@@ -1,0 +1,217 @@
+{
+  "info": {
+    "name": "Monsta - Identity + Governance",
+    "_postman_id": "b3f2a1e4-identity-governance",
+    "description": "Identity + Governance Layer APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Identity",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Test@1234\",\n  \"phone\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Governance - Platform Policy",
+      "item": [
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"commissionPolicy\": {\n    \"type\": \"PERCENTAGE\",\n    \"value\": 10\n  },\n  \"refundPolicy\": {\n    \"allowedDays\": 7,\n    \"partialRefundAllowed\": true\n  },\n  \"deliveryPolicy\": {\n    \"baseCharge\": 50,\n    \"freeDeliveryAbove\": 1000\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/governance/policy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "governance", "policy"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Policy",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/governance/policy/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "governance", "policy", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get All Policies",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/governance/policy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "governance", "policy"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Governance - Subscription Plan",
+      "item": [
+        {
+          "name": "Create Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PREMIUM\",\n  \"price\": 999,\n  \"durationInDays\": 365,\n  \"benefits\": {\n    \"freeDelivery\": true,\n    \"extraDiscountPercentage\": 5,\n    \"rewardMultiplier\": 1\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/governance/subscription",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "governance", "subscription"]
+            }
+          }
+        },
+        {
+          "name": "Get All Plans",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/governance/subscription",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "governance", "subscription"]
+            }
+          }
+        },
+        {
+          "name": "Get Plan By Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/governance/subscription/PREMIUM",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "governance", "subscription", "PREMIUM"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Plan",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/governance/subscription/{{planId}}/deactivate",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "governance",
+                "subscription",
+                "{{planId}}",
+                "deactivate"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "accessToken", "value": "" },
+    { "key": "sellerId", "value": "" },
+    { "key": "productId", "value": "" },
+    { "key": "planId", "value": "" }
+  ]
+}

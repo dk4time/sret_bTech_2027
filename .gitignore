@@ -79,3 +79,14 @@ instance/
 #PCP classworks
 6 PCP/ClassWork
 *.numbers
+
+#MERN
+node_modules/
+
+logs/
+*.log
+
+dist/
+build/
+coverage/
+uploads/
