@@ -7,6 +7,7 @@ export const getToken = async () => {
   const response = await axios.post(`${BASE_URL}/public/token`, {
     studentId: "E0123001",
     set: "setE",
+    password: "",
   });
 
   return response.data;
