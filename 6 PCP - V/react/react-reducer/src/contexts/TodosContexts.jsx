@@ -5,7 +5,7 @@ import { TodoReducer } from "../reducers/TodoReducer";
 
 export const TodosContexts = createContext();
 
-const API_URL = "http://localhost:5000/todos";
+const API_URL = "http://localhost:5050/todos";
 
 // Initial State
 const initialState = [];
@@ -14,6 +14,8 @@ const initialState = [];
 const fetchTodos = async (dispatch) => {
   try {
     const response = await axios.get(`${API_URL}?_sort=order`);
+
+    //dispatch -> fn -> 1 parameter -> object -> type, payload
     dispatch({ type: "SET_TODOS", payload: response.data });
   } catch (error) {
     console.error("Failed to fetch todos:", error);
@@ -53,7 +55,7 @@ const updateOrderAPI = async (todos, dispatch) => {
     // Loop through each todo and update its order
     const updateRequests = todos.map(
       (todo, index) =>
-        axios.patch(`${API_URL}/${todo.id}`, { order: index + 1 }) //js-4-promise-s, hmtl-3-promise-s, A-2-promise-s, css-1-promise-failed
+        axios.patch(`${API_URL}/${todo.id}`, { order: index + 1 }), //js-4-promise-s, hmtl-3-promise-s, A-2-promise-s, css-1-promise-failed
     );
 
     // Wait for all requests to complete
@@ -81,8 +83,11 @@ const toggleTodoAPI = async (id, completed, dispatch) => {
 };
 
 export const TodosProvider = ({ children }) => {
+  // const [todos1, setTodos1] = useState([]);
+  //useReducer -> fn -> 2 parameters - > fn, initialState
   const [todos, dispatch] = useReducer(TodoReducer, initialState);
 
+  //todos fetched from server - mounting phase
   useEffect(() => {
     fetchTodos(dispatch);
   }, []);
@@ -90,6 +95,7 @@ export const TodosProvider = ({ children }) => {
   const addTodo = (text) => addTodoAPI(text, todos, dispatch);
   const deleteTodo = (id) => deleteTodoAPI(id, dispatch);
   const toggleTodo = (id, completed) => toggleTodoAPI(id, completed, dispatch);
+
   const updateOrder = (newOrder) => updateOrderAPI(newOrder, dispatch);
 
   return (

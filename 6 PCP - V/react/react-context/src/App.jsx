@@ -8,7 +8,7 @@ function App() {
     <>
       <AuthProvider>
         <UserProvider>
-          {/* Login */}
+          {/* Dashboard */}
           <AppRouter />
         </UserProvider>
       </AuthProvider>

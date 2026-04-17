@@ -4,7 +4,7 @@ import React, { useReducer } from "react";
 export const TodoReducer = (state, action) => {
   switch (action.type) {
     case "SET_TODOS":
-      return action.payload;
+      return action.payload; //new state
 
     case "ADD":
       return [...state, action.payload];
@@ -13,7 +13,7 @@ export const TodoReducer = (state, action) => {
       return state.map((todo) =>
         todo.id === action.payload
           ? { ...todo, completed: !todo.completed }
-          : todo
+          : todo,
       );
 
     case "DELETE":

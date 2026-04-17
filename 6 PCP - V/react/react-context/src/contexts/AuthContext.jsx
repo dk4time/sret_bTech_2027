@@ -1,4 +1,4 @@
-import { Children, createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 //CONTEXT
 export const AuthContext = createContext();
@@ -18,3 +18,5 @@ export const AuthProvider = ({ children }) => {
 
 //CONSUMER - custom hook to use the context values in the components
 export const useAuth = () => useContext(AuthContext);
+
+// header login dashboard 100
