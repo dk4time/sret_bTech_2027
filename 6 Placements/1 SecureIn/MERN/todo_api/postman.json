@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "Task Manager API",
+    "_postman_id": "d1a9c2c5-1234-4abc-9cde-123456789abc",
+    "description": "CRUD operations for Task Manager API (Node + Express + MongoDB)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "task_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Task",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Learn MongoDB\",\n  \"description\": \"Practice CRUD\",\n  \"status\": \"todo\",\n  \"dueDate\": \"2026-06-01\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks"]
+        }
+      }
+    },
+    {
+      "name": "Get All Tasks",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/tasks",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks"]
+        }
+      }
+    },
+    {
+      "name": "Get Task By ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/tasks/{{task_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "{{task_id}}"]
+        }
+      }
+    },
+    {
+      "name": "Update Task (PATCH)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"in-progress\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tasks/{{task_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "{{task_id}}"]
+        }
+      }
+    },
+    {
+      "name": "Delete Task",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{base_url}}/api/tasks/{{task_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "tasks", "{{task_id}}"]
+        }
+      }
+    }
+  ]
+}
