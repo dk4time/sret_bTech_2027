@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 import connectDB from "./config/db.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ connectDB();
 
 // Routes
 app.use("/api/tasks", taskRoutes);
+
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");
