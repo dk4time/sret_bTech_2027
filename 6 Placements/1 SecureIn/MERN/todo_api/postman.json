@@ -1,95 +1,297 @@
 {
   "info": {
-    "name": "Task Manager API",
-    "_postman_id": "d1a9c2c5-1234-4abc-9cde-123456789abc",
-    "description": "CRUD operations for Task Manager API (Node + Express + MongoDB)",
+    "name": "Task Manager API - Complete System",
+    "_postman_id": "final-collection-001",
+    "description": "Users + Projects + Tasks + Assignment + Pagination + Search + Stats",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:3000"
-    },
-    {
-      "key": "task_id",
-      "value": ""
-    }
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "user_id", "value": "" },
+    { "key": "project_id", "value": "" },
+    { "key": "task_id", "value": "" }
   ],
   "item": [
     {
-      "name": "Create Task",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dinesh\",\n  \"email\": \"dinesh@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"title\": \"Learn MongoDB\",\n  \"description\": \"Practice CRUD\",\n  \"status\": \"todo\",\n  \"dueDate\": \"2026-06-01\"\n}"
         },
-        "url": {
-          "raw": "{{base_url}}/api/tasks",
-          "host": ["{{base_url}}"],
-          "path": ["api", "tasks"]
-        }
-      }
-    },
-    {
-      "name": "Get All Tasks",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{base_url}}/api/tasks",
-          "host": ["{{base_url}}"],
-          "path": ["api", "tasks"]
-        }
-      }
-    },
-    {
-      "name": "Get Task By ID",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{base_url}}/api/tasks/{{task_id}}",
-          "host": ["{{base_url}}"],
-          "path": ["api", "tasks", "{{task_id}}"]
-        }
-      }
-    },
-    {
-      "name": "Update Task (PATCH)",
-      "request": {
-        "method": "PATCH",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+        {
+          "name": "Get Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"status\": \"in-progress\"\n}"
-        },
-        "url": {
-          "raw": "{{base_url}}/api/tasks/{{task_id}}",
-          "host": ["{{base_url}}"],
-          "path": ["api", "tasks", "{{task_id}}"]
         }
-      }
+      ]
     },
+
     {
-      "name": "Delete Task",
-      "request": {
-        "method": "DELETE",
-        "url": {
-          "raw": "{{base_url}}/api/tasks/{{task_id}}",
-          "host": ["{{base_url}}"],
-          "path": ["api", "tasks", "{{task_id}}"]
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"API Project\",\n  \"owner\": \"{{user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/projects",
+              "host": ["{{base_url}}"],
+              "path": ["api", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Get Projects",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/projects",
+              "host": ["{{base_url}}"],
+              "path": ["api", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Get Project By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "projects", "{{project_id}}"]
+            }
+          }
         }
-      }
+      ]
+    },
+
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Learn API\",\n  \"project\": \"{{project_id}}\",\n  \"assignedTo\": \"{{user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks"]
+            }
+          }
+        },
+
+        {
+          "name": "Get Tasks (Pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks?page=1&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks"]
+            }
+          }
+        },
+
+        {
+          "name": "Search Tasks",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks?search=api",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks"]
+            }
+          }
+        },
+
+        {
+          "name": "Filter by Project",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks?projectId={{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks"]
+            }
+          }
+        },
+
+        {
+          "name": "Overdue Tasks",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks?overdue=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks"]
+            }
+          }
+        },
+
+        {
+          "name": "Get Task By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "{{task_id}}"]
+            }
+          }
+        },
+
+        {
+          "name": "Assign Task",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasks/{{task_id}}/assign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "{{task_id}}", "assign"]
+            }
+          }
+        },
+
+        {
+          "name": "Unassign Task",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/api/tasks/{{task_id}}/unassign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "{{task_id}}", "unassign"]
+            }
+          }
+        },
+
+        {
+          "name": "Patch Task",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"done\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "{{task_id}}"]
+            }
+          }
+        },
+
+        {
+          "name": "Put Task (Replace)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Replaced Task\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "{{task_id}}"]
+            }
+          }
+        },
+
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "{{task_id}}"]
+            }
+          }
+        },
+
+        {
+          "name": "Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "stats"]
+            }
+          }
+        },
+
+        {
+          "name": "Stats Per User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks/stats/user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "stats", "user", "{{user_id}}"]
+            }
+          }
+        },
+
+        {
+          "name": "Recent Tasks",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks/recent",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "recent"]
+            }
+          }
+        },
+
+        {
+          "name": "Tasks Due Soon",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/tasks/due-soon",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "due-soon"]
+            }
+          }
+        }
+      ]
     }
   ]
 }

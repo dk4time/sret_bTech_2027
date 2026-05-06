@@ -32,15 +32,24 @@ const taskSchema = new mongoose.Schema(
       ref: "User",
       index: true,
     },
+
+    project: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      index: true,
+    },
   },
   { timestamps: true },
 );
 
-// Compound Unique Index (Prevents duplicates per user)
-taskSchema.index({ title: 1, assignedTo: 1 }, { unique: true });
-
-// Query Optimization Index
 taskSchema.index({ status: 1, dueDate: 1 });
+
+taskSchema.index({ title: 1, project: 1 }, { unique: true });
+
+taskSchema.index({
+  title: "text",
+  description: "text",
+});
 
 const Task = mongoose.model("Task", taskSchema);
 
