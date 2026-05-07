@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
   try {
     const projects = await Project.find()
       .populate("owner", "name email")
-      .populate("members", "name email")
+      .populate("members.user", "name email")
       .sort({ createdAt: -1 });
 
     res.json(projects);
@@ -77,7 +77,7 @@ router.get("/:id", async (req, res) => {
 
     const project = await Project.findById(req.params.id)
       .populate("owner", "name email")
-      .populate("members", "name email");
+      .populate("members.users", "name email");
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
