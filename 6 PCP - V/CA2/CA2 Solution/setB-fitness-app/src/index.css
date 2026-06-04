@@ -1,0 +1,209 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f6f8;
+  color: #111827;
+}
+
+/* CONTAINER */
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 16px;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 0 0 12px 12px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nav-links {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-links a {
+  color: #d1d5db;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.nav-links a:hover {
+  background: #1f2937;
+}
+
+.nav-links .active {
+  background: #2563eb;
+  color: white;
+}
+
+/* ================= HOME ================= */
+
+.home-card {
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.home-card h1 {
+  margin-bottom: 10px;
+}
+
+.home-card p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.home-links {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.home-btn {
+  background: #2563eb;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.home-btn:hover {
+  background: #1e4ed8;
+}
+
+/* ================= CARD ================= */
+
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ================= BUTTONS ================= */
+
+button {
+  padding: 8px 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+button:hover {
+  background: #1e4ed8;
+}
+
+/* ================= INPUT ================= */
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* ================= FILTER ================= */
+
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+}
+
+/* ================= STATS ================= */
+
+.stats-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stats-box div {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* ================= DETAIL PAGE ================= */
+
+.container p {
+  margin: 6px 0;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+  .container {
+    margin: 20px auto;
+    padding: 12px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  .home-card {
+    padding: 20px;
+  }
+
+  .home-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+}

@@ -165,5 +165,9 @@ yarn.lock
 *.db
 *.sqlite
 
+*.pages
+Evaluator - Development Flow.pdf
+Internal Evaluator Architecture.pdf
+Assessment Question Pattern.pdf
 
-Phase_3_DBMS
+3 MERN Comparision.pdf
