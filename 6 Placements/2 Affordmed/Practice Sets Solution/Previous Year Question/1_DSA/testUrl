@@ -1,0 +1,4 @@
+GET http://localhost:3000/numbers?url=http://localhost:4000/primes&url=http://localhost:4000/fibo&url=http://localhost:4000/odd
+
+GET http://localhost:3000/prefixes?keywords=bonfire,bonsai,bool
+
