@@ -1,0 +1,38 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 8 · CLI (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class Menu {
+        <<abstract>>
+    }
+    class StartupMenu
+    class MainMenu
+    class CustomerMenu
+    class CaptainMenu
+    class OperationsMenu
+    class ClockMenu
+    class ConsoleIO
+    Menu <|-- StartupMenu : is-a
+    Menu <|-- MainMenu : is-a
+    Menu <|-- CustomerMenu : is-a
+    Menu <|-- CaptainMenu : is-a
+    Menu <|-- OperationsMenu : is-a
+    Menu <|-- ClockMenu : is-a
+    MainMenu *-- Menu : has-a, owns
+    Menu o-- ConsoleIO : has-a, uses
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:3px

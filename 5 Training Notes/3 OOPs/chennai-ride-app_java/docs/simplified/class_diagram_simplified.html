@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chennai Ride App · Simplified Class Diagram</title>
+<style>
+  :root {
+    --ink: #0f172a; --muted: #475569; --line: #cbd5e1; --panel: #f8fafc; --link: #1d4ed8;
+    --abstract-bg: #ede9fe; --abstract-bd: #6d28d9;
+    --interface-bg: #dcfce7; --interface-bd: #15803d;
+    --enum-bg: #fef3c7; --enum-bd: #b45309;
+    --concrete-bg: #f8fafc; --concrete-bd: #475569;
+    --group-bg: #e0f2fe; --group-bd: #0369a1;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: #ffffff; }
+  body { margin: 0; color: var(--ink); font: 21px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; }
+  header { padding: 26px 32px 6px; }
+  h1 { margin: 0 0 4px; font-size: 2.2rem; }
+  .sub { margin: 0 0 8px; color: var(--muted); }
+  #summary { font-weight: 700; margin: 0; }
+  nav { position: sticky; top: 0; z-index: 5; background: #ffffffee; border-bottom: 1px solid var(--line);
+        padding: 10px 32px; display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.9rem; }
+  nav a { color: var(--link); font-weight: 600; text-decoration: none; }
+  nav a:hover, nav a:focus-visible { text-decoration: underline; }
+  main { padding: 6px 32px 40px; max-width: 1800px; }
+  h2 { font-size: 1.6rem; margin: 0; }
+  h3 { margin: 0 0 8px; font-size: 1.25rem; }
+  .legend, .group, .notes { border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; margin: 22px 0; }
+  .legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px 26px; margin-top: 12px; }
+  .swatch, .arrow { display: flex; align-items: center; gap: 14px; }
+  .swatch .box { flex: none; width: 58px; height: 38px; border-radius: 4px; border: 2.5px solid; }
+  .swatch b, .arrow b { display: block; }
+  .swatch small, .arrow small { display: block; color: var(--muted); font-size: 0.82rem; line-height: 1.35; }
+  .arrow svg { flex: none; width: 150px; height: 40px; }
+  .abstract .box, .chip.abstract { background: var(--abstract-bg); border-color: var(--abstract-bd); }
+  .interface .box, .chip.interface { background: var(--interface-bg); border-color: var(--interface-bd); }
+  .enum .box, .chip.enum { background: var(--enum-bg); border-color: var(--enum-bd); }
+  .concrete .box, .chip.concrete { background: var(--concrete-bg); border-color: var(--concrete-bd); }
+  .group .box { background: var(--group-bg); border-color: var(--group-bd); }
+  .swatch.group { border: 0; padding: 0; margin: 0; }
+  .rule-of-thumb { margin: 16px 0 0; padding: 10px 14px; background: var(--panel); border-left: 5px solid var(--link); border-radius: 6px; }
+  .group-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .badge { font-size: 0.8rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); }
+  .badge[data-status="ok"] { color: #15803d; border-color: #15803d; }
+  .badge[data-status="error"] { color: #b91c1c; border-color: #b91c1c; }
+  .group-body { display: grid; grid-template-columns: minmax(0, 3fr) minmax(320px, 2fr); gap: 22px; margin-top: 14px; align-items: start; }
+  .canvas { overflow: auto; min-height: 120px; }
+  .canvas svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+  .canvas pre.error { color: #b91c1c; white-space: pre-wrap; font-size: 0.8rem; }
+  .why { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; font-size: 0.86rem; }
+  .why ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 8px; }
+  .why li { line-height: 1.4; }
+  .why .rule { margin: 12px 0 0; font-weight: 600; }
+  .chip { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0 7px; border-radius: 4px; border: 1.5px solid; margin-right: 4px; vertical-align: 1px; white-space: nowrap; }
+  .source { color: var(--muted); font-size: 0.78rem; margin: 10px 0 0; }
+  code { font-family: "Cascadia Code", Consolas, "SF Mono", Menlo, monospace; font-size: 0.9em; background: var(--panel); padding: 1px 5px; border-radius: 4px; }
+  .notes li { margin: 6px 0; font-size: 0.9rem; }
+  script.mermaid-source { display: none; }
+  @media (max-width: 1100px) { .group-body { grid-template-columns: 1fr; } }
+  @media print {
+    @page { size: A4 landscape; margin: 12mm; }
+    body { font-size: 12pt; }
+    nav, .badge, .source { display: none; }
+    header { padding: 0; }
+    main { padding: 0; }
+    .legend, .group, .notes { break-inside: avoid; page-break-inside: avoid; margin: 0 0 8mm; }
+    .group { break-before: page; }
+    .group-body { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+    .canvas { overflow: visible; }
+    .why, .chip, .swatch .box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Chennai Ride App · Simplified Class Diagram</h1>
+  <p class="sub">Type names only: no fields, no methods. For the full member-level diagram see <code>docs/class_diagram.html</code>.</p>
+  <p id="summary" role="status">Rendering diagrams…</p>
+</header>
+<nav aria-label="Groups"><a href="#legend">Legend</a><a href="#g01">1 · User and vehicles</a><a href="#g02">2 · Location and money</a><a href="#g03">3 · Ride</a><a href="#g04">4 · Payments</a><a href="#g05">5 · Notifications</a><a href="#g06">6 · Services</a><a href="#g07">7 · Clock and exceptions</a><a href="#g08">8 · CLI (interactive mode)</a><a href="#g09">9 · Overview</a><a href="#notes">Notes</a></nav>
+<main>
+  <section class="legend" id="legend">
+    <h2>Legend</h2>
+    <div class="legend-grid"><div class="swatch abstract"><span class="box"></span><div><b>Abstract class</b><small>«abstract» – cannot be created with new; children fill in the gaps</small></div></div><div class="swatch interface"><span class="box"></span><div><b>Interface</b><small>«interface» – a CAN-DO promise, no shared data</small></div></div><div class="swatch enum"><span class="box"></span><div><b>Enum</b><small>«enumeration» – a fixed set of values</small></div></div><div class="swatch concrete"><span class="box"></span><div><b>Concrete class</b><small>no stereotype – real objects are made from it</small></div></div><div class="swatch group"><span class="box"></span><div><b>Group (overview only)</b><small>one box per group of types</small></div></div></div>
+    <div class="legend-grid"><div class="arrow"><svg viewBox="0 0 150 40" aria-hidden="true"><line x1="6" y1="20" x2="122" y2="20" stroke="#111" stroke-width="2.5"/><polygon points="122,9 144,20 122,31" fill="#fff" stroke="#111" stroke-width="2.5"/></svg><div><b>Inheritance · “is-a”</b><small>hollow triangle points to the parent</small></div></div><div class="arrow"><svg viewBox="0 0 150 40" aria-hidden="true"><line x1="6" y1="20" x2="122" y2="20" stroke="#111" stroke-width="2.5" stroke-dasharray="8 6"/><polygon points="122,9 144,20 122,31" fill="#fff" stroke="#111" stroke-width="2.5"/></svg><div><b>Interface realisation · “can-do”</b><small>dashed line, hollow triangle points to the interface</small></div></div><div class="arrow"><svg viewBox="0 0 150 40" aria-hidden="true"><line x1="42" y1="20" x2="144" y2="20" stroke="#111" stroke-width="2.5"/><polygon points="6,20 24,10 42,20 24,30" fill="#111"/></svg><div><b>Composition · “has-a, owns” ◆</b><small>filled diamond on the owner: the part lives and dies with it</small></div></div><div class="arrow"><svg viewBox="0 0 150 40" aria-hidden="true"><line x1="42" y1="20" x2="144" y2="20" stroke="#111" stroke-width="2.5"/><polygon points="6,20 24,10 42,20 24,30" fill="#fff" stroke="#111" stroke-width="2.5"/></svg><div><b>Aggregation · “has-a, uses” ◇</b><small>hollow diamond on the whole: the part also exists on its own</small></div></div><div class="arrow"><svg viewBox="0 0 150 40" aria-hidden="true"><line x1="6" y1="20" x2="140" y2="20" stroke="#111" stroke-width="2.5" stroke-dasharray="8 6"/><polyline points="126,10 144,20 126,30" fill="none" stroke="#111" stroke-width="2.5"/></svg><div><b>Uses (dotted)</b><small>services → the model classes they work with, and the overview</small></div></div></div>
+    <p class="rule-of-thumb"><b>Rule of thumb:</b> abstract class = IS-A <i>with shared data</i> · interface = CAN-DO, <i>no shared data</i>.</p>
+  </section>
+
+  <section class="group" id="g01">
+    <div class="group-head"><h2>1 · User and vehicles</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 1 · User and vehicles"><h3>Why?</h3><ul><li><span class="chip abstract">abstract class</span> <b>User</b> Abstract, because there is no plain &quot;user&quot;: it holds the shared data (id, name, phone, rating), so it is an abstract class, not an interface.</li><li><span class="chip concrete">concrete class</span> <b>Customer</b> Concrete class: a real person who books rides and has their own data (wallet, ride history).</li><li><span class="chip concrete">concrete class</span> <b>Captain</b> Concrete class: a real person who drives, with their own data (status, dues, acceptance rate).</li><li><span class="chip enum">enum</span> <b>CaptainStatus</b> Enum: a fixed set of values (KYC_PENDING, OFFLINE, AVAILABLE, ON_RIDE), so an invalid status is impossible.</li><li><span class="chip abstract">abstract class</span> <b>Vehicle</b> Abstract: the fare formula is written once in the parent; each child overrides its own rates (polymorphism).</li><li><span class="chip concrete">concrete class</span> <b>Bike</b> Concrete: the cheapest vehicle; it supplies its own rates and speeds.</li><li><span class="chip concrete">concrete class</span> <b>Auto</b> Concrete: a three-wheeler with its own rates.</li><li><span class="chip abstract">abstract class</span> <b>Cab</b> Abstract, in the middle: it groups Economy and Premium and gives multilevel inheritance.</li><li><span class="chip concrete">concrete class</span> <b>CabEconomy</b> Concrete: a sedan cab (level 3 of Vehicle → Cab → CabEconomy).</li><li><span class="chip concrete">concrete class</span> <b>CabPremium</b> Concrete: an SUV cab with 6 seats.</li><li><span class="chip enum">enum</span> <b>VehicleType</b> Enum: a fixed set of values (BIKE, AUTO, CAB_ECONOMY, CAB_PREMIUM), so an invalid value is impossible.</li></ul><p class="rule">Captain HAS-A Vehicle: a captain is a person, not a vehicle, so this is composition (◆), not inheritance.</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/01_user_and_vehicles.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "1 · User and vehicles"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+    class User {
+        <<abstract>>
+    }
+    class Vehicle {
+        <<abstract>>
+    }
+    class Cab {
+        <<abstract>>
+    }
+
+    class CaptainStatus {
+        <<enumeration>>
+    }
+    class VehicleType {
+        <<enumeration>>
+    }
+    class Customer
+    class Captain
+    class Bike
+    class Auto
+    class CabEconomy
+    class CabPremium
+
+    User <|-- Customer : is-a
+    User <|-- Captain : is-a
+    Captain *-- Vehicle : has-a, owns
+    Captain o-- CaptainStatus : has-a, uses
+    Vehicle <|-- Bike : is-a
+    Vehicle <|-- Auto : is-a
+    Vehicle <|-- Cab : is-a
+    Cab <|-- CabEconomy : is-a
+    Cab <|-- CabPremium : is-a
+    Vehicle ..> VehicleType : uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style User fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style Vehicle fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style Cab fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style CaptainStatus fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style VehicleType fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style Customer fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Captain fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Bike fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Auto fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CabEconomy fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CabPremium fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g02">
+    <div class="group-head"><h2>2 · Location and money</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 2 · Location and money"><h3>Why?</h3><ul><li><span class="chip concrete">concrete class</span> <b>Location</b> Immutable: values never change, so it is safe to share one Location between many objects.</li><li><span class="chip concrete">concrete class</span> <b>Money</b> Immutable: values never change, so it is safe to share; it uses BigDecimal to avoid floating-point errors (₹0.1 + ₹0.2 is exactly ₹0.30).</li><li><span class="chip concrete">concrete class</span> <b>ChennaiPlaces</b> Concrete holder of named Chennai places (T. Nagar, Egmore…), created once as constants.</li><li><span class="chip concrete">concrete class</span> <b>ServiceArea</b> Concrete: the Chennai boundary, hotspots and congested zones; it rejects pickups or drops outside the city.</li></ul></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/02_location_and_money.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "2 · Location and money"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR
+
+
+
+    class Location
+    class Money
+    class ChennaiPlaces
+    class ServiceArea
+
+    ChennaiPlaces *-- Location : has-a, owns
+    ServiceArea o-- Location : has-a, uses
+    note for Money "immutable"
+    note for Location "immutable"
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Location fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Money fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ChennaiPlaces fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ServiceArea fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g03">
+    <div class="group-head"><h2>3 · Ride</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 3 · Ride"><h3>Why?</h3><ul><li><span class="chip concrete">concrete class</span> <b>Ride</b> Guards its own status: there is no setStatus(), only assignCaptain(), start(otp), complete(), cancel(). The OTP is private. This is the best encapsulation example.</li><li><span class="chip concrete">concrete class</span> <b>Customer</b> Shown here because a Ride has one (details in group 1).</li><li><span class="chip concrete">concrete class</span> <b>Captain</b> Shown here because a Ride has one (details in group 1).</li><li><span class="chip enum">enum</span> <b>RideStatus</b> Enum: a fixed set of values (REQUESTED … COMPLETED, CANCELLED), so an invalid status is impossible.</li><li><span class="chip concrete">concrete class</span> <b>FareReceipt</b> The itemised bill. It is created for one ride and belongs to it (composition).</li><li><span class="chip enum">enum</span> <b>CancellationReason</b> Enum: a fixed list of reasons, each allowed for only one party (customer, captain or system).</li></ul><p class="rule">Ride HAS Customer and Captain: aggregation (◇), because both exist before and after the ride.</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/03_ride.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "3 · Ride"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+
+    class RideStatus {
+        <<enumeration>>
+    }
+    class CancellationReason {
+        <<enumeration>>
+    }
+    class Ride
+    class Customer
+    class Captain
+    class FareReceipt
+
+    Ride o-- Customer : has-a, uses
+    Ride o-- Captain : has-a, uses
+    Ride *-- FareReceipt : has-a, owns
+    Ride o-- RideStatus : has-a, uses
+    Ride o-- CancellationReason : has-a, uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style RideStatus fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style CancellationReason fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style Ride fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Customer fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Captain fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style FareReceipt fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g04">
+    <div class="group-head"><h2>4 · Payments</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 4 · Payments"><h3>Why?</h3><ul><li><span class="chip interface">interface</span> <b>Payable</b> Interface: no shared data, only a CAN-DO promise (&quot;can pay&quot;), so a new payment method is one new class and no changes to existing code.</li><li><span class="chip concrete">concrete class</span> <b>UpiPayment</b> Can-do Payable: pays by UPI; it can fail when the bank is down.</li><li><span class="chip concrete">concrete class</span> <b>CashPayment</b> Can-do Payable: the customer pays the captain in cash; it always succeeds.</li><li><span class="chip concrete">concrete class</span> <b>WalletPayment</b> Can-do Payable: pays from the in-app wallet, all or nothing.</li><li><span class="chip enum">enum</span> <b>PaymentStatus</b> Enum: a fixed set of values (NOT_ATTEMPTED, SUCCESS, FAILED), so an invalid value is impossible.</li></ul><p class="rule">Rule of thumb: abstract class = IS-A with shared data; interface = CAN-DO, no shared data.</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/04_payments.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "4 · Payments"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+    class Payable {
+        <<interface>>
+    }
+    class PaymentStatus {
+        <<enumeration>>
+    }
+    class UpiPayment
+    class CashPayment
+    class WalletPayment
+
+    Payable <|.. UpiPayment : can-do
+    Payable <|.. CashPayment : can-do
+    Payable <|.. WalletPayment : can-do
+    Payable ..> PaymentStatus : uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Payable fill:#dcfce7,stroke:#15803d,stroke-width:3px
+    style PaymentStatus fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style UpiPayment fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CashPayment fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style WalletPayment fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g05">
+    <div class="group-head"><h2>5 · Notifications</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 5 · Notifications"><h3>Why?</h3><ul><li><span class="chip interface">interface</span> <b>Notifier</b> Interface: no shared data, only a CAN-DO promise (&quot;can notify&quot;), so adding WhatsApp or email is one new class.</li><li><span class="chip concrete">concrete class</span> <b>SmsNotifier</b> Can-do Notifier: sends a text message, but only for important events.</li><li><span class="chip concrete">concrete class</span> <b>PushNotifier</b> Can-do Notifier: sends an in-app push for every event.</li></ul><p class="rule">RideService keeps a List&lt;Notifier&gt; and never asks &quot;SMS or push?&quot;: the right code runs by itself (dynamic dispatch).</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/05_notifications.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "5 · Notifications"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+    class Notifier {
+        <<interface>>
+    }
+
+    class SmsNotifier
+    class PushNotifier
+
+    Notifier <|.. SmsNotifier : can-do
+    Notifier <|.. PushNotifier : can-do
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Notifier fill:#dcfce7,stroke:#15803d,stroke-width:3px
+    style SmsNotifier fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style PushNotifier fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g06">
+    <div class="group-head"><h2>6 · Services</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 6 · Services"><h3>Why?</h3><ul><li><span class="chip concrete">concrete class</span> <b>CustomerService</b> Services coordinate several objects; models enforce their own rules. This one registers customers and handles wallet top-ups.</li><li><span class="chip concrete">concrete class</span> <b>CaptainService</b> Registers captains, runs KYC, online/offline and dues settlement.</li><li><span class="chip concrete">concrete class</span> <b>MatchingService</b> Finds the nearest eligible captain and offers the ride.</li><li><span class="chip concrete">concrete class</span> <b>RideService</b> Runs the ride flow: book → assign → arrive → start → complete → pay.</li><li><span class="chip concrete">concrete class</span> <b>FareService</b> Calculates surge, estimates and the final receipt.</li><li><span class="chip concrete">concrete class</span> <b>PaymentService</b> Collects the money through a Payable.</li><li><span class="chip concrete">concrete class</span> <b>RatingService</b> Ratings for completed rides only, once per side.</li><li><span class="chip concrete">concrete class</span> <b>EarningsService</b> Splits every payment into captain earnings, commission and GST.</li><li><span class="chip concrete">concrete class</span> <b>Customer</b> Model class (group 1).</li><li><span class="chip concrete">concrete class</span> <b>Captain</b> Model class (group 1).</li><li><span class="chip abstract">abstract class</span> <b>Vehicle</b> Model class (group 1).</li><li><span class="chip concrete">concrete class</span> <b>Ride</b> Model class (group 3).</li><li><span class="chip concrete">concrete class</span> <b>FareReceipt</b> Model class (group 3).</li><li><span class="chip interface">interface</span> <b>Payable</b> Model interface (group 4).</li><li><span class="chip concrete">concrete class</span> <b>Location</b> Model class (group 2).</li><li><span class="chip concrete">concrete class</span> <b>Money</b> Model class (group 2).</li><li><span class="chip concrete">concrete class</span> <b>ServiceArea</b> Model class (group 2).</li></ul><p class="rule">Services coordinate several objects; the models handle their own rules (a Ride checks its own status, a Customer its own wallet).</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/06_services.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "6 · Services"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR
+    class Vehicle {
+        <<abstract>>
+    }
+    class Payable {
+        <<interface>>
+    }
+
+    class CustomerService
+    class CaptainService
+    class MatchingService
+    class RideService
+    class FareService
+    class PaymentService
+    class RatingService
+    class EarningsService
+    class Customer
+    class Captain
+    class Ride
+    class FareReceipt
+    class Location
+    class Money
+    class ServiceArea
+
+    CustomerService ..> Customer : uses
+    CustomerService ..> Money : uses
+    CaptainService ..> Captain : uses
+    CaptainService ..> Location : uses
+    MatchingService ..> Captain : uses
+    MatchingService ..> Ride : uses
+    MatchingService ..> Location : uses
+    RideService ..> Ride : uses
+    RideService ..> Customer : uses
+    RideService ..> Captain : uses
+    RideService ..> FareReceipt : uses
+    RideService ..> Payable : uses
+    FareService ..> Vehicle : uses
+    FareService ..> Ride : uses
+    FareService ..> FareReceipt : uses
+    FareService ..> ServiceArea : uses
+    PaymentService ..> Payable : uses
+    PaymentService ..> Ride : uses
+    RatingService ..> Ride : uses
+    RatingService ..> Captain : uses
+    EarningsService ..> Ride : uses
+    EarningsService ..> Captain : uses
+    EarningsService ..> Money : uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Vehicle fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style Payable fill:#dcfce7,stroke:#15803d,stroke-width:3px
+    style CustomerService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style MatchingService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style RideService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style FareService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style PaymentService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style RatingService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style EarningsService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Customer fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Captain fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Ride fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style FareReceipt fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Location fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Money fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ServiceArea fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g07">
+    <div class="group-head"><h2>7 · Clock and exceptions</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 7 · Clock and exceptions"><h3>Why?</h3><ul><li><span class="chip concrete">concrete class</span> <b>SimulatedClock</b> Controlled time, so demos are repeatable and a night ride is one jump away.</li><li><span class="chip concrete">concrete class</span> <b>Exception</b> Java&#x27;s own (JDK) checked exception class: the parent of our base exception.</li><li><span class="chip concrete">concrete class</span> <b>RideHailingException</b> Inheritance again: catch the parent to handle every app error, or a child to handle one specific error.</li><li><span class="chip concrete">concrete class</span> <b>InvalidRideStatusException</b> A ride method was called at the wrong moment (e.g. starting a cancelled ride).</li><li><span class="chip concrete">concrete class</span> <b>InvalidOtpException</b> The captain typed the wrong OTP.</li><li><span class="chip concrete">concrete class</span> <b>NoCaptainAvailableException</b> Nobody nearby accepted the ride.</li><li><span class="chip concrete">concrete class</span> <b>CaptainNotEligibleException</b> The captain cannot do this yet (e.g. KYC pending).</li><li><span class="chip concrete">concrete class</span> <b>CaptainBusyException</b> The captain is on a ride (e.g. cannot go offline).</li><li><span class="chip concrete">concrete class</span> <b>InsufficientWalletBalanceException</b> The wallet has too little money; nothing is deducted.</li><li><span class="chip concrete">concrete class</span> <b>InvalidBookingException</b> A booking rule was broken. It is the parent of the three booking errors below (multilevel).</li><li><span class="chip concrete">concrete class</span> <b>ActiveRideExistsException</b> The customer already has a ride in progress.</li><li><span class="chip concrete">concrete class</span> <b>PaymentPendingException</b> The customer must first pay for an earlier ride.</li><li><span class="chip concrete">concrete class</span> <b>OutOfServiceAreaException</b> The pickup or drop is outside Chennai.</li></ul><p class="rule">Catch InvalidBookingException to catch all three booking errors at once, or RideHailingException for every app error.</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/07_clock_and_exceptions.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "7 · Clock and exceptions"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR
+
+
+
+    class SimulatedClock
+    class Exception
+    class RideHailingException
+    class InvalidRideStatusException
+    class InvalidOtpException
+    class NoCaptainAvailableException
+    class CaptainNotEligibleException
+    class CaptainBusyException
+    class InsufficientWalletBalanceException
+    class InvalidBookingException
+    class ActiveRideExistsException
+    class PaymentPendingException
+    class OutOfServiceAreaException
+
+    Exception <|-- RideHailingException : is-a
+    RideHailingException <|-- InvalidRideStatusException : is-a
+    RideHailingException <|-- InvalidOtpException : is-a
+    RideHailingException <|-- NoCaptainAvailableException : is-a
+    RideHailingException <|-- CaptainNotEligibleException : is-a
+    RideHailingException <|-- CaptainBusyException : is-a
+    RideHailingException <|-- InsufficientWalletBalanceException : is-a
+    RideHailingException <|-- InvalidBookingException : is-a
+    InvalidBookingException <|-- ActiveRideExistsException : is-a
+    InvalidBookingException <|-- PaymentPendingException : is-a
+    InvalidBookingException <|-- OutOfServiceAreaException : is-a
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style SimulatedClock fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Exception fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style RideHailingException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InvalidRideStatusException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InvalidOtpException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style NoCaptainAvailableException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainNotEligibleException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainBusyException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InsufficientWalletBalanceException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InvalidBookingException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ActiveRideExistsException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style PaymentPendingException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style OutOfServiceAreaException fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g08">
+    <div class="group-head"><h2>8 · CLI (interactive mode)</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 8 · CLI (interactive mode)"><h3>Why?</h3><ul><li><span class="chip abstract">abstract class</span> <b>Menu</b> Abstract: the menu loop is written once; each menu handles its choices differently.</li><li><span class="chip concrete">concrete class</span> <b>StartupMenu</b> Is-a Menu: demo / interactive mode / self-check.</li><li><span class="chip concrete">concrete class</span> <b>MainMenu</b> Is-a Menu: opens the other menus through Menu references (polymorphism).</li><li><span class="chip concrete">concrete class</span> <b>CustomerMenu</b> Is-a Menu: the customer&#x27;s phone (book, cancel, pay…).</li><li><span class="chip concrete">concrete class</span> <b>CaptainMenu</b> Is-a Menu: the captain&#x27;s phone (accept, arrive, OTP, complete…).</li><li><span class="chip concrete">concrete class</span> <b>OperationsMenu</b> Is-a Menu: the operations dashboard.</li><li><span class="chip concrete">concrete class</span> <b>ClockMenu</b> Is-a Menu: moves the simulated clock forward.</li><li><span class="chip concrete">concrete class</span> <b>ConsoleIO</b> All keyboard input and screen output, in one place.</li><li><span class="chip concrete">concrete class</span> <b>CliSession</b> The live world (a fresh seeded Chennai) behind the menus.</li></ul><p class="rule">The menus contain no business rules: they only read input, call the services and print the result.</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/08_cli.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "8 · CLI (interactive mode)"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+    class Menu {
+        <<abstract>>
+    }
+
+
+    class StartupMenu
+    class MainMenu
+    class CustomerMenu
+    class CaptainMenu
+    class OperationsMenu
+    class ClockMenu
+    class ConsoleIO
+    class CliSession
+
+    Menu <|-- StartupMenu : is-a
+    Menu <|-- MainMenu : is-a
+    Menu <|-- CustomerMenu : is-a
+    Menu <|-- CaptainMenu : is-a
+    Menu <|-- OperationsMenu : is-a
+    Menu <|-- ClockMenu : is-a
+    Menu o-- ConsoleIO : has-a, uses
+    Menu o-- CliSession : has-a, uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Menu fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style StartupMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style MainMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CustomerMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style OperationsMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ClockMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ConsoleIO fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CliSession fill:#f8fafc,stroke:#475569,stroke-width:2px
+</script>
+  </section>
+  <section class="group" id="g09">
+    <div class="group-head"><h2>9 · Overview</h2><span class="badge" data-status="pending">rendering…</span></div>
+    <div class="group-body">
+      <div class="canvas"></div>
+      <aside class="why" aria-label="Why? 9 · Overview"><h3>Why?</h3><ul><li><b>1 · User and vehicles</b> Customer, Captain and the Vehicle family.</li><li><b>2 · Location and money</b> Immutable values used everywhere: where things are and what they cost.</li><li><b>3 · Ride</b> The heart of the model: it has a Customer and a Captain.</li><li><b>4 · Payments</b> A ride is paid through the Payable interface.</li><li><b>5 · Notifications</b> Services tell people what happened through the Notifier interface.</li><li><b>6 · Services</b> Coordinate the models, and are the only layer the CLI and the demo call.</li><li><b>7 · Clock and exceptions</b> Time for everyone; exceptions for every broken rule.</li><li><b>8 · CLI</b> The interactive menus: read input, call services, print.</li></ul><p class="rule">Arrows point from the group that USES to the group it depends on. The CLI only talks to services; services talk to models.</p></aside>
+    </div>
+    <p class="source">Mermaid source: <code>docs/simplified/diagrams/09_overview.mmd</code></p>
+    <script type="text/plain" class="mermaid-source">
+---
+title: "9 · Overview: how the groups connect"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+    class G1["1 · User and vehicles"]
+    class G2["2 · Location and money"]
+    class G3["3 · Ride"]
+    class G4["4 · Payments"]
+    class G5["5 · Notifications"]
+    class G6["6 · Services"]
+    class G7["7 · Clock and exceptions"]
+    class G8["8 · CLI"]
+    G3 o-- G1 : has-a, uses (Customer, Captain)
+    G3 ..> G4 : uses (paid through Payable)
+    G3 ..> G2 : uses (pickup, drop, fare)
+    G1 ..> G2 : uses (where people are)
+    G6 ..> G1 : uses
+    G6 ..> G3 : uses
+    G6 ..> G4 : uses
+    G6 ..> G5 : uses (notifies)
+    G6 ..> G7 : uses (clock, throws)
+    G8 ..> G6 : uses (calls)
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style G1 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G2 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G3 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G4 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G5 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G6 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G7 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G8 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+</script>
+  </section>
+  <section class="notes" id="notes">
+    <h2>Notes on names and choices</h2>
+    <ul>
+      <li><b>Names:</b> every type name was checked against the code (<code>src/com/ridehailing/</code>). All the names in the brief exist exactly as written, so nothing was renamed.</li>
+      <li><b>Added because it is in the code:</b> <code>StartupMenu</code> (the 6th Menu subclass); <code>InvalidBookingException</code> with its three children <code>ActiveRideExistsException</code>, <code>PaymentPendingException</code>, <code>OutOfServiceAreaException</code>; Java's own <code>Exception</code> as the parent of <code>RideHailingException</code>; <code>ConsoleIO</code> and <code>CliSession</code> in the CLI group.</li>
+      <li><b>Ride has a Customer:</b> in the code the Ride keeps its <code>Captain</code> directly and reaches its <code>Customer</code> through its <code>RideRequest</code>. Both are shown as aggregation (◇) because both people exist before and after the ride.</li>
+      <li><b>Links to enums</b> (Captain → CaptainStatus, Ride → RideStatus / CancellationReason) are drawn as aggregation (“has-a, uses”), because an enum value is shared and is never owned by one object. <code>Vehicle ..&gt; VehicleType</code> and <code>Payable ..&gt; PaymentStatus</code> are dotted “uses” links: the type is returned by a method, not stored.</li>
+      <li><b>Location in group 2:</b> <code>ChennaiPlaces</code> creates the named places (◆ owns); <code>ServiceArea</code> keeps shared references to some of them (◇ uses).</li>
+      <li><b>Services group:</b> only the key model classes each service uses (from its imports) are drawn, so the picture stays readable.</li>
+      <li><b>Left out on purpose</b> (see the detailed diagram <code>docs/class_diagram.html</code>): RideRequest, FareEstimate, OutstandingFee, TimelineEntry, PaymentMethod, RideEvent, NotificationLog, DispatchMode, RideAutopilot, ChennaiWorld, ChennaiRideApp, Launcher, GoBackException, QuitException, SelfCheck.</li>
+    </ul>
+  </section>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  try {
+    const elk = await import("https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0/dist/mermaid-layout-elk.esm.min.mjs");
+    mermaid.registerLayoutLoaders(elk.default);
+  } catch (e) {
+    console.warn("ELK layout not available, using Mermaid's default layout", e);
+  }
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: "strict",
+    theme: "base",
+    themeVariables: {
+      background: "#ffffff", primaryColor: "#f8fafc", primaryBorderColor: "#475569",
+      primaryTextColor: "#0f172a", lineColor: "#111827", fontSize: "20px",
+      fontFamily: "Segoe UI, system-ui, -apple-system, Roboto, Arial, sans-serif"
+    },
+    class: { hideEmptyMembersBox: true }
+  });
+  const sections = [...document.querySelectorAll("section.group")];
+  let ok = 0;
+  for (const [i, section] of sections.entries()) {
+    const source = section.querySelector("script.mermaid-source").textContent.trim();
+    const canvas = section.querySelector(".canvas");
+    const badge = section.querySelector(".badge");
+    try {
+      const { svg } = await mermaid.render("simple-" + i, source);
+      canvas.innerHTML = svg;
+      badge.dataset.status = "ok";
+      badge.textContent = "✔ rendered";
+      ok++;
+    } catch (err) {
+      const pre = document.createElement("pre");
+      pre.className = "error";
+      pre.textContent = "Mermaid error: " + (err && err.message ? err.message : err);
+      canvas.replaceChildren(pre);
+      badge.dataset.status = "error";
+      badge.textContent = "✘ syntax error";
+      document.getElementById("simple-" + i)?.remove();
+    }
+  }
+  document.getElementById("summary").textContent =
+    ok + " of " + sections.length + " diagrams rendered" + (ok === sections.length ? " ✔" : " ✘");
+  document.body.dataset.rendered = ok + "/" + sections.length;
+</script>
+</body>
+</html>

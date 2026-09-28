@@ -1,0 +1,2581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapido Chennai — UML Class Diagram</title>
+<style>
+  :root {
+    --ink: #111827; --muted: #4b5563; --rule: #d1d5db; --accent: #1d4ed8;
+    --bg: #ffffff; --panel: #f9fafb; --ok: #166534; --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 20px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1500px; margin: 0 auto; padding: 32px 24px 80px; }
+  h1 { font-size: 2.1rem; margin: 0 0 6px; }
+  h2 { font-size: 1.6rem; margin: 0 0 8px; padding-top: 12px; }
+  h3 { font-size: 1.2rem; margin: 24px 0 8px; }
+  .subtitle { color: var(--muted); margin: 0 0 20px; }
+  nav ol { margin: 8px 0 0; padding-left: 1.4em; columns: 2; }
+  a { color: var(--accent); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em;
+         background: #eef2ff; padding: 1px 5px; border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 16px; font-size: 0.9rem; }
+  th, td { border: 1px solid var(--rule); padding: 8px 10px; text-align: left; vertical-align: middle; }
+  th { background: var(--panel); }
+  .panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 20px; margin: 20px 0; }
+  .swatch { display: inline-block; width: 22px; height: 16px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; border: 2px solid; }
+  .diagram-section { border-top: 3px solid var(--ink); margin-top: 40px; padding-top: 8px; }
+  .intro { max-width: 70ch; color: #1f2937; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 8px 0; }
+  button { font: inherit; font-size: 0.85rem; padding: 6px 14px; border: 2px solid var(--ink);
+           background: #fff; border-radius: 6px; cursor: pointer; }
+  button:hover { background: #eef2ff; }
+  .status { font-weight: 600; font-size: 0.9rem; }
+  .status.ok { color: var(--ok); } .status.bad { color: var(--bad); }
+  .source-file { color: var(--muted); font-size: 0.8rem; font-family: ui-monospace, Menlo, monospace; }
+  .diagram-box { border: 1px solid var(--rule); border-radius: 10px; background: #fff; overflow: auto;
+                 padding: 16px; max-height: 88vh; }
+  .diagram-box svg { max-width: none !important; }
+  /* Multiplicities ("1", "0..*") are drawn in a tiny fixed box by Mermaid; make them readable on a projector. */
+  svg.classDiagram .edgeTerminals foreignObject { overflow: visible; }
+  svg.classDiagram .edgeTerminals .edgeLabel { font-size: 16px; font-weight: 700; color: #1d4ed8; background: #fff; }
+  .diagram-box.fit svg { width: 100% !important; height: auto !important; }
+  .zoom-label { font-size: 0.85rem; min-width: 4.5em; text-align: center; font-variant-numeric: tabular-nums; }
+  .diagram-box pre.error { color: var(--bad); white-space: pre-wrap; font-size: 0.85rem; }
+  details { margin: 10px 0; font-size: 0.85rem; }
+  details pre { background: var(--panel); border: 1px solid var(--rule); padding: 12px; overflow: auto; max-height: 420px; }
+  #render-report { font-weight: 700; }
+  @media (max-width: 700px) { body { font-size: 17px; } nav ol { columns: 1; } main { padding: 20px 16px 60px; } }
+  @media print { .toolbar, details, nav { display: none; } .diagram-box { max-height: none; overflow: visible; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Rapido Chennai — UML Class Diagram</h1>
+  <p class="subtitle">Generated from the actual Python code in <code>ridehailing/</code> by reading every class.
+     Every member name, visibility and abstract/static marker was machine-checked against the code.
+     <span id="render-report">Rendering diagrams…</span></p>
+
+  <nav class="panel" aria-label="Diagrams">
+    <b>Diagrams on this page</b>
+    <ol>
+      <li><a href="#legend">Legend: arrows and notation</a></li>
+      <li><a href="#diagram-a">(a) Users and vehicles</a></li>
+<li><a href="#diagram-b">(b) Ride and payments</a></li>
+<li><a href="#diagram-c">(c) Services and notifications</a></li>
+<li><a href="#diagram-d">(d) CLI layer</a></li>
+<li><a href="#diagram-e">(e) Overview — class names and relationships only</a></li>
+    </ol>
+  </nav>
+
+  <section id="legend">
+    <h2>Legend</h2>
+    <h3>Relationship arrows</h3>
+    <table>
+      <thead><tr><th>Arrow</th><th>Name</th><th>Meaning</th><th>Example in this project</th><th>Mermaid</th></tr></thead>
+      <tbody>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="inheritance arrow"><line x1="14" y1="20" x2="118" y2="20" stroke="#111" stroke-width="2.5"/><polygon points="118,9 140,20 118,31" fill="#fff" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Inheritance (generalisation)</b></td><td>IS-A. The child inherits and may override.</td><td>Captain ▷ User · CabPremium ▷ Cab ▷ Vehicle</td><td><code>Parent &lt;|-- Child</code></td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="realisation arrow"><line x1="14" y1="20" x2="118" y2="20" stroke="#111" stroke-width="2.5" stroke-dasharray="7 5"/><polygon points="118,9 140,20 118,31" fill="#fff" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Interface realisation</b></td><td>Implements an interface: the class provides the abstract methods.</td><td>UpiPayment ⇢▷ Payable</td><td><code>Interface &lt;|.. Impl</code></td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="composition arrow"><line x1="46" y1="20" x2="140" y2="20" stroke="#111" stroke-width="2.5"/><polygon points="14,20 30,11 46,20 30,29" fill="#111" stroke="#111" stroke-width="2"/></svg></td><td><b>Composition ◆</b></td><td>Owns the part: it is created by / lives and dies with the whole, not shared.</td><td>Captain ◆ Vehicle · Ride ◆ FareReceipt</td><td><code>Whole *-- Part</code></td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="aggregation arrow"><line x1="46" y1="20" x2="140" y2="20" stroke="#111" stroke-width="2.5"/><polygon points="14,20 30,11 46,20 30,29" fill="#fff" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Aggregation ◇</b></td><td>Has / refers to an object that exists independently and may be shared.</td><td>Ride ◇ Customer · Ride ◇ Captain</td><td><code>Whole o-- Part</code></td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="association arrow"><line x1="14" y1="20" x2="139" y2="20" stroke="#111" stroke-width="2.5"/><polyline points="124,10 140,20 124,30" fill="none" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Association</b></td><td>Knows about / keeps a reference to another object.</td><td>Ride → Payable · Captain → CaptainStatus</td><td><code>A --> B</code></td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="dependency arrow"><line x1="14" y1="20" x2="139" y2="20" stroke="#111" stroke-width="2.5" stroke-dasharray="7 5"/><polyline points="124,10 140,20 124,30" fill="none" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Dependency</b></td><td>Uses temporarily (parameter, return value, creates, raises); not stored.</td><td>FareService ⇢ FareReceipt (creates)</td><td><code>A ..> B</code></td></tr>
+      </tbody>
+    </table>
+    <p>Every arrow in the diagrams is labelled with the OOP concept it shows, e.g. <i>inheritance – multilevel</i> or
+       <i>composition – HAS-A</i>. Numbers at the ends are multiplicities: <code>1</code> exactly one,
+       <code>0..1</code> optional, <code>0..*</code> any number.</p>
+
+    <p>Each diagram opens at <b>actual size</b> (18px text) and scrolls sideways. Use <b>−</b> / <b>+</b> to zoom and
+       <b>Fit to width</b> to see a whole diagram at once.</p>
+
+    <h3>Member notation</h3>
+    <table>
+      <thead><tr><th>Symbol</th><th>Meaning</th><th>Python in this project</th></tr></thead>
+      <tbody>
+        <tr><td><code>+name</code></td><td>public</td><td>no underscore, e.g. <code>book_ride()</code></td></tr>
+        <tr><td><code>#_name</code></td><td>protected</td><td>one underscore (a convention: "internal, subclasses may use"), e.g. <code>_location</code></td></tr>
+        <tr><td><code>-__name</code></td><td>private</td><td>two underscores: name-mangled, e.g. <code>Ride.__otp</code> is stored as <code>_Ride__otp</code></td></tr>
+        <tr><td><i>italic</i> <code>name()*</code></td><td>abstract member</td><td><code>@abstractmethod</code>; a subclass must override it</td></tr>
+        <tr><td><u>underlined</u> <code>name$</code></td><td>class-level (static)</td><td>class attribute, <code>@staticmethod</code> or <code>@classmethod</code></td></tr>
+        <tr><td><code>name() Type</code></td><td>read-only property</td><td><code>@property</code> getters are shown as methods; none of them has a setter</td></tr>
+        <tr><td><code>Optional~T~</code>, <code>list~T~</code></td><td>generic types</td><td><code>T | None</code>, <code>list[T]</code></td></tr>
+        <tr><td><code>ClassName(…)</code></td><td>constructor</td><td><code>__init__</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Class kinds (box colour)</h3>
+    <table>
+      <tbody>
+        <tr><td><span class="swatch" style="background:#FFF4D6;border-color:#B45309"></span>«abstract»</td><td><code>abc.ABC</code> with abstract members and some concrete code: User, Vehicle, Cab, Notifier, Menu. Instantiating one raises <code>TypeError</code>.</td></tr>
+        <tr><td><span class="swatch" style="background:#F3E8FF;border-color:#7E22CE"></span>«interface»</td><td>Python has no <code>interface</code> keyword. <b>Payable</b> is an ABC used as an interface: its two members are abstract, plus one default (<code>is_cash</code>).</td></tr>
+        <tr><td><span class="swatch" style="background:#E7F6EA;border-color:#2E7D32"></span>«enumeration»</td><td><code>enum.Enum</code> with extra data and methods: VehicleType, RideStatus, CaptainStatus, CancellationReason, PaymentStatus.</td></tr>
+        <tr><td><span class="swatch" style="background:#E6F0FB;border-color:#1D4ED8"></span>«value object»</td><td>Immutable, compared and hashed by value: Location, Money.</td></tr>
+        <tr><td><span class="swatch" style="background:#FDECEC;border-color:#B91C1C"></span>«exception»</td><td>CLI control-flow exceptions (GoBack, QuitRequested, EndOfInput).</td></tr>
+        <tr><td><span class="swatch" style="background:#F3F4F6;border-color:#6B7280;border-style:dashed"></span>reference</td><td>A class drawn in full in another diagram (the box says which).</td></tr>
+        <tr><td><span class="swatch" style="background:#ECECFF;border-color:#9370DB"></span>plain</td><td>An ordinary concrete class.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  
+<section class="diagram-section" id="diagram-a">
+  <h2>(a) Users and vehicles</h2>
+  <p class="intro">The two hierarchies of the model. <b>User</b> is abstract with two children (hierarchical inheritance). <b>Vehicle → Cab → CabEconomy / CabPremium</b> is multilevel inheritance. A <b>Captain</b> <i>owns</i> exactly one Vehicle (composition ◆). <b>Location</b> and <b>Money</b> are immutable value objects.</p>
+  <div class="toolbar">
+    <button type="button" data-zoom="-" data-box="a" aria-label="Zoom out">−</button>
+    <span class="zoom-label" id="zoom-a">100%</span>
+    <button type="button" data-zoom="+" data-box="a" aria-label="Zoom in">+</button>
+    <button type="button" data-zoom="1" data-box="a">Actual size</button>
+    <button type="button" data-zoom="fit" data-box="a">Fit to width</button>
+    <span class="status" id="status-a" data-diagram="a">Rendering…</span>
+    <span class="source-file">docs/diagrams/01_users_and_vehicles.mmd</span>
+  </div>
+  <div class="diagram-box" id="diagram-box-a"></div>
+  <script type="text/plain" class="mermaid-source" data-key="a">%% (a) Users and vehicles — generated from ridehailing/model/user/*, model/vehicle/*, model/common/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level: class attribute, @staticmethod or @classmethod (underlined).
+classDiagram
+    direction TB
+
+    class User {
+        <<abstract>>
+        ##95;id#95;counter: int$
+        ##95;PHONE#95;PATTERN: Pattern$
+        ##95;user#95;id: str
+        ##95;name: str
+        ##95;phone: str
+        ##95;location: Location
+        ##95;ratings: list~int~
+        +User(name: str, phone: str, location: Location)
+        +role() str*
+        +id#95;prefix() str*
+        +user#95;id() str
+        +name() str
+        +phone() str
+        +location() Location
+        +rating#95;count() int
+        +average#95;rating() Decimal
+        +receive#95;rating(score: int) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Customer {
+        +MAX#95;TOP#95;UP: Money$
+        +SELF#95;TRAVEL#95;SPEED#95;KMPH: int$
+        ##95;wallet#95;balance: Money
+        ##95;preferred#95;payment: Optional~Payable~
+        ##95;active#95;ride: Optional~Ride~
+        ##95;unpaid#95;ride: Optional~Ride~
+        ##95;ride#95;history: list~Ride~
+        ##95;pending#95;fees: list~PendingFee~
+        ##95;used#95;coupons: set~str~
+        ##95;location#95;since: datetime
+        +Customer(name: str, phone: str, location: Location, wallet#95;balance: Money, joined#95;at: datetime)
+        +role() str
+        +id#95;prefix() str
+        +wallet#95;balance() Money
+        +ride#95;history() tuple~Ride~
+        +last#95;completed#95;ride() Optional~Ride~
+        +pending#95;fee#95;total() Money
+        +top#95;up(amount: Money) None
+        +pay#95;from#95;wallet(amount: Money) None
+        +ensure#95;can#95;book() None
+        +begin#95;ride(ride: Ride) None
+        +finish#95;ride(ride: Ride, drop: Location, at: datetime) None
+        +ride#95;cancelled(ride: Ride) None
+        +relocate#95;to(place: Location, at: datetime) None
+        +add#95;pending#95;fee(fee: PendingFee) None
+        +take#95;pending#95;fees() list~PendingFee~
+        +mark#95;coupon#95;used(code: str) None
+    }
+
+    class PendingFee {
+        ##95;amount: Money
+        ##95;captain: Optional~Captain~
+        ##95;ride#95;id: str
+        +amount() Money
+        +captain() Optional~Captain~
+        +ride#95;id() str
+    }
+
+    class Captain {
+        +CASH#95;DUES#95;LIMIT: Money$
+        +RATING#95;FLAG#95;THRESHOLD: Decimal$
+        +MIN#95;RATINGS#95;BEFORE#95;FLAG: int$
+        ##95;vehicle: Vehicle
+        ##95;status: CaptainStatus
+        ##95;current#95;ride: Optional~Ride~
+        ##95;pending#95;offer: Optional~Ride~
+        ##95;dues#95;owed: Money
+        ##95;free#95;since: Optional~datetime~
+        ##95;offers#95;received: int
+        ##95;offers#95;accepted: int
+        ##95;cancellation#95;count: int
+        +Captain(name: str, phone: str, home#95;location: Location, vehicle: Vehicle, opening#95;dues: Optional~Money~, past#95;ratings: list~int~)
+        +role() str
+        +id#95;prefix() str
+        +vehicle() Vehicle
+        +status() CaptainStatus
+        +is#95;available() bool
+        +accepts#95;cash#95;rides() bool
+        +acceptance#95;rate() Decimal
+        +is#95;flagged() bool
+        +verify#95;kyc() None
+        +go#95;online() None
+        +go#95;offline() None
+        +respond#95;to#95;offer(ride: Ride) bool
+        +receive#95;offer(ride: Ride) None
+        +withdraw#95;offer() Ride
+        +start#95;assignment(ride: Ride, at: datetime) None
+        +arrive#95;at(pickup: Location) None
+        +finish#95;ride(drop: Location, at: datetime) None
+        +release#95;after#95;cancellation(at: datetime, cancelled#95;by#95;captain: bool) None
+        +add#95;dues(amount: Money) None
+        +settle#95;dues() Money
+        ##95;release(at: datetime) None
+    }
+
+    class CaptainStatus {
+        <<enumeration>>
+        KYC_PENDING
+        OFFLINE
+        ONLINE
+        ON_RIDE
+        +label: str
+        +is#95;working() bool
+    }
+
+    class Vehicle {
+        <<abstract>>
+        ##95;PLATE#95;PATTERN: Pattern$
+        ##95;registration#95;number: str
+        ##95;model#95;name: str
+        ##95;colour: str
+        +Vehicle(registration#95;number: str, model#95;name: str, colour: str)
+        +registration#95;number() str
+        +model#95;name() str
+        +vehicle#95;type() VehicleType*
+        +base#95;fare() Money*
+        +per#95;km#95;rate() Money*
+        +per#95;minute#95;rate() Money*
+        +minimum#95;fare() Money*
+        +seat#95;capacity() int*
+        +average#95;speed#95;kmph(is#95;peak: bool) int*
+        +distance#95;charge(distance#95;km: Decimal) Money
+        +time#95;charge(minutes: int) Money
+        +calculate#95;base#95;fare(distance#95;km: Decimal, minutes: int) Money
+        +can#95;carry(passengers: int) bool
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Bike {
+        ##95;BASE#95;FARE: Money$
+        ##95;PER#95;KM: Money$
+        ##95;PER#95;MINUTE: Money$
+        ##95;MINIMUM#95;FARE: Money$
+        +vehicle#95;type() VehicleType
+        +base#95;fare() Money
+        +per#95;km#95;rate() Money
+        +per#95;minute#95;rate() Money
+        +minimum#95;fare() Money
+        +seat#95;capacity() int
+        +average#95;speed#95;kmph(is#95;peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class Auto {
+        ##95;BASE#95;FARE: Money$
+        ##95;PER#95;KM: Money$
+        ##95;PER#95;MINUTE: Money$
+        ##95;MINIMUM#95;FARE: Money$
+        +vehicle#95;type() VehicleType
+        +base#95;fare() Money
+        +per#95;km#95;rate() Money
+        +per#95;minute#95;rate() Money
+        +minimum#95;fare() Money
+        +seat#95;capacity() int
+        +average#95;speed#95;kmph(is#95;peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class Cab {
+        <<abstract>>
+        ##95;air#95;conditioned: bool
+        +is#95;air#95;conditioned() bool
+        +luggage#95;bags() int*
+        +average#95;speed#95;kmph(is#95;peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class CabEconomy {
+        ##95;BASE#95;FARE: Money$
+        ##95;PER#95;KM: Money$
+        ##95;PER#95;MINUTE: Money$
+        ##95;MINIMUM#95;FARE: Money$
+        +vehicle#95;type() VehicleType
+        +base#95;fare() Money
+        +per#95;km#95;rate() Money
+        +per#95;minute#95;rate() Money
+        +minimum#95;fare() Money
+        +seat#95;capacity() int
+        +luggage#95;bags() int
+    }
+
+    class CabPremium {
+        ##95;BASE#95;FARE: Money$
+        ##95;PER#95;KM: Money$
+        ##95;PER#95;MINUTE: Money$
+        ##95;MINIMUM#95;FARE: Money$
+        +vehicle#95;type() VehicleType
+        +base#95;fare() Money
+        +per#95;km#95;rate() Money
+        +per#95;minute#95;rate() Money
+        +minimum#95;fare() Money
+        +seat#95;capacity() int
+        +luggage#95;bags() int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class VehicleType {
+        <<enumeration>>
+        BIKE
+        AUTO
+        CAB_ECONOMY
+        CAB_PREMIUM
+        +display#95;name: str
+        +seats: int
+        ##95;cancellation#95;fee#95;rupees: str
+        +cancellation#95;fee() Money
+        +can#95;carry(passengers: int) bool
+        +is#95;cab() bool
+    }
+
+    class Location {
+        <<value object>>
+        +EARTH#95;RADIUS#95;KM: float$
+        +ROAD#95;FACTOR: float$
+        ##95;name: str
+        ##95;latitude: float
+        ##95;longitude: float
+        +from#95;place#95;name(place#95;name: str) Location$
+        +haversine#95;km(lat1: float, lon1: float, lat2: float, lon2: float) float$
+        +name() str
+        +distance#95;to(other: Location) float
+        +road#95;distance#95;to(other: Location) float
+        +is#95;within#95;km(other: Location, radius#95;km: float) bool
+        +point#95;towards(destination: Location, fraction: float, name: str) Location
+        +#95;#95;setattr#95;#95;(name: str, value: object) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Money {
+        <<value object>>
+        +CURRENCY#95;SYMBOL: str$
+        ##95;PAISA: Decimal$
+        ##95;amount: Decimal
+        +Money(amount: Decimal)
+        +zero() Money$
+        +total(amounts: list~Money~) Money$
+        +amount() Decimal
+        +#95;#95;add#95;#95;(other: Money) Money
+        +#95;#95;sub#95;#95;(other: Money) Money
+        +#95;#95;mul#95;#95;(factor: Decimal) Money
+        +#95;#95;lt#95;#95;(other: Money) bool
+        +#95;#95;le#95;#95;(other: Money) bool
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+        +#95;#95;setattr#95;#95;(name: str, value: object) None
+        +percent(rate: Decimal) Money
+    }
+
+    User <|-- Customer : inheritance – hierarchical
+    User <|-- Captain : inheritance – hierarchical
+    Vehicle <|-- Bike : inheritance – hierarchical
+    Vehicle <|-- Auto : inheritance – hierarchical
+    Vehicle <|-- Cab : inheritance – multilevel (level 2)
+    Cab <|-- CabEconomy : inheritance – multilevel (level 3)
+    Cab <|-- CabPremium : inheritance – multilevel (level 3)
+
+    Captain "1" *-- "1" Vehicle : composition – HAS-A, created with the captain
+    Customer "1" *-- "0..*" PendingFee : composition – owns its unpaid fees
+    PendingFee "0..*" --> "0..1" Captain : association – fee is paid to
+    Captain "1" --> "1" CaptainStatus : association – enum state
+    User "0..*" --> "1" Location : association – is currently at
+    Customer "1" --> "1" Money : association – wallet (value object)
+    Vehicle ..> VehicleType : dependency – polymorphic vehicle_type()
+    Vehicle ..> Money : dependency – rates are Money
+
+    note for Vehicle "calculate_base_fare() is written ONCE here.<br>It calls the abstract rates, so a Bike and a CabPremium<br>give different fares: polymorphism."
+    note for Money "Immutable: #95;#95;setattr#95;#95; always raises.<br>Operator overloading: fare + gst, rate * km."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Location fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+    style Money fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+</script>
+  <details><summary>Mermaid source (01_users_and_vehicles.mmd)</summary><pre>%% (a) Users and vehicles — generated from ridehailing/model/user/*, model/vehicle/*, model/common/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level: class attribute, @staticmethod or @classmethod (underlined).
+classDiagram
+    direction TB
+
+    class User {
+        &lt;&lt;abstract&gt;&gt;
+        #_id_counter: int$
+        #_PHONE_PATTERN: Pattern$
+        #_user_id: str
+        #_name: str
+        #_phone: str
+        #_location: Location
+        #_ratings: list~int~
+        +User(name: str, phone: str, location: Location)
+        +role() str*
+        +id_prefix() str*
+        +user_id() str
+        +name() str
+        +phone() str
+        +location() Location
+        +rating_count() int
+        +average_rating() Decimal
+        +receive_rating(score: int) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Customer {
+        +MAX_TOP_UP: Money$
+        +SELF_TRAVEL_SPEED_KMPH: int$
+        #_wallet_balance: Money
+        #_preferred_payment: Optional~Payable~
+        #_active_ride: Optional~Ride~
+        #_unpaid_ride: Optional~Ride~
+        #_ride_history: list~Ride~
+        #_pending_fees: list~PendingFee~
+        #_used_coupons: set~str~
+        #_location_since: datetime
+        +Customer(name: str, phone: str, location: Location, wallet_balance: Money, joined_at: datetime)
+        +role() str
+        +id_prefix() str
+        +wallet_balance() Money
+        +ride_history() tuple~Ride~
+        +last_completed_ride() Optional~Ride~
+        +pending_fee_total() Money
+        +top_up(amount: Money) None
+        +pay_from_wallet(amount: Money) None
+        +ensure_can_book() None
+        +begin_ride(ride: Ride) None
+        +finish_ride(ride: Ride, drop: Location, at: datetime) None
+        +ride_cancelled(ride: Ride) None
+        +relocate_to(place: Location, at: datetime) None
+        +add_pending_fee(fee: PendingFee) None
+        +take_pending_fees() list~PendingFee~
+        +mark_coupon_used(code: str) None
+    }
+
+    class PendingFee {
+        #_amount: Money
+        #_captain: Optional~Captain~
+        #_ride_id: str
+        +amount() Money
+        +captain() Optional~Captain~
+        +ride_id() str
+    }
+
+    class Captain {
+        +CASH_DUES_LIMIT: Money$
+        +RATING_FLAG_THRESHOLD: Decimal$
+        +MIN_RATINGS_BEFORE_FLAG: int$
+        #_vehicle: Vehicle
+        #_status: CaptainStatus
+        #_current_ride: Optional~Ride~
+        #_pending_offer: Optional~Ride~
+        #_dues_owed: Money
+        #_free_since: Optional~datetime~
+        #_offers_received: int
+        #_offers_accepted: int
+        #_cancellation_count: int
+        +Captain(name: str, phone: str, home_location: Location, vehicle: Vehicle, opening_dues: Optional~Money~, past_ratings: list~int~)
+        +role() str
+        +id_prefix() str
+        +vehicle() Vehicle
+        +status() CaptainStatus
+        +is_available() bool
+        +accepts_cash_rides() bool
+        +acceptance_rate() Decimal
+        +is_flagged() bool
+        +verify_kyc() None
+        +go_online() None
+        +go_offline() None
+        +respond_to_offer(ride: Ride) bool
+        +receive_offer(ride: Ride) None
+        +withdraw_offer() Ride
+        +start_assignment(ride: Ride, at: datetime) None
+        +arrive_at(pickup: Location) None
+        +finish_ride(drop: Location, at: datetime) None
+        +release_after_cancellation(at: datetime, cancelled_by_captain: bool) None
+        +add_dues(amount: Money) None
+        +settle_dues() Money
+        #_release(at: datetime) None
+    }
+
+    class CaptainStatus {
+        &lt;&lt;enumeration&gt;&gt;
+        KYC_PENDING
+        OFFLINE
+        ONLINE
+        ON_RIDE
+        +label: str
+        +is_working() bool
+    }
+
+    class Vehicle {
+        &lt;&lt;abstract&gt;&gt;
+        #_PLATE_PATTERN: Pattern$
+        #_registration_number: str
+        #_model_name: str
+        #_colour: str
+        +Vehicle(registration_number: str, model_name: str, colour: str)
+        +registration_number() str
+        +model_name() str
+        +vehicle_type() VehicleType*
+        +base_fare() Money*
+        +per_km_rate() Money*
+        +per_minute_rate() Money*
+        +minimum_fare() Money*
+        +seat_capacity() int*
+        +average_speed_kmph(is_peak: bool) int*
+        +distance_charge(distance_km: Decimal) Money
+        +time_charge(minutes: int) Money
+        +calculate_base_fare(distance_km: Decimal, minutes: int) Money
+        +can_carry(passengers: int) bool
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Bike {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +average_speed_kmph(is_peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class Auto {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +average_speed_kmph(is_peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class Cab {
+        &lt;&lt;abstract&gt;&gt;
+        #_air_conditioned: bool
+        +is_air_conditioned() bool
+        +luggage_bags() int*
+        +average_speed_kmph(is_peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class CabEconomy {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +luggage_bags() int
+    }
+
+    class CabPremium {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +luggage_bags() int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class VehicleType {
+        &lt;&lt;enumeration&gt;&gt;
+        BIKE
+        AUTO
+        CAB_ECONOMY
+        CAB_PREMIUM
+        +display_name: str
+        +seats: int
+        #_cancellation_fee_rupees: str
+        +cancellation_fee() Money
+        +can_carry(passengers: int) bool
+        +is_cab() bool
+    }
+
+    class Location {
+        &lt;&lt;value object&gt;&gt;
+        +EARTH_RADIUS_KM: float$
+        +ROAD_FACTOR: float$
+        #_name: str
+        #_latitude: float
+        #_longitude: float
+        +from_place_name(place_name: str) Location$
+        +haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) float$
+        +name() str
+        +distance_to(other: Location) float
+        +road_distance_to(other: Location) float
+        +is_within_km(other: Location, radius_km: float) bool
+        +point_towards(destination: Location, fraction: float, name: str) Location
+        +#95;#95;setattr#95;#95;(name: str, value: object) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Money {
+        &lt;&lt;value object&gt;&gt;
+        +CURRENCY_SYMBOL: str$
+        #_PAISA: Decimal$
+        #_amount: Decimal
+        +Money(amount: Decimal)
+        +zero() Money$
+        +total(amounts: list~Money~) Money$
+        +amount() Decimal
+        +#95;#95;add#95;#95;(other: Money) Money
+        +#95;#95;sub#95;#95;(other: Money) Money
+        +#95;#95;mul#95;#95;(factor: Decimal) Money
+        +#95;#95;lt#95;#95;(other: Money) bool
+        +#95;#95;le#95;#95;(other: Money) bool
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+        +#95;#95;setattr#95;#95;(name: str, value: object) None
+        +percent(rate: Decimal) Money
+    }
+
+    User &lt;|-- Customer : inheritance – hierarchical
+    User &lt;|-- Captain : inheritance – hierarchical
+    Vehicle &lt;|-- Bike : inheritance – hierarchical
+    Vehicle &lt;|-- Auto : inheritance – hierarchical
+    Vehicle &lt;|-- Cab : inheritance – multilevel (level 2)
+    Cab &lt;|-- CabEconomy : inheritance – multilevel (level 3)
+    Cab &lt;|-- CabPremium : inheritance – multilevel (level 3)
+
+    Captain &quot;1&quot; *-- &quot;1&quot; Vehicle : composition – HAS-A, created with the captain
+    Customer &quot;1&quot; *-- &quot;0..*&quot; PendingFee : composition – owns its unpaid fees
+    PendingFee &quot;0..*&quot; --&gt; &quot;0..1&quot; Captain : association – fee is paid to
+    Captain &quot;1&quot; --&gt; &quot;1&quot; CaptainStatus : association – enum state
+    User &quot;0..*&quot; --&gt; &quot;1&quot; Location : association – is currently at
+    Customer &quot;1&quot; --&gt; &quot;1&quot; Money : association – wallet (value object)
+    Vehicle ..&gt; VehicleType : dependency – polymorphic vehicle_type()
+    Vehicle ..&gt; Money : dependency – rates are Money
+
+    note for Vehicle &quot;calculate_base_fare() is written ONCE here.&lt;br&gt;It calls the abstract rates, so a Bike and a CabPremium&lt;br&gt;give different fares: polymorphism.&quot;
+    note for Money &quot;Immutable: #95;#95;setattr#95;#95; always raises.&lt;br&gt;Operator overloading: fare + gst, rate * km.&quot;
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Location fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+    style Money fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+</pre></details>
+</section>
+
+<section class="diagram-section" id="diagram-b">
+  <h2>(b) Ride and payments</h2>
+  <p class="intro"><b>Ride</b> guards its own status and hides the OTP in the name-mangled <code>__otp</code> (the only <code>-</code> private member in the project). It <i>refers to</i> an existing Customer and Captain (aggregation ◇) and <i>owns</i> its request, estimate and receipt (composition ◆). <b>Payable</b> is an interface realised by UPI, Cash and Wallet (dashed arrows).</p>
+  <div class="toolbar">
+    <button type="button" data-zoom="-" data-box="b" aria-label="Zoom out">−</button>
+    <span class="zoom-label" id="zoom-b">100%</span>
+    <button type="button" data-zoom="+" data-box="b" aria-label="Zoom in">+</button>
+    <button type="button" data-zoom="1" data-box="b">Actual size</button>
+    <button type="button" data-zoom="fit" data-box="b">Fit to width</button>
+    <span class="status" id="status-b" data-diagram="b">Rendering…</span>
+    <span class="source-file">docs/diagrams/02_ride_and_payments.mmd</span>
+  </div>
+  <div class="diagram-box" id="diagram-box-b"></div>
+  <script type="text/plain" class="mermaid-source" data-key="b">%% (b) Ride and payments — generated from ridehailing/model/ride/*, model/payment/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class Ride {
+        ##95;next#95;number: int$
+        +MAX#95;OTP#95;ATTEMPTS: int$
+        +ARRIVAL#95;RADIUS#95;KM: float$
+        +FREE#95;WAITING#95;MINUTES: int$
+        ##95;ride#95;id: str
+        -#95;#95;otp: str
+        ##95;otp#95;attempts: int
+        ##95;status: RideStatus
+        ##95;request: RideRequest
+        ##95;estimate: FareEstimate
+        ##95;captain: Optional~Captain~
+        ##95;payment#95;method: Payable
+        ##95;payment#95;status: PaymentStatus
+        ##95;receipt: Optional~FareReceipt~
+        ##95;carried#95;fees: list~PendingFee~
+        ##95;route: list~Location~
+        ##95;timeline: list~tuple~
+        ##95;cancellation#95;reason: Optional~CancellationReason~
+        ##95;cancelled#95;by: Optional~User~
+        +Ride(request: RideRequest, otp: str, estimate: FareEstimate, payment#95;method: Payable, booked#95;at: datetime)
+        +ride#95;id() str
+        +status() RideStatus
+        +customer() Customer
+        +captain() Optional~Captain~
+        +pickup() Location
+        +drop() Location
+        +receipt() Optional~FareReceipt~
+        +is#95;paid() bool
+        +actual#95;distance#95;km() Decimal
+        +trip#95;minutes() int
+        +otp#95;for(user: User) str
+        +is#95;excluded(captain: Captain) bool
+        +record#95;offer(captain: Captain, distance#95;km: float, accepted: bool, at: datetime) None
+        +assign#95;captain(captain: Captain, eta#95;minutes: int, at: datetime) None
+        +release#95;captain(at: datetime) Captain
+        +mark#95;arrived(at: datetime) None
+        +start(entered#95;otp: str, at: datetime) None
+        +change#95;destination(change#95;point: Location, new#95;drop: Location, at: datetime) None
+        +end#95;early(stop#95;point: Location, at: datetime) None
+        +end#95;trip(at: datetime) None
+        +attach#95;receipt(receipt: FareReceipt, carried#95;fees: list~PendingFee~) None
+        +mark#95;payment#95;failed(reason: str, at: datetime) None
+        +complete(paid#95;with: Payable, payment#95;reference: str, at: datetime) None
+        +cancel(reason: CancellationReason, by: Optional~User~, at: datetime, fee: Optional~Money~) None
+        +rate#95;captain(score: int) None
+        +rate#95;customer(score: int) None
+        +timeline#95;text() str
+        ##95;transition(new#95;status: RideStatus, at: datetime, note: str) None
+        ##95;require#95;status(action: str, allowed: RideStatus...) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class RideRequest {
+        ##95;customer: Customer
+        ##95;pickup: Location
+        ##95;drop: Location
+        ##95;vehicle#95;type: VehicleType
+        ##95;passengers: int
+        ##95;requested#95;at: datetime
+        ##95;coupon#95;code: Optional~str~
+        +customer() Customer
+        +pickup() Location
+        +drop() Location
+        +vehicle#95;type() VehicleType
+        +passengers() int
+        +coupon#95;code() Optional~str~
+    }
+
+    class FareEstimate {
+        ##95;vehicle#95;type: VehicleType
+        ##95;distance#95;km: Decimal
+        ##95;trip#95;minutes: int
+        ##95;surge#95;multiplier: Decimal
+        ##95;fare: Money
+        ##95;nearest#95;captain#95;eta: Optional~int~
+        +fare() Money
+        +surge#95;multiplier() Decimal
+        +nearest#95;captain#95;eta() Optional~int~
+        +is#95;available() bool
+    }
+
+    class FareReceipt {
+        +GST#95;RATE: Decimal$
+        ##95;ride#95;id: str
+        ##95;base#95;fare: Money
+        ##95;distance#95;charge: Money
+        ##95;time#95;charge: Money
+        ##95;minimum#95;fare#95;top#95;up: Money
+        ##95;waiting#95;charge: Money
+        ##95;surge#95;charge: Money
+        ##95;night#95;charge: Money
+        ##95;previous#95;cancellation#95;fee: Money
+        ##95;coupon#95;discount: Money
+        ##95;estimated#95;total: Optional~Money~
+        ##95;fare#95;before#95;gst: Money
+        ##95;gst: Money
+        ##95;total: Money
+        +FareReceipt(ride#95;id: str, vehicle#95;type: VehicleType, base#95;fare: Money, ... keyword-only)
+        +fare#95;before#95;gst() Money
+        +ride#95;fare#95;before#95;gst() Money
+        +gst() Money
+        +total() Money
+        +#95;#95;str#95;#95;() str
+    }
+
+    class RideStatus {
+        <<enumeration>>
+        REQUESTED
+        CAPTAIN_ASSIGNED
+        CAPTAIN_ARRIVED
+        IN_PROGRESS
+        PAYMENT_PENDING
+        COMPLETED
+        CANCELLED
+        +label: str
+        +is#95;active() bool
+        +is#95;cancellable() bool
+        +is#95;final() bool
+    }
+
+    class CancellationReason {
+        <<enumeration>>
+        CUSTOMER_CANCELLED
+        NO_SHOW
+        OTP_FAILED
+        NO_CAPTAIN_AVAILABLE
+        +description: str
+        +fee#95;may#95;apply: bool
+    }
+
+    class PaymentStatus {
+        <<enumeration>>
+        NOT_DUE
+        FAILED
+        PAID
+        +label: str
+    }
+
+    class Payable {
+        <<interface>>
+        +method#95;name() str*
+        +pay(amount: Money) str*
+        +is#95;cash() bool
+        +#95;#95;str#95;#95;() str
+    }
+
+    class UpiPayment {
+        ##95;reference#95;counter: int$
+        ##95;upi#95;id: str
+        ##95;rng: Random
+        ##95;failure#95;rate: float
+        +UpiPayment(upi#95;id: str, rng: Random, failure#95;rate: float)
+        +upi#95;id() str
+        +method#95;name() str
+        +pay(amount: Money) str
+    }
+
+    class CashPayment {
+        ##95;reference#95;counter: int$
+        +method#95;name() str
+        +is#95;cash() bool
+        +pay(amount: Money) str
+    }
+
+    class WalletPayment {
+        ##95;reference#95;counter: int$
+        ##95;customer: Customer
+        +WalletPayment(customer: Customer)
+        +method#95;name() str
+        +pay(amount: Money) str
+    }
+
+    class Customer {
+        see diagram (a)
+    }
+    class Captain {
+        see diagram (a)
+    }
+    class User {
+        <<abstract>>
+        see diagram (a)
+    }
+    class PendingFee {
+        see diagram (a)
+    }
+
+    Ride "1" *-- "1" RideRequest : composition – frozen booking details
+    Ride "1" *-- "1" FareEstimate : composition – price shown before confirming
+    Ride "1" *-- "0..1" FareReceipt : composition – the itemised bill
+    Ride "0..*" o-- "1" Customer : aggregation – existing customer (via request.customer)
+    Ride "0..*" o-- "0..1" Captain : aggregation – existing captain, assigned later
+    Ride "0..*" --> "1" Payable : association – chosen payment method
+    Ride "1" --> "0..*" PendingFee : association – old fees billed on this ride
+    Ride --> RideStatus : association – guarded state (no setter)
+    Ride --> PaymentStatus : association
+    Ride --> CancellationReason : association
+    Ride ..> User : dependency – otp_for(user), cancelled_by
+
+    Payable <|.. UpiPayment : realisation – implements pay()
+    Payable <|.. CashPayment : realisation – implements pay(), overrides is_cash
+    Payable <|.. WalletPayment : realisation – implements pay()
+    WalletPayment "0..*" --> "1" Customer : association – pays from this wallet
+
+    note for Ride "#95;#95;otp is name-mangled to _Ride#95;#95;otp:<br>ride.#95;#95;otp from outside raises AttributeError.<br>status changes only via assign_captain(), start(otp), cancel()..."
+    note for Payable "Python has no 'interface' keyword:<br>Payable is an ABC used as an interface.<br>PaymentService just calls payable.pay(amount)."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:2px
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style User fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style PendingFee fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+</script>
+  <details><summary>Mermaid source (02_ride_and_payments.mmd)</summary><pre>%% (b) Ride and payments — generated from ridehailing/model/ride/*, model/payment/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class Ride {
+        #_next_number: int$
+        +MAX_OTP_ATTEMPTS: int$
+        +ARRIVAL_RADIUS_KM: float$
+        +FREE_WAITING_MINUTES: int$
+        #_ride_id: str
+        -__otp: str
+        #_otp_attempts: int
+        #_status: RideStatus
+        #_request: RideRequest
+        #_estimate: FareEstimate
+        #_captain: Optional~Captain~
+        #_payment_method: Payable
+        #_payment_status: PaymentStatus
+        #_receipt: Optional~FareReceipt~
+        #_carried_fees: list~PendingFee~
+        #_route: list~Location~
+        #_timeline: list~tuple~
+        #_cancellation_reason: Optional~CancellationReason~
+        #_cancelled_by: Optional~User~
+        +Ride(request: RideRequest, otp: str, estimate: FareEstimate, payment_method: Payable, booked_at: datetime)
+        +ride_id() str
+        +status() RideStatus
+        +customer() Customer
+        +captain() Optional~Captain~
+        +pickup() Location
+        +drop() Location
+        +receipt() Optional~FareReceipt~
+        +is_paid() bool
+        +actual_distance_km() Decimal
+        +trip_minutes() int
+        +otp_for(user: User) str
+        +is_excluded(captain: Captain) bool
+        +record_offer(captain: Captain, distance_km: float, accepted: bool, at: datetime) None
+        +assign_captain(captain: Captain, eta_minutes: int, at: datetime) None
+        +release_captain(at: datetime) Captain
+        +mark_arrived(at: datetime) None
+        +start(entered_otp: str, at: datetime) None
+        +change_destination(change_point: Location, new_drop: Location, at: datetime) None
+        +end_early(stop_point: Location, at: datetime) None
+        +end_trip(at: datetime) None
+        +attach_receipt(receipt: FareReceipt, carried_fees: list~PendingFee~) None
+        +mark_payment_failed(reason: str, at: datetime) None
+        +complete(paid_with: Payable, payment_reference: str, at: datetime) None
+        +cancel(reason: CancellationReason, by: Optional~User~, at: datetime, fee: Optional~Money~) None
+        +rate_captain(score: int) None
+        +rate_customer(score: int) None
+        +timeline_text() str
+        #_transition(new_status: RideStatus, at: datetime, note: str) None
+        #_require_status(action: str, allowed: RideStatus...) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class RideRequest {
+        #_customer: Customer
+        #_pickup: Location
+        #_drop: Location
+        #_vehicle_type: VehicleType
+        #_passengers: int
+        #_requested_at: datetime
+        #_coupon_code: Optional~str~
+        +customer() Customer
+        +pickup() Location
+        +drop() Location
+        +vehicle_type() VehicleType
+        +passengers() int
+        +coupon_code() Optional~str~
+    }
+
+    class FareEstimate {
+        #_vehicle_type: VehicleType
+        #_distance_km: Decimal
+        #_trip_minutes: int
+        #_surge_multiplier: Decimal
+        #_fare: Money
+        #_nearest_captain_eta: Optional~int~
+        +fare() Money
+        +surge_multiplier() Decimal
+        +nearest_captain_eta() Optional~int~
+        +is_available() bool
+    }
+
+    class FareReceipt {
+        +GST_RATE: Decimal$
+        #_ride_id: str
+        #_base_fare: Money
+        #_distance_charge: Money
+        #_time_charge: Money
+        #_minimum_fare_top_up: Money
+        #_waiting_charge: Money
+        #_surge_charge: Money
+        #_night_charge: Money
+        #_previous_cancellation_fee: Money
+        #_coupon_discount: Money
+        #_estimated_total: Optional~Money~
+        #_fare_before_gst: Money
+        #_gst: Money
+        #_total: Money
+        +FareReceipt(ride_id: str, vehicle_type: VehicleType, base_fare: Money, ... keyword-only)
+        +fare_before_gst() Money
+        +ride_fare_before_gst() Money
+        +gst() Money
+        +total() Money
+        +#95;#95;str#95;#95;() str
+    }
+
+    class RideStatus {
+        &lt;&lt;enumeration&gt;&gt;
+        REQUESTED
+        CAPTAIN_ASSIGNED
+        CAPTAIN_ARRIVED
+        IN_PROGRESS
+        PAYMENT_PENDING
+        COMPLETED
+        CANCELLED
+        +label: str
+        +is_active() bool
+        +is_cancellable() bool
+        +is_final() bool
+    }
+
+    class CancellationReason {
+        &lt;&lt;enumeration&gt;&gt;
+        CUSTOMER_CANCELLED
+        NO_SHOW
+        OTP_FAILED
+        NO_CAPTAIN_AVAILABLE
+        +description: str
+        +fee_may_apply: bool
+    }
+
+    class PaymentStatus {
+        &lt;&lt;enumeration&gt;&gt;
+        NOT_DUE
+        FAILED
+        PAID
+        +label: str
+    }
+
+    class Payable {
+        &lt;&lt;interface&gt;&gt;
+        +method_name() str*
+        +pay(amount: Money) str*
+        +is_cash() bool
+        +#95;#95;str#95;#95;() str
+    }
+
+    class UpiPayment {
+        #_reference_counter: int$
+        #_upi_id: str
+        #_rng: Random
+        #_failure_rate: float
+        +UpiPayment(upi_id: str, rng: Random, failure_rate: float)
+        +upi_id() str
+        +method_name() str
+        +pay(amount: Money) str
+    }
+
+    class CashPayment {
+        #_reference_counter: int$
+        +method_name() str
+        +is_cash() bool
+        +pay(amount: Money) str
+    }
+
+    class WalletPayment {
+        #_reference_counter: int$
+        #_customer: Customer
+        +WalletPayment(customer: Customer)
+        +method_name() str
+        +pay(amount: Money) str
+    }
+
+    class Customer {
+        see diagram (a)
+    }
+    class Captain {
+        see diagram (a)
+    }
+    class User {
+        &lt;&lt;abstract&gt;&gt;
+        see diagram (a)
+    }
+    class PendingFee {
+        see diagram (a)
+    }
+
+    Ride &quot;1&quot; *-- &quot;1&quot; RideRequest : composition – frozen booking details
+    Ride &quot;1&quot; *-- &quot;1&quot; FareEstimate : composition – price shown before confirming
+    Ride &quot;1&quot; *-- &quot;0..1&quot; FareReceipt : composition – the itemised bill
+    Ride &quot;0..*&quot; o-- &quot;1&quot; Customer : aggregation – existing customer (via request.customer)
+    Ride &quot;0..*&quot; o-- &quot;0..1&quot; Captain : aggregation – existing captain, assigned later
+    Ride &quot;0..*&quot; --&gt; &quot;1&quot; Payable : association – chosen payment method
+    Ride &quot;1&quot; --&gt; &quot;0..*&quot; PendingFee : association – old fees billed on this ride
+    Ride --&gt; RideStatus : association – guarded state (no setter)
+    Ride --&gt; PaymentStatus : association
+    Ride --&gt; CancellationReason : association
+    Ride ..&gt; User : dependency – otp_for(user), cancelled_by
+
+    Payable &lt;|.. UpiPayment : realisation – implements pay()
+    Payable &lt;|.. CashPayment : realisation – implements pay(), overrides is_cash
+    Payable &lt;|.. WalletPayment : realisation – implements pay()
+    WalletPayment &quot;0..*&quot; --&gt; &quot;1&quot; Customer : association – pays from this wallet
+
+    note for Ride &quot;#95;#95;otp is name-mangled to _Ride#95;#95;otp:&lt;br&gt;ride.#95;#95;otp from outside raises AttributeError.&lt;br&gt;status changes only via assign_captain(), start(otp), cancel()...&quot;
+    note for Payable &quot;Python has no &#x27;interface&#x27; keyword:&lt;br&gt;Payable is an ABC used as an interface.&lt;br&gt;PaymentService just calls payable.pay(amount).&quot;
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:2px
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style User fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style PendingFee fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+</pre></details>
+</section>
+
+<section class="diagram-section" id="diagram-c">
+  <h2>(c) Services and notifications</h2>
+  <p class="intro"><b>ChennaiRideApp</b> is the composition root: it creates every service. Services receive the services they need through their constructors, which is why those links are aggregation ◇ (shared). <b>RideService</b> holds a <code>list[Notifier]</code> and calls <code>notify()</code> on each, which is polymorphism.</p>
+  <div class="toolbar">
+    <button type="button" data-zoom="-" data-box="c" aria-label="Zoom out">−</button>
+    <span class="zoom-label" id="zoom-c">100%</span>
+    <button type="button" data-zoom="+" data-box="c" aria-label="Zoom in">+</button>
+    <button type="button" data-zoom="1" data-box="c">Actual size</button>
+    <button type="button" data-zoom="fit" data-box="c">Fit to width</button>
+    <span class="status" id="status-c" data-diagram="c">Rendering…</span>
+    <span class="source-file">docs/diagrams/03_services_and_notifications.mmd</span>
+  </div>
+  <div class="diagram-box" id="diagram-box-c"></div>
+  <script type="text/plain" class="mermaid-source" data-key="c">%% (c) Services and notifications — generated from ridehailing/service/*, notification/*, time/*, app/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class ChennaiRideApp {
+        +clock: SimulatedClock
+        +sms: SmsNotifier
+        +push: PushNotifier
+        +captain#95;service: CaptainService
+        +customer#95;service: CustomerService
+        +fare#95;service: FareService
+        +matching#95;service: MatchingService
+        +earnings#95;service: EarningsService
+        +payment#95;service: PaymentService
+        +rating#95;service: RatingService
+        +ride#95;service: RideService
+        +upi#95;accounts: dict~Customer, UpiPayment~
+        +run() None
+        +bring#95;captains#95;online() list~tuple~
+        +print#95;reconciliation() None
+        +wallets#95;balance() bool
+    }
+
+    class RideService {
+        +MIN#95;TRIP#95;KM: float$
+        +MAX#95;TRIP#95;KM: Decimal$
+        +CANCELLATION#95;GRACE: timedelta$
+        +NO#95;SHOW#95;WAIT#95;MINUTES: int$
+        ##95;clock: SimulatedClock
+        ##95;service#95;area: ServiceArea
+        ##95;fares: FareService
+        ##95;matching: MatchingService
+        ##95;payments: PaymentService
+        ##95;notifiers: list~Notifier~
+        ##95;otp#95;rng: Random
+        ##95;rides: list~Ride~
+        ##95;manual#95;offers: bool
+        +fare#95;estimates(customer: Customer, drop: Location, pickup: Optional~Location~) list~FareEstimate~
+        +book#95;ride(customer: Customer, drop: Location, vehicle#95;type: VehicleType, passengers: int = 1, payment#95;method: Optional~Payable~ = None, coupon#95;code: Optional~str~ = None) Ride
+        +captain#95;arrives(ride: Ride) None
+        +start#95;ride(ride: Ride, entered#95;otp: str) None
+        +change#95;destination(ride: Ride, change#95;point: Location, new#95;drop: Location) None
+        +end#95;trip#95;early(ride: Ride, stop#95;point: Location, payment#95;method: Optional~Payable~) FareReceipt
+        +complete#95;trip(ride: Ride, payment#95;method: Optional~Payable~) FareReceipt
+        +pay#95;for#95;ride(ride: Ride, payable: Payable) str
+        +cancel#95;by#95;customer(ride: Ride) Money
+        +cancel#95;by#95;captain(ride: Ride) Captain
+        +cancel#95;no#95;show(ride: Ride) Money
+        +set#95;manual#95;offers(enabled: bool) None
+        +accept#95;offer(captain: Captain) Ride
+        +reject#95;offer(captain: Captain) Optional~Captain~
+        +active#95;rides() list~Ride~
+        +position#95;now(ride: Ride) Location
+        +surge#95;at(place: Location, vehicle#95;type: VehicleType) Decimal
+        +cancellation#95;fee#95;if#95;cancelled#95;now(ride: Ride) Money
+        ##95;match(ride: Ride) Captain
+        ##95;assign(ride: Ride, captain: Captain) Captain
+        ##95;settle#95;trip(ride: Ride, payment#95;method: Optional~Payable~) FareReceipt
+        ##95;notify(user: User, message: str) None
+    }
+
+    class FareService {
+        +NIGHT#95;CHARGE#95;RATE: Decimal$
+        +WAITING#95;CHARGE#95;PER#95;MINUTE: Money$
+        +MAX#95;SURGE: Decimal$
+        +HOTSPOT#95;RADIUS#95;KM: float$
+        +COUPONS: dict$
+        ##95;rate#95;card: dict~VehicleType, Vehicle~
+        +rate#95;card#95;vehicle(vehicle#95;type: VehicleType) Vehicle
+        +road#95;km(start: Location, end: Location) Decimal$
+        +is#95;hotspot(location: Location) bool$
+        +travel#95;minutes(vehicle: Vehicle, start: Location, end: Location, at: datetime) int
+        +surge#95;multiplier(pickup: Location, open#95;requests: int, free#95;captains: int, at: datetime) Decimal
+        +validate#95;coupon(customer: Customer, code: Optional~str~) None
+        +estimate(pickup: Location, drop: Location, vehicle#95;type: VehicleType, surge: Decimal, at: datetime, nearest#95;captain#95;eta: Optional~int~) FareEstimate
+        +build#95;receipt(ride: Ride, previous#95;fee: Money, at: datetime) FareReceipt
+        ##95;price(vehicle: Vehicle, distance#95;km: Decimal, trip#95;minutes: int, ...) FareReceipt
+    }
+
+    class MatchingService {
+        +SEARCH#95;RADIUS#95;KM: float$
+        +MAX#95;REJECTIONS: int$
+        ##95;captain#95;service: CaptainService
+        ##95;fare#95;service: FareService
+        +ineligibility#95;reason(captain: Captain, ride: Ride, at: datetime) Optional~str~
+        +captains#95;near(place: Location, vehicle#95;type: Optional~VehicleType~, at: datetime) list~tuple~
+        +eligible#95;captains(ride: Ride, at: datetime) list~Captain~
+        +free#95;captains#95;near(pickup: Location, vehicle#95;type: VehicleType) list~Captain~
+        +offered#95;captains() list~Captain~
+        +eta#95;minutes(captain: Captain, pickup: Location, at: datetime) int
+        +nearest#95;eta(pickup: Location, vehicle#95;type: VehicleType, at: datetime) Optional~int~
+        +next#95;candidate(ride: Ride, at: datetime) Captain
+        +find#95;captain(ride: Ride, at: datetime) Captain
+        ##95;reason(captain: Captain, pickup: Location, ...) Optional~str~
+    }
+
+    class PaymentService {
+        ##95;earnings: EarningsService
+        ##95;ledger: list~PaymentRecord~
+        +pay#95;ride(ride: Ride, payable: Payable, at: datetime) str
+        +charge#95;fee(customer: Customer, fee: Money, captain: Captain, payable: Payable, ride#95;id: str, at: datetime) str
+        +ledger() tuple~PaymentRecord~
+        +total#95;collected() Money
+    }
+
+    class PaymentRecord {
+        ##95;at: datetime
+        ##95;reference: str
+        ##95;customer: Customer
+        ##95;method: str
+        ##95;amount: Money
+        ##95;succeeded: bool
+        ##95;note: str
+        +amount() Money
+        +succeeded() bool
+        +method() str
+    }
+
+    class EarningsService {
+        +COMMISSION#95;RATE: Decimal$
+        ##95;daily: dict~tuple, DailyEarnings~
+        ##95;total#95;paid: Money
+        ##95;total#95;commission: Money
+        ##95;total#95;gst: Money
+        ##95;total#95;captain#95;earnings: Money
+        +record#95;ride#95;payment(ride: Ride, is#95;cash: bool, at: datetime) None
+        +record#95;fee#95;payment(fee: Money, captain: Optional~Captain~, at: datetime) None
+        +earnings#95;for(captain: Captain, day: date) DailyEarnings
+        +total#95;paid#95;by#95;customers() Money
+        +books#95;balance() bool
+        ##95;split(amount: Money, captain: Optional~Captain~, day: date, counts#95;as#95;ride: bool) Money
+    }
+
+    class DailyEarnings {
+        ##95;captain: Captain
+        ##95;day: date
+        ##95;rides: int
+        ##95;gross#95;fare: Money
+        ##95;commission: Money
+        ##95;net#95;earnings: Money
+        ##95;cash#95;collected: Money
+        ##95;dues#95;added: Money
+        +add#95;earning(gross: Money, commission: Money, net: Money, counts#95;as#95;ride: bool) None
+        +add#95;cash(collected: Money, owed#95;to#95;platform: Money) None
+    }
+
+    class CaptainService {
+        ##95;clock: SimulatedClock
+        ##95;captains: list~Captain~
+        ##95;total#95;dues#95;settled: Money
+        +register#95;captain(name: str, phone: str, home#95;place: str, vehicle: Vehicle, opening#95;dues: Optional~Money~, past#95;ratings: list~int~) Captain
+        +verify#95;kyc(captain: Captain) None
+        +go#95;online(captain: Captain) None
+        +go#95;offline(captain: Captain) None
+        +settle#95;dues(captain: Captain) Money
+        +captains() tuple~Captain~
+        +find(name: str) Captain
+    }
+
+    class CustomerService {
+        ##95;clock: SimulatedClock
+        ##95;customers: list~Customer~
+        +register#95;customer(name: str, phone: str, home#95;place: str, wallet#95;balance: Money) Customer
+        +top#95;up(customer: Customer, amount: Money) Money
+        +relocate(customer: Customer, place#95;name: str) None
+        +customers() tuple~Customer~
+        +find(name: str) Customer
+    }
+
+    class RatingService {
+        +rate#95;captain(ride: Ride, score: int) None
+        +rate#95;customer(ride: Ride, score: int) None
+        +leaderboard(captains: tuple~Captain~) list~Captain~
+        +flagged#95;captains(captains: tuple~Captain~) list~Captain~
+        ##95;validate#95;score(score: int) None$
+    }
+
+    class SimulatedClock {
+        +PEAK#95;WINDOWS: tuple$
+        +NIGHT#95;START#95;HOUR: int$
+        +NIGHT#95;END#95;HOUR: int$
+        ##95;now: datetime
+        +now() datetime
+        +advance(minutes: int, seconds: int) datetime
+        +advance#95;to(moment: datetime) datetime
+        +is#95;peak#95;hour(moment: datetime) bool$
+        +is#95;night(moment: datetime) bool$
+    }
+
+    class ServiceArea {
+        ##95;name: str
+        ##95;south: float
+        ##95;north: float
+        ##95;west: float
+        ##95;east: float
+        +chennai#95;metro() ServiceArea$
+        +contains(location: Location) bool
+        +ensure#95;contains(location: Location) None
+    }
+
+    class Notifier {
+        <<abstract>>
+        ##95;sequence: int$
+        ##95;sent: list~str~
+        ##95;log: list~tuple~
+        +channel() str*
+        +notify(user: User, message: str, at: datetime) None*
+        ##95;record(at: datetime, line: str) None
+        +log() tuple~tuple~
+        +sent#95;count() int
+        +sent#95;messages() tuple~str~
+    }
+
+    class SmsNotifier {
+        ##95;echo: bool
+        +SmsNotifier(echo: bool = False)
+        +channel() str
+        +notify(user: User, message: str, at: datetime) None
+    }
+
+    class PushNotifier {
+        ##95;echo: bool
+        +PushNotifier(echo: bool = True)
+        +channel() str
+        +notify(user: User, message: str, at: datetime) None
+    }
+
+    class Ride {
+        see diagram (b)
+    }
+    class Captain {
+        see diagram (a)
+    }
+    class Customer {
+        see diagram (a)
+    }
+    class Vehicle {
+        <<abstract>>
+        see diagram (a)
+    }
+    class Payable {
+        <<interface>>
+        see diagram (b)
+    }
+    class FareEstimate {
+        see diagram (b)
+    }
+    class FareReceipt {
+        see diagram (b)
+    }
+
+    ChennaiRideApp "1" *-- "1" SimulatedClock : composition – creates the clock
+    ChennaiRideApp "1" *-- "1" RideService : composition – builds every service
+    ChennaiRideApp "1" *-- "1" CaptainService : composition
+    ChennaiRideApp "1" *-- "1" CustomerService : composition
+    ChennaiRideApp "1" *-- "1" FareService : composition
+    ChennaiRideApp "1" *-- "1" MatchingService : composition
+    ChennaiRideApp "1" *-- "1" PaymentService : composition
+    ChennaiRideApp "1" *-- "1" EarningsService : composition
+    ChennaiRideApp "1" *-- "1" RatingService : composition
+    ChennaiRideApp "1" *-- "2" Notifier : composition – one SMS and one push notifier
+
+    RideService o-- FareService : aggregation – injected, shared
+    RideService o-- MatchingService : aggregation – injected, shared
+    RideService o-- PaymentService : aggregation – injected, shared
+    RideService "1" o-- "0..*" Notifier : aggregation – list of Notifier (polymorphism)
+    RideService --> SimulatedClock : association – all time comes from here
+    RideService --> ServiceArea : association – validates pickup and drop
+    RideService "1" --> "0..*" Ride : association – creates and tracks rides
+    MatchingService o-- CaptainService : aggregation – injected
+    MatchingService o-- FareService : aggregation – ETA maths
+    PaymentService o-- EarningsService : aggregation – injected
+    PaymentService "1" *-- "0..*" PaymentRecord : composition – the ledger
+    EarningsService "1" *-- "0..*" DailyEarnings : composition – one per captain per day
+    DailyEarnings "0..*" --> "1" Captain : association
+    FareService "1" *-- "4" Vehicle : composition – rate-card vehicles
+    FareService ..> FareEstimate : dependency – creates
+    FareService ..> FareReceipt : dependency – creates
+    CaptainService "1" o-- "0..*" Captain : aggregation – registry
+    CustomerService "1" o-- "0..*" Customer : aggregation – registry
+    CaptainService --> SimulatedClock : association
+    CustomerService --> SimulatedClock : association
+    RatingService ..> Ride : dependency – rates completed rides
+    PaymentService ..> Payable : dependency – calls pay(), dynamic dispatch
+
+    Notifier <|-- SmsNotifier : inheritance – overrides notify()
+    Notifier <|-- PushNotifier : inheritance – overrides notify()
+
+    note for RideService "book_ride(... passengers=1, payment_method=None, coupon_code=None):<br>Python has no method overloading, so default/keyword args are used."
+    note for ChennaiRideApp "Composition root: builds the whole world.<br>The scripted demo AND the CLI (CliSession) use it."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Ride fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Vehicle fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Payable fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style FareEstimate fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style FareReceipt fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+</script>
+  <details><summary>Mermaid source (03_services_and_notifications.mmd)</summary><pre>%% (c) Services and notifications — generated from ridehailing/service/*, notification/*, time/*, app/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class ChennaiRideApp {
+        +clock: SimulatedClock
+        +sms: SmsNotifier
+        +push: PushNotifier
+        +captain_service: CaptainService
+        +customer_service: CustomerService
+        +fare_service: FareService
+        +matching_service: MatchingService
+        +earnings_service: EarningsService
+        +payment_service: PaymentService
+        +rating_service: RatingService
+        +ride_service: RideService
+        +upi_accounts: dict~Customer, UpiPayment~
+        +run() None
+        +bring_captains_online() list~tuple~
+        +print_reconciliation() None
+        +wallets_balance() bool
+    }
+
+    class RideService {
+        +MIN_TRIP_KM: float$
+        +MAX_TRIP_KM: Decimal$
+        +CANCELLATION_GRACE: timedelta$
+        +NO_SHOW_WAIT_MINUTES: int$
+        #_clock: SimulatedClock
+        #_service_area: ServiceArea
+        #_fares: FareService
+        #_matching: MatchingService
+        #_payments: PaymentService
+        #_notifiers: list~Notifier~
+        #_otp_rng: Random
+        #_rides: list~Ride~
+        #_manual_offers: bool
+        +fare_estimates(customer: Customer, drop: Location, pickup: Optional~Location~) list~FareEstimate~
+        +book_ride(customer: Customer, drop: Location, vehicle_type: VehicleType, passengers: int = 1, payment_method: Optional~Payable~ = None, coupon_code: Optional~str~ = None) Ride
+        +captain_arrives(ride: Ride) None
+        +start_ride(ride: Ride, entered_otp: str) None
+        +change_destination(ride: Ride, change_point: Location, new_drop: Location) None
+        +end_trip_early(ride: Ride, stop_point: Location, payment_method: Optional~Payable~) FareReceipt
+        +complete_trip(ride: Ride, payment_method: Optional~Payable~) FareReceipt
+        +pay_for_ride(ride: Ride, payable: Payable) str
+        +cancel_by_customer(ride: Ride) Money
+        +cancel_by_captain(ride: Ride) Captain
+        +cancel_no_show(ride: Ride) Money
+        +set_manual_offers(enabled: bool) None
+        +accept_offer(captain: Captain) Ride
+        +reject_offer(captain: Captain) Optional~Captain~
+        +active_rides() list~Ride~
+        +position_now(ride: Ride) Location
+        +surge_at(place: Location, vehicle_type: VehicleType) Decimal
+        +cancellation_fee_if_cancelled_now(ride: Ride) Money
+        #_match(ride: Ride) Captain
+        #_assign(ride: Ride, captain: Captain) Captain
+        #_settle_trip(ride: Ride, payment_method: Optional~Payable~) FareReceipt
+        #_notify(user: User, message: str) None
+    }
+
+    class FareService {
+        +NIGHT_CHARGE_RATE: Decimal$
+        +WAITING_CHARGE_PER_MINUTE: Money$
+        +MAX_SURGE: Decimal$
+        +HOTSPOT_RADIUS_KM: float$
+        +COUPONS: dict$
+        #_rate_card: dict~VehicleType, Vehicle~
+        +rate_card_vehicle(vehicle_type: VehicleType) Vehicle
+        +road_km(start: Location, end: Location) Decimal$
+        +is_hotspot(location: Location) bool$
+        +travel_minutes(vehicle: Vehicle, start: Location, end: Location, at: datetime) int
+        +surge_multiplier(pickup: Location, open_requests: int, free_captains: int, at: datetime) Decimal
+        +validate_coupon(customer: Customer, code: Optional~str~) None
+        +estimate(pickup: Location, drop: Location, vehicle_type: VehicleType, surge: Decimal, at: datetime, nearest_captain_eta: Optional~int~) FareEstimate
+        +build_receipt(ride: Ride, previous_fee: Money, at: datetime) FareReceipt
+        #_price(vehicle: Vehicle, distance_km: Decimal, trip_minutes: int, ...) FareReceipt
+    }
+
+    class MatchingService {
+        +SEARCH_RADIUS_KM: float$
+        +MAX_REJECTIONS: int$
+        #_captain_service: CaptainService
+        #_fare_service: FareService
+        +ineligibility_reason(captain: Captain, ride: Ride, at: datetime) Optional~str~
+        +captains_near(place: Location, vehicle_type: Optional~VehicleType~, at: datetime) list~tuple~
+        +eligible_captains(ride: Ride, at: datetime) list~Captain~
+        +free_captains_near(pickup: Location, vehicle_type: VehicleType) list~Captain~
+        +offered_captains() list~Captain~
+        +eta_minutes(captain: Captain, pickup: Location, at: datetime) int
+        +nearest_eta(pickup: Location, vehicle_type: VehicleType, at: datetime) Optional~int~
+        +next_candidate(ride: Ride, at: datetime) Captain
+        +find_captain(ride: Ride, at: datetime) Captain
+        #_reason(captain: Captain, pickup: Location, ...) Optional~str~
+    }
+
+    class PaymentService {
+        #_earnings: EarningsService
+        #_ledger: list~PaymentRecord~
+        +pay_ride(ride: Ride, payable: Payable, at: datetime) str
+        +charge_fee(customer: Customer, fee: Money, captain: Captain, payable: Payable, ride_id: str, at: datetime) str
+        +ledger() tuple~PaymentRecord~
+        +total_collected() Money
+    }
+
+    class PaymentRecord {
+        #_at: datetime
+        #_reference: str
+        #_customer: Customer
+        #_method: str
+        #_amount: Money
+        #_succeeded: bool
+        #_note: str
+        +amount() Money
+        +succeeded() bool
+        +method() str
+    }
+
+    class EarningsService {
+        +COMMISSION_RATE: Decimal$
+        #_daily: dict~tuple, DailyEarnings~
+        #_total_paid: Money
+        #_total_commission: Money
+        #_total_gst: Money
+        #_total_captain_earnings: Money
+        +record_ride_payment(ride: Ride, is_cash: bool, at: datetime) None
+        +record_fee_payment(fee: Money, captain: Optional~Captain~, at: datetime) None
+        +earnings_for(captain: Captain, day: date) DailyEarnings
+        +total_paid_by_customers() Money
+        +books_balance() bool
+        #_split(amount: Money, captain: Optional~Captain~, day: date, counts_as_ride: bool) Money
+    }
+
+    class DailyEarnings {
+        #_captain: Captain
+        #_day: date
+        #_rides: int
+        #_gross_fare: Money
+        #_commission: Money
+        #_net_earnings: Money
+        #_cash_collected: Money
+        #_dues_added: Money
+        +add_earning(gross: Money, commission: Money, net: Money, counts_as_ride: bool) None
+        +add_cash(collected: Money, owed_to_platform: Money) None
+    }
+
+    class CaptainService {
+        #_clock: SimulatedClock
+        #_captains: list~Captain~
+        #_total_dues_settled: Money
+        +register_captain(name: str, phone: str, home_place: str, vehicle: Vehicle, opening_dues: Optional~Money~, past_ratings: list~int~) Captain
+        +verify_kyc(captain: Captain) None
+        +go_online(captain: Captain) None
+        +go_offline(captain: Captain) None
+        +settle_dues(captain: Captain) Money
+        +captains() tuple~Captain~
+        +find(name: str) Captain
+    }
+
+    class CustomerService {
+        #_clock: SimulatedClock
+        #_customers: list~Customer~
+        +register_customer(name: str, phone: str, home_place: str, wallet_balance: Money) Customer
+        +top_up(customer: Customer, amount: Money) Money
+        +relocate(customer: Customer, place_name: str) None
+        +customers() tuple~Customer~
+        +find(name: str) Customer
+    }
+
+    class RatingService {
+        +rate_captain(ride: Ride, score: int) None
+        +rate_customer(ride: Ride, score: int) None
+        +leaderboard(captains: tuple~Captain~) list~Captain~
+        +flagged_captains(captains: tuple~Captain~) list~Captain~
+        #_validate_score(score: int) None$
+    }
+
+    class SimulatedClock {
+        +PEAK_WINDOWS: tuple$
+        +NIGHT_START_HOUR: int$
+        +NIGHT_END_HOUR: int$
+        #_now: datetime
+        +now() datetime
+        +advance(minutes: int, seconds: int) datetime
+        +advance_to(moment: datetime) datetime
+        +is_peak_hour(moment: datetime) bool$
+        +is_night(moment: datetime) bool$
+    }
+
+    class ServiceArea {
+        #_name: str
+        #_south: float
+        #_north: float
+        #_west: float
+        #_east: float
+        +chennai_metro() ServiceArea$
+        +contains(location: Location) bool
+        +ensure_contains(location: Location) None
+    }
+
+    class Notifier {
+        &lt;&lt;abstract&gt;&gt;
+        #_sequence: int$
+        #_sent: list~str~
+        #_log: list~tuple~
+        +channel() str*
+        +notify(user: User, message: str, at: datetime) None*
+        #_record(at: datetime, line: str) None
+        +log() tuple~tuple~
+        +sent_count() int
+        +sent_messages() tuple~str~
+    }
+
+    class SmsNotifier {
+        #_echo: bool
+        +SmsNotifier(echo: bool = False)
+        +channel() str
+        +notify(user: User, message: str, at: datetime) None
+    }
+
+    class PushNotifier {
+        #_echo: bool
+        +PushNotifier(echo: bool = True)
+        +channel() str
+        +notify(user: User, message: str, at: datetime) None
+    }
+
+    class Ride {
+        see diagram (b)
+    }
+    class Captain {
+        see diagram (a)
+    }
+    class Customer {
+        see diagram (a)
+    }
+    class Vehicle {
+        &lt;&lt;abstract&gt;&gt;
+        see diagram (a)
+    }
+    class Payable {
+        &lt;&lt;interface&gt;&gt;
+        see diagram (b)
+    }
+    class FareEstimate {
+        see diagram (b)
+    }
+    class FareReceipt {
+        see diagram (b)
+    }
+
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; SimulatedClock : composition – creates the clock
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; RideService : composition – builds every service
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; CaptainService : composition
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; CustomerService : composition
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; FareService : composition
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; MatchingService : composition
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; PaymentService : composition
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; EarningsService : composition
+    ChennaiRideApp &quot;1&quot; *-- &quot;1&quot; RatingService : composition
+    ChennaiRideApp &quot;1&quot; *-- &quot;2&quot; Notifier : composition – one SMS and one push notifier
+
+    RideService o-- FareService : aggregation – injected, shared
+    RideService o-- MatchingService : aggregation – injected, shared
+    RideService o-- PaymentService : aggregation – injected, shared
+    RideService &quot;1&quot; o-- &quot;0..*&quot; Notifier : aggregation – list of Notifier (polymorphism)
+    RideService --&gt; SimulatedClock : association – all time comes from here
+    RideService --&gt; ServiceArea : association – validates pickup and drop
+    RideService &quot;1&quot; --&gt; &quot;0..*&quot; Ride : association – creates and tracks rides
+    MatchingService o-- CaptainService : aggregation – injected
+    MatchingService o-- FareService : aggregation – ETA maths
+    PaymentService o-- EarningsService : aggregation – injected
+    PaymentService &quot;1&quot; *-- &quot;0..*&quot; PaymentRecord : composition – the ledger
+    EarningsService &quot;1&quot; *-- &quot;0..*&quot; DailyEarnings : composition – one per captain per day
+    DailyEarnings &quot;0..*&quot; --&gt; &quot;1&quot; Captain : association
+    FareService &quot;1&quot; *-- &quot;4&quot; Vehicle : composition – rate-card vehicles
+    FareService ..&gt; FareEstimate : dependency – creates
+    FareService ..&gt; FareReceipt : dependency – creates
+    CaptainService &quot;1&quot; o-- &quot;0..*&quot; Captain : aggregation – registry
+    CustomerService &quot;1&quot; o-- &quot;0..*&quot; Customer : aggregation – registry
+    CaptainService --&gt; SimulatedClock : association
+    CustomerService --&gt; SimulatedClock : association
+    RatingService ..&gt; Ride : dependency – rates completed rides
+    PaymentService ..&gt; Payable : dependency – calls pay(), dynamic dispatch
+
+    Notifier &lt;|-- SmsNotifier : inheritance – overrides notify()
+    Notifier &lt;|-- PushNotifier : inheritance – overrides notify()
+
+    note for RideService &quot;book_ride(... passengers=1, payment_method=None, coupon_code=None):&lt;br&gt;Python has no method overloading, so default/keyword args are used.&quot;
+    note for ChennaiRideApp &quot;Composition root: builds the whole world.&lt;br&gt;The scripted demo AND the CLI (CliSession) use it.&quot;
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Ride fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Vehicle fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Payable fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style FareEstimate fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style FareReceipt fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+</pre></details>
+</section>
+
+<section class="diagram-section" id="diagram-d">
+  <h2>(d) CLI layer</h2>
+  <p class="intro"><b>Menu</b> is abstract and its <code>run()</code> loop is written once. Six menus inherit it. <b>MainMenu</b> builds its four sub-menus and holds them through the <code>Menu</code> type, which is polymorphism. The CLI has no business rules: <b>CliSession</b> owns the same <b>ChennaiRideApp</b> world that the scripted demo uses.</p>
+  <div class="toolbar">
+    <button type="button" data-zoom="-" data-box="d" aria-label="Zoom out">−</button>
+    <span class="zoom-label" id="zoom-d">100%</span>
+    <button type="button" data-zoom="+" data-box="d" aria-label="Zoom in">+</button>
+    <button type="button" data-zoom="1" data-box="d">Actual size</button>
+    <button type="button" data-zoom="fit" data-box="d">Fit to width</button>
+    <span class="status" id="status-d" data-diagram="d">Rendering…</span>
+    <span class="source-file">docs/diagrams/04_cli_layer.mmd</span>
+  </div>
+  <div class="diagram-box" id="diagram-box-d"></div>
+  <script type="text/plain" class="mermaid-source" data-key="d">%% (d) CLI layer — generated from ridehailing/cli/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class Menu {
+        <<abstract>>
+        ##95;title: str
+        ##95;io: ConsoleIO
+        +Menu(title: str, io: ConsoleIO)
+        +title() str
+        +options() list~tuple~*
+        +handle(choice: str) bool*
+        +on#95;enter() bool
+        +status#95;line() Optional~str~
+        +heading() str
+        +run() None
+    }
+
+    class StartupMenu {
+        +StartupMenu(io: ConsoleIO)
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        ##95;run#95;separately(flag: str) None
+    }
+
+    class MainMenu {
+        ##95;session: CliSession
+        ##95;submenus: dict~str, Menu~
+        +MainMenu(io: ConsoleIO, session: CliSession)
+        +status#95;line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        ##95;settings() None
+    }
+
+    class CustomerMenu {
+        ##95;session: CliSession
+        ##95;customer: Optional~Customer~
+        +on#95;enter() bool
+        +status#95;line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        ##95;pick#95;customer() Customer
+        ##95;book() None
+        ##95;track() None
+        ##95;cancel() None
+        ##95;change#95;destination() None
+        ##95;end#95;early() None
+        ##95;pay#95;pending() None
+        ##95;rate() None
+        ##95;history() None
+    }
+
+    class CaptainMenu {
+        ##95;session: CliSession
+        ##95;captain: Optional~Captain~
+        +on#95;enter() bool
+        +status#95;line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        ##95;pick#95;captain() Captain
+        ##95;offer() None
+        ##95;arrive() None
+        ##95;start() None
+        ##95;complete() None
+        ##95;cancel() None
+        ##95;earnings() None
+        ##95;settle() None
+    }
+
+    class OperationsMenu {
+        ##95;session: CliSession
+        +status#95;line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        ##95;board() None
+        ##95;live#95;rides() None
+        ##95;nearby() None
+        ##95;surge() None
+        ##95;notifications() None
+        ##95;earnings() None
+        ##95;flagged() None
+    }
+
+    class ClockMenu {
+        ##95;session: CliSession
+        +status#95;line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+    }
+
+    class ConsoleIO {
+        +WIDTH: int$
+        ##95;echo#95;input: bool
+        +read#95;line(prompt: str, allow#95;empty: bool) str
+        +read#95;text(prompt: str, allow#95;empty: bool) str
+        +read#95;int(prompt: str, low: int, high: int, default: Optional~int~) int
+        +read#95;choice(prompt: str, choices: list~str~) str
+        +read#95;yes#95;no(prompt: str) bool
+        +read#95;money(prompt: str) Money
+        +read#95;time(prompt: str) tuple~int~
+        +read#95;place(prompt: str, places: list~tuple~, default: Optional~Location~, show#95;list: bool) Location
+        +print#95;header(title: str) None
+        +print#95;status(line: str) None
+        +print#95;options(options: list~tuple~) None
+        +print#95;table(headers: list~str~, rows: list, align: Optional~str~) None
+        +print#95;error(message: str) None
+        +print#95;success(message: str) None
+        +print#95;info(message: str) None
+        ##95;confirm#95;quit() bool
+        ##95;print#95;place#95;list(places: list~tuple~) None
+    }
+
+    class CliSession {
+        +io: ConsoleIO
+        +app: ChennaiRideApp
+        ##95;auto#95;captains: bool
+        ##95;service#95;area: ServiceArea
+        +CliSession(io: ConsoleIO)
+        +clock() SimulatedClock
+        +rides() RideService
+        +customers() tuple~Customer~
+        +captains() tuple~Captain~
+        +open#95;for#95;business() None
+        +auto#95;captains() bool
+        +set#95;auto#95;captains(enabled: bool) None
+        +status#95;line() str
+        +place#95;choices() list~tuple~
+        +read#95;place(prompt: str, default: Optional~Location~, show#95;list: bool) Location
+        +read#95;payment(customer: Customer, allow#95;default: bool) Optional~Payable~
+        +finish#95;trip(ride: Ride, stop: Optional~Location~) None
+        +offer#95;holder(ride: Ride) Optional~Captain~
+        +describe#95;waiting(ride: Ride, hint: bool) str
+    }
+
+    class GoBack {
+        <<exception>>
+    }
+    class QuitRequested {
+        <<exception>>
+    }
+    class EndOfInput {
+        <<exception>>
+    }
+
+    class ChennaiRideApp {
+        see diagram (c)
+    }
+    class Customer {
+        see diagram (a)
+    }
+    class Captain {
+        see diagram (a)
+    }
+
+    Menu <|-- StartupMenu : inheritance – hierarchical
+    Menu <|-- MainMenu : inheritance – hierarchical
+    Menu <|-- CustomerMenu : inheritance – hierarchical
+    Menu <|-- CaptainMenu : inheritance – hierarchical
+    Menu <|-- OperationsMenu : inheritance – hierarchical
+    Menu <|-- ClockMenu : inheritance – hierarchical
+    QuitRequested <|-- EndOfInput : inheritance – EndOfInput IS-A QuitRequested
+
+    Menu "0..*" o-- "1" ConsoleIO : aggregation – one ConsoleIO shared by all menus
+    MainMenu "1" *-- "4" Menu : composition – builds its sub-menus, holds them as Menu (polymorphism)
+    MainMenu o-- CliSession : aggregation – shared session
+    CustomerMenu o-- CliSession : aggregation – shared session
+    CaptainMenu o-- CliSession : aggregation – shared session
+    OperationsMenu o-- CliSession : aggregation – shared session
+    ClockMenu o-- CliSession : aggregation – shared session
+    CliSession "1" *-- "1" ChennaiRideApp : composition – same seeded world as the demo
+    CliSession o-- ConsoleIO : aggregation – shared
+    CustomerMenu --> "0..1" Customer : association – selected customer
+    CaptainMenu --> "0..1" Captain : association – selected captain
+    StartupMenu ..> CliSession : dependency – starts a fresh session
+    StartupMenu ..> MainMenu : dependency – runs it
+    ConsoleIO ..> GoBack : dependency – raises on b
+    ConsoleIO ..> QuitRequested : dependency – raises on q
+    ConsoleIO ..> EndOfInput : dependency – raises at end of input
+
+    note for Menu "run() is written once here (template method):<br>show options, read a choice, call handle(), repeat.<br>Every RideHailingError is caught and printed as a clean message."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style GoBack fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style QuitRequested fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style EndOfInput fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style ChennaiRideApp fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+</script>
+  <details><summary>Mermaid source (04_cli_layer.mmd)</summary><pre>%% (d) CLI layer — generated from ridehailing/cli/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class Menu {
+        &lt;&lt;abstract&gt;&gt;
+        #_title: str
+        #_io: ConsoleIO
+        +Menu(title: str, io: ConsoleIO)
+        +title() str
+        +options() list~tuple~*
+        +handle(choice: str) bool*
+        +on_enter() bool
+        +status_line() Optional~str~
+        +heading() str
+        +run() None
+    }
+
+    class StartupMenu {
+        +StartupMenu(io: ConsoleIO)
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_run_separately(flag: str) None
+    }
+
+    class MainMenu {
+        #_session: CliSession
+        #_submenus: dict~str, Menu~
+        +MainMenu(io: ConsoleIO, session: CliSession)
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_settings() None
+    }
+
+    class CustomerMenu {
+        #_session: CliSession
+        #_customer: Optional~Customer~
+        +on_enter() bool
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_pick_customer() Customer
+        #_book() None
+        #_track() None
+        #_cancel() None
+        #_change_destination() None
+        #_end_early() None
+        #_pay_pending() None
+        #_rate() None
+        #_history() None
+    }
+
+    class CaptainMenu {
+        #_session: CliSession
+        #_captain: Optional~Captain~
+        +on_enter() bool
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_pick_captain() Captain
+        #_offer() None
+        #_arrive() None
+        #_start() None
+        #_complete() None
+        #_cancel() None
+        #_earnings() None
+        #_settle() None
+    }
+
+    class OperationsMenu {
+        #_session: CliSession
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_board() None
+        #_live_rides() None
+        #_nearby() None
+        #_surge() None
+        #_notifications() None
+        #_earnings() None
+        #_flagged() None
+    }
+
+    class ClockMenu {
+        #_session: CliSession
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+    }
+
+    class ConsoleIO {
+        +WIDTH: int$
+        #_echo_input: bool
+        +read_line(prompt: str, allow_empty: bool) str
+        +read_text(prompt: str, allow_empty: bool) str
+        +read_int(prompt: str, low: int, high: int, default: Optional~int~) int
+        +read_choice(prompt: str, choices: list~str~) str
+        +read_yes_no(prompt: str) bool
+        +read_money(prompt: str) Money
+        +read_time(prompt: str) tuple~int~
+        +read_place(prompt: str, places: list~tuple~, default: Optional~Location~, show_list: bool) Location
+        +print_header(title: str) None
+        +print_status(line: str) None
+        +print_options(options: list~tuple~) None
+        +print_table(headers: list~str~, rows: list, align: Optional~str~) None
+        +print_error(message: str) None
+        +print_success(message: str) None
+        +print_info(message: str) None
+        #_confirm_quit() bool
+        #_print_place_list(places: list~tuple~) None
+    }
+
+    class CliSession {
+        +io: ConsoleIO
+        +app: ChennaiRideApp
+        #_auto_captains: bool
+        #_service_area: ServiceArea
+        +CliSession(io: ConsoleIO)
+        +clock() SimulatedClock
+        +rides() RideService
+        +customers() tuple~Customer~
+        +captains() tuple~Captain~
+        +open_for_business() None
+        +auto_captains() bool
+        +set_auto_captains(enabled: bool) None
+        +status_line() str
+        +place_choices() list~tuple~
+        +read_place(prompt: str, default: Optional~Location~, show_list: bool) Location
+        +read_payment(customer: Customer, allow_default: bool) Optional~Payable~
+        +finish_trip(ride: Ride, stop: Optional~Location~) None
+        +offer_holder(ride: Ride) Optional~Captain~
+        +describe_waiting(ride: Ride, hint: bool) str
+    }
+
+    class GoBack {
+        &lt;&lt;exception&gt;&gt;
+    }
+    class QuitRequested {
+        &lt;&lt;exception&gt;&gt;
+    }
+    class EndOfInput {
+        &lt;&lt;exception&gt;&gt;
+    }
+
+    class ChennaiRideApp {
+        see diagram (c)
+    }
+    class Customer {
+        see diagram (a)
+    }
+    class Captain {
+        see diagram (a)
+    }
+
+    Menu &lt;|-- StartupMenu : inheritance – hierarchical
+    Menu &lt;|-- MainMenu : inheritance – hierarchical
+    Menu &lt;|-- CustomerMenu : inheritance – hierarchical
+    Menu &lt;|-- CaptainMenu : inheritance – hierarchical
+    Menu &lt;|-- OperationsMenu : inheritance – hierarchical
+    Menu &lt;|-- ClockMenu : inheritance – hierarchical
+    QuitRequested &lt;|-- EndOfInput : inheritance – EndOfInput IS-A QuitRequested
+
+    Menu &quot;0..*&quot; o-- &quot;1&quot; ConsoleIO : aggregation – one ConsoleIO shared by all menus
+    MainMenu &quot;1&quot; *-- &quot;4&quot; Menu : composition – builds its sub-menus, holds them as Menu (polymorphism)
+    MainMenu o-- CliSession : aggregation – shared session
+    CustomerMenu o-- CliSession : aggregation – shared session
+    CaptainMenu o-- CliSession : aggregation – shared session
+    OperationsMenu o-- CliSession : aggregation – shared session
+    ClockMenu o-- CliSession : aggregation – shared session
+    CliSession &quot;1&quot; *-- &quot;1&quot; ChennaiRideApp : composition – same seeded world as the demo
+    CliSession o-- ConsoleIO : aggregation – shared
+    CustomerMenu --&gt; &quot;0..1&quot; Customer : association – selected customer
+    CaptainMenu --&gt; &quot;0..1&quot; Captain : association – selected captain
+    StartupMenu ..&gt; CliSession : dependency – starts a fresh session
+    StartupMenu ..&gt; MainMenu : dependency – runs it
+    ConsoleIO ..&gt; GoBack : dependency – raises on b
+    ConsoleIO ..&gt; QuitRequested : dependency – raises on q
+    ConsoleIO ..&gt; EndOfInput : dependency – raises at end of input
+
+    note for Menu &quot;run() is written once here (template method):&lt;br&gt;show options, read a choice, call handle(), repeat.&lt;br&gt;Every RideHailingError is caught and printed as a clean message.&quot;
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style GoBack fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style QuitRequested fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style EndOfInput fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style ChennaiRideApp fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+</pre></details>
+</section>
+
+<section class="diagram-section" id="diagram-e">
+  <h2>(e) Overview — class names and relationships only</h2>
+  <p class="intro">Every class from diagrams (a)–(d) with its relationships and no members, so you can see the whole system at once. It opens fitted to the width; press <i>Actual size</i> or <i>+</i> to read the labels.</p>
+  <div class="toolbar">
+    <button type="button" data-zoom="-" data-box="e" aria-label="Zoom out">−</button>
+    <span class="zoom-label" id="zoom-e">100%</span>
+    <button type="button" data-zoom="+" data-box="e" aria-label="Zoom in">+</button>
+    <button type="button" data-zoom="1" data-box="e">Actual size</button>
+    <button type="button" data-zoom="fit" data-box="e">Fit to width</button>
+    <span class="status" id="status-e" data-diagram="e">Rendering…</span>
+    <span class="source-file">docs/diagrams/05_overview.mmd</span>
+  </div>
+  <div class="diagram-box" id="diagram-box-e"></div>
+  <script type="text/plain" class="mermaid-source" data-key="e">%% (e) Overview — every class and relationship, no members. Details are in diagrams (a)–(d).
+classDiagram
+    direction LR
+
+    class User {
+        <<abstract>>
+    }
+    class Vehicle {
+        <<abstract>>
+    }
+    class Cab {
+        <<abstract>>
+    }
+    class Payable {
+        <<interface>>
+    }
+    class Notifier {
+        <<abstract>>
+    }
+    class Menu {
+        <<abstract>>
+    }
+    class VehicleType {
+        <<enumeration>>
+    }
+    class CaptainStatus {
+        <<enumeration>>
+    }
+    class RideStatus {
+        <<enumeration>>
+    }
+    class CancellationReason {
+        <<enumeration>>
+    }
+    class PaymentStatus {
+        <<enumeration>>
+    }
+    class Location {
+        <<value object>>
+    }
+    class Money {
+        <<value object>>
+    }
+
+    %% users and vehicles
+    User <|-- Customer : is-a
+    User <|-- Captain : is-a
+    Vehicle <|-- Bike : is-a
+    Vehicle <|-- Auto : is-a
+    Vehicle <|-- Cab : is-a
+    Cab <|-- CabEconomy : is-a
+    Cab <|-- CabPremium : is-a
+    Captain *-- Vehicle : owns
+    Customer *-- PendingFee : owns
+    Captain --> CaptainStatus : state
+    Vehicle ..> VehicleType : type
+    User --> Location : at
+
+    %% ride and payments
+    Ride *-- RideRequest : owns
+    Ride *-- FareEstimate : owns
+    Ride *-- FareReceipt : owns
+    Ride o-- Customer : refs
+    Ride o-- Captain : refs
+    Ride --> Payable : pays with
+    Ride --> RideStatus : state
+    Ride --> PaymentStatus : state
+    Ride --> CancellationReason : reason
+    Payable <|.. UpiPayment : implements
+    Payable <|.. CashPayment : implements
+    Payable <|.. WalletPayment : implements
+    FareReceipt ..> Money : amounts
+
+    %% services and notifications
+    ChennaiRideApp *-- RideService : builds
+    ChennaiRideApp *-- CaptainService : builds
+    ChennaiRideApp *-- CustomerService : builds
+    ChennaiRideApp *-- RatingService : builds
+    ChennaiRideApp *-- SimulatedClock : builds
+    RideService o-- FareService : uses
+    RideService o-- MatchingService : uses
+    RideService o-- PaymentService : uses
+    RideService o-- Notifier : notifies
+    RideService --> ServiceArea : checks
+    RideService --> Ride : manages
+    MatchingService o-- CaptainService : uses
+    PaymentService o-- EarningsService : uses
+    PaymentService *-- PaymentRecord : ledger
+    EarningsService *-- DailyEarnings : owns
+    FareService *-- Vehicle : rate card
+    CaptainService o-- Captain : registry
+    CustomerService o-- Customer : registry
+    Notifier <|-- SmsNotifier : is-a
+    Notifier <|-- PushNotifier : is-a
+
+    %% CLI layer
+    Menu <|-- StartupMenu : is-a
+    Menu <|-- MainMenu : is-a
+    Menu <|-- CustomerMenu : is-a
+    Menu <|-- CaptainMenu : is-a
+    Menu <|-- OperationsMenu : is-a
+    Menu <|-- ClockMenu : is-a
+    Menu o-- ConsoleIO : shared
+    MainMenu *-- Menu : sub-menus
+    CliSession *-- ChennaiRideApp : same world
+    CustomerMenu o-- CliSession : shared
+    CaptainMenu o-- CliSession : shared
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:2px
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Location fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+    style Money fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+</script>
+  <details><summary>Mermaid source (05_overview.mmd)</summary><pre>%% (e) Overview — every class and relationship, no members. Details are in diagrams (a)–(d).
+classDiagram
+    direction LR
+
+    class User {
+        &lt;&lt;abstract&gt;&gt;
+    }
+    class Vehicle {
+        &lt;&lt;abstract&gt;&gt;
+    }
+    class Cab {
+        &lt;&lt;abstract&gt;&gt;
+    }
+    class Payable {
+        &lt;&lt;interface&gt;&gt;
+    }
+    class Notifier {
+        &lt;&lt;abstract&gt;&gt;
+    }
+    class Menu {
+        &lt;&lt;abstract&gt;&gt;
+    }
+    class VehicleType {
+        &lt;&lt;enumeration&gt;&gt;
+    }
+    class CaptainStatus {
+        &lt;&lt;enumeration&gt;&gt;
+    }
+    class RideStatus {
+        &lt;&lt;enumeration&gt;&gt;
+    }
+    class CancellationReason {
+        &lt;&lt;enumeration&gt;&gt;
+    }
+    class PaymentStatus {
+        &lt;&lt;enumeration&gt;&gt;
+    }
+    class Location {
+        &lt;&lt;value object&gt;&gt;
+    }
+    class Money {
+        &lt;&lt;value object&gt;&gt;
+    }
+
+    %% users and vehicles
+    User &lt;|-- Customer : is-a
+    User &lt;|-- Captain : is-a
+    Vehicle &lt;|-- Bike : is-a
+    Vehicle &lt;|-- Auto : is-a
+    Vehicle &lt;|-- Cab : is-a
+    Cab &lt;|-- CabEconomy : is-a
+    Cab &lt;|-- CabPremium : is-a
+    Captain *-- Vehicle : owns
+    Customer *-- PendingFee : owns
+    Captain --&gt; CaptainStatus : state
+    Vehicle ..&gt; VehicleType : type
+    User --&gt; Location : at
+
+    %% ride and payments
+    Ride *-- RideRequest : owns
+    Ride *-- FareEstimate : owns
+    Ride *-- FareReceipt : owns
+    Ride o-- Customer : refs
+    Ride o-- Captain : refs
+    Ride --&gt; Payable : pays with
+    Ride --&gt; RideStatus : state
+    Ride --&gt; PaymentStatus : state
+    Ride --&gt; CancellationReason : reason
+    Payable &lt;|.. UpiPayment : implements
+    Payable &lt;|.. CashPayment : implements
+    Payable &lt;|.. WalletPayment : implements
+    FareReceipt ..&gt; Money : amounts
+
+    %% services and notifications
+    ChennaiRideApp *-- RideService : builds
+    ChennaiRideApp *-- CaptainService : builds
+    ChennaiRideApp *-- CustomerService : builds
+    ChennaiRideApp *-- RatingService : builds
+    ChennaiRideApp *-- SimulatedClock : builds
+    RideService o-- FareService : uses
+    RideService o-- MatchingService : uses
+    RideService o-- PaymentService : uses
+    RideService o-- Notifier : notifies
+    RideService --&gt; ServiceArea : checks
+    RideService --&gt; Ride : manages
+    MatchingService o-- CaptainService : uses
+    PaymentService o-- EarningsService : uses
+    PaymentService *-- PaymentRecord : ledger
+    EarningsService *-- DailyEarnings : owns
+    FareService *-- Vehicle : rate card
+    CaptainService o-- Captain : registry
+    CustomerService o-- Customer : registry
+    Notifier &lt;|-- SmsNotifier : is-a
+    Notifier &lt;|-- PushNotifier : is-a
+
+    %% CLI layer
+    Menu &lt;|-- StartupMenu : is-a
+    Menu &lt;|-- MainMenu : is-a
+    Menu &lt;|-- CustomerMenu : is-a
+    Menu &lt;|-- CaptainMenu : is-a
+    Menu &lt;|-- OperationsMenu : is-a
+    Menu &lt;|-- ClockMenu : is-a
+    Menu o-- ConsoleIO : shared
+    MainMenu *-- Menu : sub-menus
+    CliSession *-- ChennaiRideApp : same world
+    CustomerMenu o-- CliSession : shared
+    CaptainMenu o-- CliSession : shared
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:2px
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Location fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+    style Money fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+</pre></details>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.min.js"></script>
+<script>
+  (function () {
+    var report = document.getElementById("render-report");
+    if (typeof mermaid === "undefined") {
+      report.textContent = "✘ Mermaid could not be loaded from cdn.jsdelivr.net (check the internet connection).";
+      report.style.color = "#b91c1c";
+      document.body.setAttribute("data-render", "no-mermaid");
+      return;
+    }
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      themeVariables: {
+        fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+        fontSize: "18px",
+        primaryColor: "#ECECFF",
+        primaryBorderColor: "#9370DB",
+        primaryTextColor: "#111827",
+        lineColor: "#111827",
+        textColor: "#111827",
+        noteBkgColor: "#FFFBEB",
+        noteBorderColor: "#D97706",
+        noteTextColor: "#111827",
+        background: "#ffffff"
+      },
+      class: { useMaxWidth: false }
+    });
+
+    // Mermaid scales every diagram down to the page width, which makes wide diagrams unreadable.
+    // We size each SVG from its own viewBox instead: 100% = true size (18px text), with zoom and fit.
+    var zoomLevels = {};
+    function applyZoom(key, zoom) {
+      var box = document.getElementById("diagram-box-" + key);
+      var svg = box.querySelector("svg");
+      var label = document.getElementById("zoom-" + key);
+      if (!svg) { return; }
+      if (zoom === "fit") {
+        box.classList.add("fit");
+        label.textContent = "fit";
+        zoomLevels[key] = "fit";
+        return;
+      }
+      box.classList.remove("fit");
+      var viewBox = svg.viewBox.baseVal;
+      svg.setAttribute("width", String(Math.round(viewBox.width * zoom)));
+      svg.setAttribute("height", String(Math.round(viewBox.height * zoom)));
+      zoomLevels[key] = zoom;
+      label.textContent = Math.round(zoom * 100) + "%";
+    }
+    document.querySelectorAll("[data-zoom]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var key = button.getAttribute("data-box");
+        var action = button.getAttribute("data-zoom");
+        var current = typeof zoomLevels[key] === "number" ? zoomLevels[key] : 1;
+        if (action === "fit") { applyZoom(key, "fit"); }
+        else if (action === "1") { applyZoom(key, 1); }
+        else if (action === "+") { applyZoom(key, Math.min(current * 1.25, 3)); }
+        else { applyZoom(key, Math.max(current / 1.25, 0.2)); }
+      });
+    });
+
+    var sources = Array.prototype.slice.call(document.querySelectorAll("script.mermaid-source"));
+    var ok = 0, failed = 0;
+    sources.reduce(function (chain, element) {
+      return chain.then(function () {
+        var key = element.getAttribute("data-key");
+        var box = document.getElementById("diagram-box-" + key);
+        var status = document.getElementById("status-" + key);
+        return mermaid.render("uml-" + key, element.textContent).then(function (result) {
+          box.innerHTML = result.svg;
+          applyZoom(key, key === "e" ? "fit" : 1);
+          status.textContent = "✔ rendered";
+          status.className = "status ok";
+          ok += 1;
+        }).catch(function (error) {
+          box.innerHTML = "";
+          var pre = document.createElement("pre");
+          pre.className = "error";
+          pre.textContent = "Mermaid error:\n" + (error && error.message ? error.message : String(error));
+          box.appendChild(pre);
+          status.textContent = "✘ syntax error";
+          status.className = "status bad";
+          failed += 1;
+        });
+      });
+    }, Promise.resolve()).then(function () {
+      report.textContent = failed === 0
+        ? "✔ All " + ok + " diagrams rendered without errors."
+        : "✘ " + failed + " of " + (ok + failed) + " diagrams failed to render.";
+      report.style.color = failed === 0 ? "#166534" : "#b91c1c";
+      document.body.setAttribute("data-render", failed === 0 ? "ok" : "failed");
+      document.body.setAttribute("data-render-ok", String(ok));
+      document.body.setAttribute("data-render-failed", String(failed));
+      // Diagrams render after load and push content down, so jump to a #diagram-x link again now.
+      if (location.hash) {
+        var target = document.getElementById(location.hash.slice(1));
+        if (target) { document.documentElement.style.scrollBehavior = "auto"; target.scrollIntoView(); }
+      }
+    });
+  })();
+</script>
+</body>
+</html>

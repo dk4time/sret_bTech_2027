@@ -1,0 +1,46 @@
+# ── Walkthrough 01: the canonical Egmore -> Tambaram ride (Manual captain mode) ──
+# Move the clock to 9:10 AM (peak hour).
+4
+3
+09:10
+0
+# Customer app -> Arun (#3) -> Book a ride
+1
+3
+4
+# Pickup: Enter = Arun's current location (Egmore). Drop: "tam" -> Tambaram.
+
+tam
+# Vehicle row 3 = Cab Economy, 1 passenger, pay by Rapido Wallet (3), no coupon, confirm.
+3
+1
+3
+
+y
+# The offer now waits on Senthil's phone. Back to the main menu -> Captain app -> Senthil (#8).
+0
+2
+8
+# View incoming offer -> Accept
+3
+1
+# Mark arrived (the clock moves by the travel ETA), then start with Arun's OTP.
+4
+5
+8050
+# Complete ride: the clock moves by the trip time, the receipt is printed.
+6
+0
+# Operations -> Nearby captains for EGMORE, Cab Economy: Senthil is now ✘ outside the radius.
+3
+3
+egmore
+4
+# Nearby captains for CHROMEPET, Cab Economy: Senthil (at Tambaram) is ✔ eligible.
+3
+chromepet
+4
+# Captain position board
+1
+0
+0

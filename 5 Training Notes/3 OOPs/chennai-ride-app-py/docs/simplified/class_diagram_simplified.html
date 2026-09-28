@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapido Chennai — Simplified Class Diagram</title>
+<style>
+  :root { --ink: #111827; --muted: #4b5563; --rule: #d1d5db; --panel: #f9fafb; --ok: #166534; --bad: #b91c1c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #ffffff; color: var(--ink);
+         font: 22px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1600px; margin: 0 auto; padding: 32px 28px 80px; }
+  h1 { font-size: 2.2rem; margin: 0 0 4px; }
+  h2 { font-size: 1.7rem; margin: 0 0 12px; }
+  h3 { font-size: 1.2rem; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); margin: 0 0 20px; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.85em; background: #eef2ff; padding: 1px 5px; border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin: 8px 0 16px; }
+  th, td { border: 1px solid var(--rule); padding: 8px 10px; text-align: left; vertical-align: middle; }
+  th { background: var(--panel); }
+  .legend { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; border: 2px solid var(--ink); border-radius: 12px; padding: 18px 22px; }
+  .swatches { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; }
+  .swatches li { margin: 6px 0; }
+  .chip { display: inline-block; padding: 1px 10px; border-radius: 6px; border: 3px solid; font-weight: 700; margin-right: 6px; }
+  .chip.abstract { background: #FFF4D6; border-color: #B45309; }
+  .chip.interface { background: #F3E8FF; border-color: #7E22CE; }
+  .chip.enum { background: #E7F6EA; border-color: #2E7D32; }
+  .chip.concrete { background: #FFFFFF; border-color: #4B5563; border-width: 2px; }
+  .chip.module { background: #F9FAFB; border-color: #6B7280; border-style: dashed; border-width: 2px; }
+  .rule { margin: 14px 0 0; padding: 10px 14px; background: #FFFBEB; border-left: 6px solid #D97706; font-size: 0.95rem; }
+  .group { border-top: 4px solid var(--ink); margin-top: 44px; padding-top: 16px; }
+  .pair { display: grid; grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr); gap: 28px; align-items: start; }
+  .diagram-box { border: 1px solid var(--rule); border-radius: 12px; padding: 16px; overflow: auto; background: #fff; text-align: center; }
+  .diagram-box svg { max-width: 100%; height: auto; }
+  .status { font-weight: 700; font-size: 0.8rem; margin-bottom: 6px; }
+  .status.ok { color: var(--ok); } .status.bad { color: var(--bad); }
+  .file { color: var(--muted); font-size: 0.7rem; font-family: ui-monospace, Menlo, monospace; margin: 6px 0 0; }
+  .why { background: var(--panel); border: 2px solid var(--rule); border-radius: 12px; padding: 16px 18px; font-size: 0.85rem; }
+  .why ul { list-style: none; padding: 0; margin: 0; }
+  .why li { margin: 0 0 10px; line-height: 1.45; }
+  .why .chip { font-size: 0.85em; }
+  .takeaway { margin: 12px 0 0; padding-top: 10px; border-top: 1px dashed var(--rule); font-weight: 600; }
+  pre.error { color: var(--bad); white-space: pre-wrap; font-size: 0.8rem; text-align: left; }
+  #report { font-weight: 700; }
+  @media (max-width: 900px) {
+    body { font-size: 18px; } .pair, .legend { grid-template-columns: 1fr; } main { padding: 20px 16px 60px; }
+  }
+  @media print {
+    body { font-size: 12pt; } main { max-width: none; padding: 0; }
+    .group { page-break-before: always; break-before: page; border-top: 0; margin-top: 0; }
+    .pair { grid-template-columns: 1fr; gap: 12px; }
+    .diagram-box { overflow: visible; border: 0; padding: 0; }
+    .status, .file { display: none; }
+    .why, .legend, table { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Rapido Chennai — Simplified Class Diagram</h1>
+  <p class="subtitle">Type names and relationships only. Built from the real <code>ridehailing/</code> code.
+     <span id="report">Rendering diagrams…</span></p>
+
+  <section class="legend" aria-label="Legend">
+    <div>
+      <h3>Arrows</h3>
+      <table>
+        <thead><tr><th>Arrow</th><th>Name</th><th>Label</th><th>Meaning</th></tr></thead>
+        <tbody>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="inheritance arrow"><line x1="10" y1="20" x2="118" y2="20" stroke="#111" stroke-width="2.5"/><polygon points="118,9 140,20 118,31" fill="#fff" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Inheritance</b></td><td>“is-a”</td><td>Child IS-A parent and may override it. Solid line, hollow triangle.</td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="realisation arrow"><line x1="10" y1="20" x2="118" y2="20" stroke="#111" stroke-width="2.5" stroke-dasharray="7 5"/><polygon points="118,9 140,20 118,31" fill="#fff" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Interface realisation</b></td><td>“can-do”</td><td>The class keeps the interface's promise. Dashed line, hollow triangle.</td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="composition arrow"><polygon points="10,20 26,11 42,20 26,29" fill="#111" stroke="#111" stroke-width="2.5"/><line x1="42" y1="20" x2="140" y2="20" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Composition</b></td><td>“has-a, owns”</td><td>Owns the part; the part lives and dies with it. Filled diamond ◆ at the owner.</td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="aggregation arrow"><polygon points="10,20 26,11 42,20 26,29" fill="#fff" stroke="#111" stroke-width="2.5"/><line x1="42" y1="20" x2="140" y2="20" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Aggregation</b></td><td>“has-a, uses”</td><td>Refers to something that exists on its own. Hollow diamond ◇ at the holder.</td></tr>
+<tr><td><svg width="150" height="40" viewBox="0 0 150 40" role="img" aria-label="uses arrow"><line x1="10" y1="20" x2="139" y2="20" stroke="#111" stroke-width="2.5" stroke-dasharray="7 5"/><polyline points="124,10 140,20 124,30" fill="none" stroke="#111" stroke-width="2.5"/></svg></td><td><b>Uses (dependency)</b></td><td>“uses”</td><td>Only in group 6: a service uses a model class. Dotted line, open arrow.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Colours</h3>
+      <ul class="swatches">
+        <li><span class="chip abstract">«abstract»</span> abstract class: shared data, cannot be created</li>
+        <li><span class="chip interface">«interface»</span> interface: a CAN-DO promise, no data</li>
+        <li><span class="chip enum">«enumeration»</span> enum: a fixed set of values</li>
+        <li><span class="chip concrete">Plain</span> concrete class: real objects are made from it</li>
+        <li><span class="chip module">«module»</span> a Python module, not a class</li>
+      </ul>
+      <p class="rule"><b>Rule of thumb:</b> abstract class = IS-A with shared data;<br>interface = CAN-DO, no shared data.</p>
+    </div>
+  </section>
+
+
+<section class="group" id="group-1">
+  <h2>1 · User and vehicles</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-1">Rendering…</div>
+      <div class="diagram-box" id="box-1"></div>
+      <script type="text/plain" class="mermaid-source" data-n="1">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 1 · User and vehicles (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction TB
+    class User {
+        <<abstract>>
+    }
+    class Customer
+    class Captain
+    class Vehicle {
+        <<abstract>>
+    }
+    class Bike
+    class Auto
+    class Cab {
+        <<abstract>>
+    }
+    class CabEconomy
+    class CabPremium
+    class CaptainStatus {
+        <<enumeration>>
+    }
+    class VehicleType {
+        <<enumeration>>
+    }
+    User <|-- Customer : is-a
+    User <|-- Captain : is-a
+    Vehicle <|-- Bike : is-a
+    Vehicle <|-- Auto : is-a
+    Vehicle <|-- Cab : is-a
+    Cab <|-- CabEconomy : is-a
+    Cab <|-- CabPremium : is-a
+    Captain *-- Vehicle : has-a, owns
+    Captain o-- CaptainStatus : has-a, uses
+    Vehicle o-- VehicleType : has-a, uses
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px
+</script>
+      <p class="file">docs/simplified/diagrams/01_user_and_vehicles.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip abstract">User</span> Abstract: no &quot;plain&quot; user exists. It holds shared data (id, name, phone, rating), so it is an abstract class, not an interface.</li>
+<li><span class="chip concrete">Customer</span> Concrete: a real person who books, with their own data (wallet, ride history).</li>
+<li><span class="chip concrete">Captain</span> Concrete: a real person who drives, with their own data (status, dues, vehicle).</li>
+<li><span class="chip abstract">Vehicle</span> Abstract: the fare formula is written ONCE here; each child overrides its own rates (polymorphism).</li>
+<li><span class="chip concrete">Bike</span> Concrete: overrides the rates with bike values.</li>
+<li><span class="chip concrete">Auto</span> Concrete: overrides the rates with auto values.</li>
+<li><span class="chip abstract">Cab</span> Abstract, in the middle: groups Economy and Premium, giving multilevel inheritance.</li>
+<li><span class="chip concrete">CabEconomy</span> Concrete: Vehicle → Cab → CabEconomy (three levels).</li>
+<li><span class="chip concrete">CabPremium</span> Concrete: Vehicle → Cab → CabPremium (three levels).</li>
+<li><span class="chip enum">CaptainStatus</span> Enum: a fixed set of values (KYC_PENDING, OFFLINE, ONLINE, ON_RIDE), so an invalid value is impossible.</li>
+<li><span class="chip enum">VehicleType</span> Enum: BIKE, AUTO, CAB_ECONOMY, CAB_PREMIUM, each with a seat count and a cancellation fee.</li>
+      </ul>
+      <p class="takeaway">Captain HAS-A Vehicle: a captain is a person, not a vehicle, so this is composition (◆), not inheritance.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-2">
+  <h2>2 · Location and money</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-2">Rendering…</div>
+      <div class="diagram-box" id="box-2"></div>
+      <script type="text/plain" class="mermaid-source" data-n="2">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 2 · Location and money (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class Location
+    class Money
+    class chennai_places {
+        <<module>>
+    }
+    class ServiceArea
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style chennai_places fill:#F9FAFB,stroke:#6B7280,stroke-width:2px,stroke-dasharray:6 4
+</script>
+      <p class="file">docs/simplified/diagrams/02_location_and_money.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip concrete">Location</span> Immutable: a place never changes, so it is safe to share. Compared by value (same coordinates = equal).</li>
+<li><span class="chip concrete">Money</span> Immutable: ₹ amounts never change. Decimal inside, so no floating-point errors (0.1 + 0.2 = 0.3 exactly).</li>
+<li><span class="chip module">chennai_places</span> Not a class: a module holding a dict of real Chennai places and helper functions. Location.from_place_name() reads it.</li>
+<li><span class="chip concrete">ServiceArea</span> Concrete: the Chennai Metro box. A pickup or drop outside it is rejected.</li>
+      </ul>
+      <p class="takeaway">These are small building blocks used everywhere. They only appear as parameters of each other, so this group has no arrows.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-3">
+  <h2>3 · Ride</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-3">Rendering…</div>
+      <div class="diagram-box" id="box-3"></div>
+      <script type="text/plain" class="mermaid-source" data-n="3">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 3 · Ride (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class Ride
+    class Customer
+    class Captain
+    class RideRequest
+    class FareEstimate
+    class FareReceipt
+    class RideStatus {
+        <<enumeration>>
+    }
+    class CancellationReason {
+        <<enumeration>>
+    }
+    Ride o-- Customer : has-a, uses
+    Ride o-- Captain : has-a, uses
+    Ride *-- RideRequest : has-a, owns
+    Ride *-- FareEstimate : has-a, owns
+    Ride *-- FareReceipt : has-a, owns
+    Ride o-- RideStatus : has-a, uses
+    Ride o-- CancellationReason : has-a, uses
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px
+</script>
+      <p class="file">docs/simplified/diagrams/03_ride.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip concrete">Ride</span> Guards its own status: there is no set_status(), only assign_captain(), start(otp), complete(), cancel(). The OTP is private. The best encapsulation example.</li>
+<li><span class="chip concrete">Customer</span> Aggregation: the customer exists before and after the ride.</li>
+<li><span class="chip concrete">Captain</span> Aggregation: the captain exists before and after the ride.</li>
+<li><span class="chip concrete">RideRequest</span> Composition: what was booked (pickup, drop, vehicle type), frozen at booking.</li>
+<li><span class="chip concrete">FareEstimate</span> Composition: the price shown before confirming.</li>
+<li><span class="chip concrete">FareReceipt</span> Composition: the itemised bill, created for this ride only.</li>
+<li><span class="chip enum">RideStatus</span> Enum: REQUESTED → … → COMPLETED / CANCELLED. Only these values can exist.</li>
+<li><span class="chip enum">CancellationReason</span> Enum: CUSTOMER_CANCELLED, NO_SHOW, OTP_FAILED, NO_CAPTAIN_AVAILABLE.</li>
+      </ul>
+      <p class="takeaway">◇ (aggregation) = the ride only refers to them. ◆ (composition) = the ride owns them.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-4">
+  <h2>4 · Payments</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-4">Rendering…</div>
+      <div class="diagram-box" id="box-4"></div>
+      <script type="text/plain" class="mermaid-source" data-n="4">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 4 · Payments (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction TB
+    class Payable {
+        <<interface>>
+    }
+    class UpiPayment
+    class CashPayment
+    class WalletPayment
+    class PaymentStatus {
+        <<enumeration>>
+    }
+    Payable <|.. UpiPayment : can-do
+    Payable <|.. CashPayment : can-do
+    Payable <|.. WalletPayment : can-do
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:3px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px
+</script>
+      <p class="file">docs/simplified/diagrams/04_payments.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip interface">Payable</span> Interface: shares no data, only a CAN-DO promise (pay). A new payment method = one new class, no changes to existing code.</li>
+<li><span class="chip concrete">UpiPayment</span> Can-do pay(): UPI, which can fail (seeded, so every run is identical).</li>
+<li><span class="chip concrete">CashPayment</span> Can-do pay(): cash, which always succeeds; the captain then owes the platform its share.</li>
+<li><span class="chip concrete">WalletPayment</span> Can-do pay(): wallet, which deducts all or nothing, never partially.</li>
+<li><span class="chip enum">PaymentStatus</span> Enum: NOT_DUE, FAILED, PAID, so a ride&#x27;s payment can only be in one of these states.</li>
+      </ul>
+      <p class="takeaway">Rule of thumb: abstract class = IS-A with shared data; interface = CAN-DO, no shared data.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-5">
+  <h2>5 · Notifications</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-5">Rendering…</div>
+      <div class="diagram-box" id="box-5"></div>
+      <script type="text/plain" class="mermaid-source" data-n="5">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 5 · Notifications (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction TB
+    class Notifier {
+        <<abstract>>
+    }
+    class SmsNotifier
+    class PushNotifier
+    Notifier <|-- SmsNotifier : is-a
+    Notifier <|-- PushNotifier : is-a
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+</script>
+      <p class="file">docs/simplified/diagrams/05_notifications.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip abstract">Notifier</span> Abstract class in the code (not an interface): it keeps shared data, the log of sent messages. By the rule of thumb (shared data), that makes it abstract.</li>
+<li><span class="chip concrete">SmsNotifier</span> Is-a Notifier: sends by SMS to the user&#x27;s +91 number.</li>
+<li><span class="chip concrete">PushNotifier</span> Is-a Notifier: in-app push (printed in the demo).</li>
+      </ul>
+      <p class="takeaway">RideService holds a list of Notifier and calls notify() on each, without knowing SMS from push. That is polymorphism.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-6">
+  <h2>6 · Services</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-6">Rendering…</div>
+      <div class="diagram-box" id="box-6"></div>
+      <script type="text/plain" class="mermaid-source" data-n="6">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 6 · Services (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class CustomerService
+    class CaptainService
+    class MatchingService
+    class RideService
+    class FareService
+    class PaymentService
+    class RatingService
+    class EarningsService
+    class Ride
+    class Customer
+    class Captain
+    class Vehicle {
+        <<abstract>>
+    }
+    class Location
+    class Money
+    class FareReceipt
+    class Payable {
+        <<interface>>
+    }
+    class Notifier {
+        <<abstract>>
+    }
+    CustomerService ..> Customer
+    CustomerService ..> Money
+    CaptainService ..> Captain
+    CaptainService ..> Vehicle
+    MatchingService ..> Captain
+    MatchingService ..> Ride
+    MatchingService ..> Location
+    RideService ..> Ride
+    RideService ..> Customer
+    RideService ..> Captain
+    RideService ..> Payable
+    RideService ..> Notifier
+    FareService ..> Vehicle
+    FareService ..> FareReceipt
+    FareService ..> Location
+    PaymentService ..> Payable
+    PaymentService ..> Ride
+    RatingService ..> Ride
+    RatingService ..> Captain
+    EarningsService ..> Ride
+    EarningsService ..> Captain
+    EarningsService ..> Money
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:3px
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+</script>
+      <p class="file">docs/simplified/diagrams/06_services.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip concrete">CustomerService</span> Registers customers, tops up wallets, moves customers around.</li>
+<li><span class="chip concrete">CaptainService</span> Registers captains with their vehicles; online/offline; settles dues.</li>
+<li><span class="chip concrete">MatchingService</span> Finds the nearest eligible captain for a ride.</li>
+<li><span class="chip concrete">RideService</span> Runs every ride flow, from booking to payment, and notifies on each event.</li>
+<li><span class="chip concrete">FareService</span> All fare maths: rates, surge, night charge, coupon, receipt.</li>
+<li><span class="chip concrete">PaymentService</span> Takes payment through any Payable and keeps a ledger.</li>
+<li><span class="chip concrete">RatingService</span> Ratings after COMPLETED rides only.</li>
+<li><span class="chip concrete">EarningsService</span> Splits money into captain earnings, commission and GST; proves the books balance.</li>
+<li><span class="chip concrete">Ride</span> Model: see group 3.</li>
+<li><span class="chip concrete">Customer</span> Model: see group 1.</li>
+<li><span class="chip concrete">Captain</span> Model: see group 1.</li>
+<li><span class="chip abstract">Vehicle</span> Model: see group 1.</li>
+<li><span class="chip concrete">Location</span> Model: see group 2.</li>
+<li><span class="chip concrete">Money</span> Model: see group 2.</li>
+<li><span class="chip concrete">FareReceipt</span> Model: see group 3.</li>
+<li><span class="chip interface">Payable</span> Model: see group 4.</li>
+<li><span class="chip abstract">Notifier</span> Model: see group 5.</li>
+      </ul>
+      <p class="takeaway">Every dotted arrow means USES. Services coordinate several objects; models handle their own rules. The arrows show the main model classes each service imports.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-7">
+  <h2>7 · Clock and exceptions</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-7">Rendering…</div>
+      <div class="diagram-box" id="box-7"></div>
+      <script type="text/plain" class="mermaid-source" data-n="7">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 7 · Clock and exceptions (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class SimulatedClock
+    class Exception
+    class RideHailingError
+    class InvalidRideStatusError
+    class InvalidOtpError
+    class NoCaptainAvailableError
+    class ActiveRideExistsError
+    class PaymentPendingError
+    class InsufficientWalletBalanceError
+    class OutOfServiceAreaError
+    class InvalidBookingError
+    class CaptainNotEligibleError
+    class CaptainBusyError
+    class CaptainNotAtPickupError
+    class PaymentFailedError
+    class DuplicatePaymentError
+    class InvalidAmountError
+    class InvalidRatingError
+    class TimeTravelError
+    class UnauthorizedAccessError
+    Exception <|-- RideHailingError : is-a
+    RideHailingError <|-- InvalidRideStatusError : is-a
+    RideHailingError <|-- InvalidOtpError : is-a
+    RideHailingError <|-- NoCaptainAvailableError : is-a
+    RideHailingError <|-- ActiveRideExistsError : is-a
+    RideHailingError <|-- PaymentPendingError : is-a
+    RideHailingError <|-- InsufficientWalletBalanceError : is-a
+    RideHailingError <|-- OutOfServiceAreaError : is-a
+    RideHailingError <|-- InvalidBookingError : is-a
+    RideHailingError <|-- CaptainNotEligibleError : is-a
+    RideHailingError <|-- CaptainBusyError : is-a
+    RideHailingError <|-- CaptainNotAtPickupError : is-a
+    RideHailingError <|-- PaymentFailedError : is-a
+    RideHailingError <|-- DuplicatePaymentError : is-a
+    RideHailingError <|-- InvalidAmountError : is-a
+    RideHailingError <|-- InvalidRatingError : is-a
+    RideHailingError <|-- TimeTravelError : is-a
+    RideHailingError <|-- UnauthorizedAccessError : is-a
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+</script>
+      <p class="file">docs/simplified/diagrams/07_clock_and_exceptions.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip concrete">SimulatedClock</span> Controlled time: repeatable demos, and night rides on demand. It can never go backwards.</li>
+<li><span class="chip concrete">Exception</span> Python&#x27;s built-in base class for all errors.</li>
+<li><span class="chip concrete">RideHailingError</span> Inheritance again: catch the parent to handle ALL app errors…</li>
+<li><span class="chip concrete">17 specific errors</span> …or catch one child for one specific error, e.g. InsufficientWalletBalanceError.</li>
+      </ul>
+      <p class="takeaway">Catch RideHailingError → every app error. Catch InvalidOtpError → just that one.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-8">
+  <h2>8 · CLI</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-8">Rendering…</div>
+      <div class="diagram-box" id="box-8"></div>
+      <script type="text/plain" class="mermaid-source" data-n="8">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 8 · CLI (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class Menu {
+        <<abstract>>
+    }
+    class StartupMenu
+    class MainMenu
+    class CustomerMenu
+    class CaptainMenu
+    class OperationsMenu
+    class ClockMenu
+    class ConsoleIO
+    Menu <|-- StartupMenu : is-a
+    Menu <|-- MainMenu : is-a
+    Menu <|-- CustomerMenu : is-a
+    Menu <|-- CaptainMenu : is-a
+    Menu <|-- OperationsMenu : is-a
+    Menu <|-- ClockMenu : is-a
+    MainMenu *-- Menu : has-a, owns
+    Menu o-- ConsoleIO : has-a, uses
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+</script>
+      <p class="file">docs/simplified/diagrams/08_cli.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><span class="chip abstract">Menu</span> Abstract: the show/read/handle loop is written ONCE; each menu handles its choices differently.</li>
+<li><span class="chip concrete">StartupMenu</span> Is-a Menu: demo / interactive mode / self-check.</li>
+<li><span class="chip concrete">MainMenu</span> Is-a Menu. It also owns its four sub-menus and holds them as Menu (polymorphism).</li>
+<li><span class="chip concrete">CustomerMenu</span> Is-a Menu: the customer&#x27;s phone app.</li>
+<li><span class="chip concrete">CaptainMenu</span> Is-a Menu: the captain&#x27;s phone app.</li>
+<li><span class="chip concrete">OperationsMenu</span> Is-a Menu: the operations dashboard.</li>
+<li><span class="chip concrete">ClockMenu</span> Is-a Menu: move the clock forward.</li>
+<li><span class="chip concrete">ConsoleIO</span> One shared object for all input and output (aggregation: every menu uses the same one).</li>
+      </ul>
+      <p class="takeaway">The CLI has no business rules; it only calls the services in group 6.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="group" id="group-9">
+  <h2>9 · Overview: how the groups connect</h2>
+  <div class="pair">
+    <div class="diagram-col">
+      <div class="status" id="status-9">Rendering…</div>
+      <div class="diagram-box" id="box-9"></div>
+      <script type="text/plain" class="mermaid-source" data-n="9">---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 9 · Overview: how the 8 groups connect.
+flowchart TB
+    G8["8 · CLI"]
+    G6["6 · Services"]
+    G7["7 · Clock and exceptions"]
+    G5["5 · Notifications"]
+    G3["3 · Ride"]
+    G1["1 · User and vehicles"]
+    G4["4 · Payments"]
+    G2["2 · Location and money"]
+    G8 -- "calls the services" --> G6
+    G6 -- "reads the clock, raises errors" --> G7
+    G6 -- "sends messages" --> G5
+    G6 -- "coordinates rides" --> G3
+    G6 -- "registers users" --> G1
+    G6 -- "takes payments" --> G4
+    G3 -- "has a Customer and a Captain" --> G1
+    G3 -- "paid with a Payable" --> G4
+    G3 -- "route and fare" --> G2
+    G1 -- "is at a Location, wallet in Money" --> G2
+    classDef grp fill:#FFFFFF,stroke:#111827,stroke-width:2px,color:#111827,font-size:20px
+    classDef hub fill:#EEF2FF,stroke:#1D4ED8,stroke-width:3px,color:#111827,font-size:20px
+    class G1,G2,G3,G4,G5,G7,G8 grp
+    class G6 hub
+</script>
+      <p class="file">docs/simplified/diagrams/09_overview.mmd</p>
+    </div>
+    <aside class="why">
+      <h3>Why?</h3>
+      <ul>
+<li><b>Ride → User group</b>: A ride refers to one Customer and one Captain (aggregation).</li>
+<li><b>Ride → Payments</b>: A ride is paid through a Payable: UPI, cash or wallet.</li>
+<li><b>Services → models</b>: Services coordinate; the model classes keep their own rules.</li>
+<li><b>CLI → Services</b>: Menus only call services, so the same objects power the demo and the CLI.</li>
+      </ul>
+      <p class="takeaway">Group 6 (services) is the hub: it connects the models to each other and to the CLI.</p>
+    </aside>
+  </div>
+</section>
+
+  <section class="group" id="notes">
+    <h2>Notes: where the names differ from the brief</h2>
+    <table><tbody>
+<tr><td><b>ChennaiPlaces</b></td><td>The code has no ChennaiPlaces class. It is the module <code>chennai_places</code> (a dict of places plus helper functions), shown as a dashed «module» box.</td></tr>
+<tr><td><b>Notifier «interface»</b></td><td>In the code Notifier is an <b>abstract class</b> (<code>abc.ABC</code>) that stores the sent-message log and has a concrete <code>_record()</code> method, so it is marked «abstract», not «interface».</td></tr>
+<tr><td><b>Payable «interface»</b></td><td>Python has no <code>interface</code> keyword. Payable is an ABC used as an interface: both of its members are abstract, plus one default property, <code>is_cash</code>.</td></tr>
+<tr><td><b>setStatus(), assignCaptain()</b></td><td>The code is Python, so its names are snake_case: <code>assign_captain()</code>, <code>start(otp)</code>, <code>complete()</code>, <code>cancel()</code>. There is no <code>set_status()</code> at all.</td></tr>
+<tr><td><b>Base exception class</b></td><td>The base class is <code>RideHailingError</code> (in <code>ridehailing/exceptions.py</code>), which itself extends Python's <code>Exception</code>.</td></tr>
+<tr><td><b>Extra types shown</b></td><td>The code also has these types, included because they belong to the groups: RideRequest and FareEstimate (group 3), ServiceArea (group 2), StartupMenu and ConsoleIO (group 8).</td></tr>
+<tr><td><b>Not shown</b></td><td>Helper classes left out to keep it simple: PendingFee, DailyEarnings, PaymentRecord, ChennaiRideApp, CliSession, and the CLI control exceptions GoBack / QuitRequested / EndOfInput. The detailed diagrams are in <code>docs/class_diagram.html</code>.</td></tr>
+    </tbody></table>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.min.js"></script>
+<script>
+  (function () {
+    var report = document.getElementById("report");
+    if (typeof mermaid === "undefined") {
+      report.textContent = "✘ Mermaid could not be loaded from cdn.jsdelivr.net (check the internet connection).";
+      report.style.color = "#b91c1c";
+      document.body.setAttribute("data-render", "no-mermaid");
+      return;
+    }
+    mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: "base" });
+    var sources = Array.prototype.slice.call(document.querySelectorAll("script.mermaid-source"));
+    var ok = 0, failed = 0;
+    sources.reduce(function (chain, element) {
+      return chain.then(function () {
+        var n = element.getAttribute("data-n");
+        var box = document.getElementById("box-" + n);
+        var status = document.getElementById("status-" + n);
+        return mermaid.render("simple-" + n, element.textContent).then(function (result) {
+          box.innerHTML = result.svg;
+          status.textContent = "✔ rendered";
+          status.className = "status ok";
+          ok += 1;
+        }).catch(function (error) {
+          var pre = document.createElement("pre");
+          pre.className = "error";
+          pre.textContent = "Mermaid error: " + (error && error.message ? error.message : String(error));
+          box.innerHTML = "";
+          box.appendChild(pre);
+          status.textContent = "✘ syntax error";
+          status.className = "status bad";
+          failed += 1;
+        });
+      });
+    }, Promise.resolve()).then(function () {
+      report.textContent = failed === 0 ? "✔ All " + ok + " diagrams rendered." : "✘ " + failed + " of " + (ok + failed) + " diagrams failed.";
+      report.style.color = failed === 0 ? "#166534" : "#b91c1c";
+      document.body.setAttribute("data-render", failed === 0 ? "ok" : "failed");
+      document.body.setAttribute("data-render-ok", String(ok));
+    });
+  })();
+</script>
+</body>
+</html>

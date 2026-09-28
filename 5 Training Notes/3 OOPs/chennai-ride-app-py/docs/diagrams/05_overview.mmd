@@ -1,0 +1,122 @@
+%% (e) Overview — every class and relationship, no members. Details are in diagrams (a)–(d).
+classDiagram
+    direction LR
+
+    class User {
+        <<abstract>>
+    }
+    class Vehicle {
+        <<abstract>>
+    }
+    class Cab {
+        <<abstract>>
+    }
+    class Payable {
+        <<interface>>
+    }
+    class Notifier {
+        <<abstract>>
+    }
+    class Menu {
+        <<abstract>>
+    }
+    class VehicleType {
+        <<enumeration>>
+    }
+    class CaptainStatus {
+        <<enumeration>>
+    }
+    class RideStatus {
+        <<enumeration>>
+    }
+    class CancellationReason {
+        <<enumeration>>
+    }
+    class PaymentStatus {
+        <<enumeration>>
+    }
+    class Location {
+        <<value object>>
+    }
+    class Money {
+        <<value object>>
+    }
+
+    %% users and vehicles
+    User <|-- Customer : is-a
+    User <|-- Captain : is-a
+    Vehicle <|-- Bike : is-a
+    Vehicle <|-- Auto : is-a
+    Vehicle <|-- Cab : is-a
+    Cab <|-- CabEconomy : is-a
+    Cab <|-- CabPremium : is-a
+    Captain *-- Vehicle : owns
+    Customer *-- PendingFee : owns
+    Captain --> CaptainStatus : state
+    Vehicle ..> VehicleType : type
+    User --> Location : at
+
+    %% ride and payments
+    Ride *-- RideRequest : owns
+    Ride *-- FareEstimate : owns
+    Ride *-- FareReceipt : owns
+    Ride o-- Customer : refs
+    Ride o-- Captain : refs
+    Ride --> Payable : pays with
+    Ride --> RideStatus : state
+    Ride --> PaymentStatus : state
+    Ride --> CancellationReason : reason
+    Payable <|.. UpiPayment : implements
+    Payable <|.. CashPayment : implements
+    Payable <|.. WalletPayment : implements
+    FareReceipt ..> Money : amounts
+
+    %% services and notifications
+    ChennaiRideApp *-- RideService : builds
+    ChennaiRideApp *-- CaptainService : builds
+    ChennaiRideApp *-- CustomerService : builds
+    ChennaiRideApp *-- RatingService : builds
+    ChennaiRideApp *-- SimulatedClock : builds
+    RideService o-- FareService : uses
+    RideService o-- MatchingService : uses
+    RideService o-- PaymentService : uses
+    RideService o-- Notifier : notifies
+    RideService --> ServiceArea : checks
+    RideService --> Ride : manages
+    MatchingService o-- CaptainService : uses
+    PaymentService o-- EarningsService : uses
+    PaymentService *-- PaymentRecord : ledger
+    EarningsService *-- DailyEarnings : owns
+    FareService *-- Vehicle : rate card
+    CaptainService o-- Captain : registry
+    CustomerService o-- Customer : registry
+    Notifier <|-- SmsNotifier : is-a
+    Notifier <|-- PushNotifier : is-a
+
+    %% CLI layer
+    Menu <|-- StartupMenu : is-a
+    Menu <|-- MainMenu : is-a
+    Menu <|-- CustomerMenu : is-a
+    Menu <|-- CaptainMenu : is-a
+    Menu <|-- OperationsMenu : is-a
+    Menu <|-- ClockMenu : is-a
+    Menu o-- ConsoleIO : shared
+    MainMenu *-- Menu : sub-menus
+    CliSession *-- ChennaiRideApp : same world
+    CustomerMenu o-- CliSession : shared
+    CaptainMenu o-- CliSession : shared
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:2px
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Location fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+    style Money fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px

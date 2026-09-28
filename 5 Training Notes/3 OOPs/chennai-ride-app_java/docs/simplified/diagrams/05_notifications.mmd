@@ -1,0 +1,23 @@
+---
+title: "5 · Notifications"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+    class Notifier {
+        <<interface>>
+    }
+
+    class SmsNotifier
+    class PushNotifier
+
+    Notifier <|.. SmsNotifier : can-do
+    Notifier <|.. PushNotifier : can-do
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Notifier fill:#dcfce7,stroke:#15803d,stroke-width:3px
+    style SmsNotifier fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style PushNotifier fill:#f8fafc,stroke:#475569,stroke-width:2px

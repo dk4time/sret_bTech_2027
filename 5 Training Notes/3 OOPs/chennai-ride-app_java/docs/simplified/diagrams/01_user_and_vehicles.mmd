@@ -1,0 +1,54 @@
+---
+title: "1 · User and vehicles"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+    class User {
+        <<abstract>>
+    }
+    class Vehicle {
+        <<abstract>>
+    }
+    class Cab {
+        <<abstract>>
+    }
+
+    class CaptainStatus {
+        <<enumeration>>
+    }
+    class VehicleType {
+        <<enumeration>>
+    }
+    class Customer
+    class Captain
+    class Bike
+    class Auto
+    class CabEconomy
+    class CabPremium
+
+    User <|-- Customer : is-a
+    User <|-- Captain : is-a
+    Captain *-- Vehicle : has-a, owns
+    Captain o-- CaptainStatus : has-a, uses
+    Vehicle <|-- Bike : is-a
+    Vehicle <|-- Auto : is-a
+    Vehicle <|-- Cab : is-a
+    Cab <|-- CabEconomy : is-a
+    Cab <|-- CabPremium : is-a
+    Vehicle ..> VehicleType : uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style User fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style Vehicle fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style Cab fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style CaptainStatus fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style VehicleType fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style Customer fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Captain fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Bike fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Auto fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CabEconomy fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CabPremium fill:#f8fafc,stroke:#475569,stroke-width:2px

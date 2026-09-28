@@ -1,0 +1,73 @@
+---
+title: "6 · Services"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR
+    class Vehicle {
+        <<abstract>>
+    }
+    class Payable {
+        <<interface>>
+    }
+
+    class CustomerService
+    class CaptainService
+    class MatchingService
+    class RideService
+    class FareService
+    class PaymentService
+    class RatingService
+    class EarningsService
+    class Customer
+    class Captain
+    class Ride
+    class FareReceipt
+    class Location
+    class Money
+    class ServiceArea
+
+    CustomerService ..> Customer : uses
+    CustomerService ..> Money : uses
+    CaptainService ..> Captain : uses
+    CaptainService ..> Location : uses
+    MatchingService ..> Captain : uses
+    MatchingService ..> Ride : uses
+    MatchingService ..> Location : uses
+    RideService ..> Ride : uses
+    RideService ..> Customer : uses
+    RideService ..> Captain : uses
+    RideService ..> FareReceipt : uses
+    RideService ..> Payable : uses
+    FareService ..> Vehicle : uses
+    FareService ..> Ride : uses
+    FareService ..> FareReceipt : uses
+    FareService ..> ServiceArea : uses
+    PaymentService ..> Payable : uses
+    PaymentService ..> Ride : uses
+    RatingService ..> Ride : uses
+    RatingService ..> Captain : uses
+    EarningsService ..> Ride : uses
+    EarningsService ..> Captain : uses
+    EarningsService ..> Money : uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Vehicle fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style Payable fill:#dcfce7,stroke:#15803d,stroke-width:3px
+    style CustomerService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style MatchingService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style RideService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style FareService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style PaymentService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style RatingService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style EarningsService fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Customer fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Captain fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Ride fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style FareReceipt fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Location fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Money fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ServiceArea fill:#f8fafc,stroke:#475569,stroke-width:2px

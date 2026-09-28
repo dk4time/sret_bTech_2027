@@ -1,0 +1,67 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 6 · Services (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class CustomerService
+    class CaptainService
+    class MatchingService
+    class RideService
+    class FareService
+    class PaymentService
+    class RatingService
+    class EarningsService
+    class Ride
+    class Customer
+    class Captain
+    class Vehicle {
+        <<abstract>>
+    }
+    class Location
+    class Money
+    class FareReceipt
+    class Payable {
+        <<interface>>
+    }
+    class Notifier {
+        <<abstract>>
+    }
+    CustomerService ..> Customer
+    CustomerService ..> Money
+    CaptainService ..> Captain
+    CaptainService ..> Vehicle
+    MatchingService ..> Captain
+    MatchingService ..> Ride
+    MatchingService ..> Location
+    RideService ..> Ride
+    RideService ..> Customer
+    RideService ..> Captain
+    RideService ..> Payable
+    RideService ..> Notifier
+    FareService ..> Vehicle
+    FareService ..> FareReceipt
+    FareService ..> Location
+    PaymentService ..> Payable
+    PaymentService ..> Ride
+    RatingService ..> Ride
+    RatingService ..> Captain
+    EarningsService ..> Ride
+    EarningsService ..> Captain
+    EarningsService ..> Money
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:3px
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:3px

@@ -1,0 +1,26 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 2 · Location and money (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class Location
+    class Money
+    class chennai_places {
+        <<module>>
+    }
+    class ServiceArea
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style chennai_places fill:#F9FAFB,stroke:#6B7280,stroke-width:2px,stroke-dasharray:6 4

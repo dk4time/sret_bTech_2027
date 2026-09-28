@@ -1,0 +1,36 @@
+---
+title: "9 · Overview: how the groups connect"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+    class G1["1 · User and vehicles"]
+    class G2["2 · Location and money"]
+    class G3["3 · Ride"]
+    class G4["4 · Payments"]
+    class G5["5 · Notifications"]
+    class G6["6 · Services"]
+    class G7["7 · Clock and exceptions"]
+    class G8["8 · CLI"]
+    G3 o-- G1 : has-a, uses (Customer, Captain)
+    G3 ..> G4 : uses (paid through Payable)
+    G3 ..> G2 : uses (pickup, drop, fare)
+    G1 ..> G2 : uses (where people are)
+    G6 ..> G1 : uses
+    G6 ..> G3 : uses
+    G6 ..> G4 : uses
+    G6 ..> G5 : uses (notifies)
+    G6 ..> G7 : uses (clock, throws)
+    G8 ..> G6 : uses (calls)
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style G1 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G2 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G3 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G4 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G5 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G6 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G7 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px
+    style G8 fill:#e0f2fe,stroke:#0369a1,stroke-width:3px

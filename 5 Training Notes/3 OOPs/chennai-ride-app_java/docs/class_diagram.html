@@ -1,0 +1,1245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chennai Ride App · UML Class Diagrams</title>
+<style>
+  :root {
+    --ink: #111827; --muted: #4b5563; --line: #d1d5db; --panel: #f9fafb; --accent: #1d4ed8;
+    --ok: #15803d; --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  html { background: #ffffff; }
+  body { margin: 0; background: #ffffff; color: var(--ink);
+         font: 20px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; }
+  header { padding: 28px 32px 8px; }
+  h1 { margin: 0 0 6px; font-size: 2.1rem; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  #summary { font-weight: 600; }
+  nav { position: sticky; top: 0; z-index: 5; background: #ffffffee; border-bottom: 1px solid var(--line);
+        padding: 10px 32px; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  nav a:hover, nav a:focus-visible { text-decoration: underline; }
+  main { padding: 8px 32px 48px; }
+  h2 { font-size: 1.6rem; margin: 0; }
+  .legend, .diagram { border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin: 26px 0; }
+  .legend h2 { margin-bottom: 12px; }
+  .legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px 28px; }
+  .arrow-row { display: grid; grid-template-columns: 170px 1fr; align-items: center; gap: 14px; }
+  .arrow-row svg { width: 170px; height: 44px; }
+  .arrow-row b { display: block; }
+  .arrow-row span { color: var(--muted); font-size: 0.9rem; line-height: 1.35; display: block; }
+  table.keys { border-collapse: collapse; margin-top: 18px; width: 100%; }
+  table.keys th, table.keys td { border: 1px solid var(--line); padding: 6px 12px; text-align: left; vertical-align: top; }
+  table.keys th { background: var(--panel); }
+  code { font-family: "Cascadia Code", Consolas, "SF Mono", Menlo, monospace; font-size: 0.92em;
+         background: var(--panel); padding: 1px 5px; border-radius: 4px; }
+  .diagram-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 18px; }
+  .badge { font-size: 0.85rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); }
+  .badge[data-status="ok"] { color: var(--ok); border-color: var(--ok); }
+  .badge[data-status="error"] { color: var(--bad); border-color: var(--bad); }
+  .tools { margin-left: auto; display: flex; gap: 8px; }
+  .tools button { font: inherit; font-size: 0.9rem; padding: 4px 12px; border: 1px solid var(--line);
+                  background: #fff; border-radius: 6px; cursor: pointer; min-width: 44px; min-height: 36px; }
+  .tools button:hover { background: var(--panel); }
+  .tools button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  .blurb { color: var(--muted); margin: 8px 0 14px; }
+  .canvas { overflow: auto; border-top: 1px solid var(--line); padding-top: 14px; }
+  .canvas svg { display: block; height: auto; }
+  .canvas pre.error { color: var(--bad); white-space: pre-wrap; }
+  script.mermaid-source { display: none; }
+  @media print { nav, .tools { display: none; } .diagram { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Chennai Ride App · UML Class Diagrams</h1>
+  <p class="sub">Generated from the actual code (members read from the compiled classes with <code>javap -p</code>).
+  Key fields and methods only: plain getters are left out unless they matter.</p>
+  <p id="summary" role="status">Rendering diagrams…</p>
+</header>
+<nav aria-label="Diagrams">
+  <a href="#legend">Legend</a>
+  <a href="#a_users_and_vehicles">a) Users and vehicles</a><a href="#b_ride_and_payments">b) Ride and payments</a><a href="#c_services_and_notifications">c) Services and notifications</a><a href="#d_cli_layer">d) CLI layer</a><a href="#e_overview">e) Overview</a>
+</nav>
+<main>
+  <section class="legend" id="legend">
+    <h2>Legend</h2>
+    <div class="legend-grid">
+      <div class="arrow-row">
+        <svg viewBox="0 0 170 44" aria-hidden="true"><line x1="6" y1="22" x2="140" y2="22" stroke="#111" stroke-width="2.5"/><polygon points="140,10 164,22 140,34" fill="#fff" stroke="#111" stroke-width="2.5"/></svg>
+        <div><b>Inheritance (IS-A)</b><span><code>&lt;|--</code> solid line, hollow triangle points to the parent. Labelled hierarchical / multilevel.</span></div>
+      </div>
+      <div class="arrow-row">
+        <svg viewBox="0 0 170 44" aria-hidden="true"><line x1="6" y1="22" x2="140" y2="22" stroke="#111" stroke-width="2.5" stroke-dasharray="8 6"/><polygon points="140,10 164,22 140,34" fill="#fff" stroke="#111" stroke-width="2.5"/></svg>
+        <div><b>Interface realisation</b><span><code>&lt;|..</code> dashed line, hollow triangle points to the interface.</span></div>
+      </div>
+      <div class="arrow-row">
+        <svg viewBox="0 0 170 44" aria-hidden="true"><polygon points="6,22 26,12 46,22 26,32" fill="#111" stroke="#111" stroke-width="2"/><line x1="46" y1="22" x2="164" y2="22" stroke="#111" stroke-width="2.5"/></svg>
+        <div><b>Composition ◆ (owns)</b><span><code>*--</code> filled diamond on the owner. The part lives and dies with it (Captain ◆ Vehicle).</span></div>
+      </div>
+      <div class="arrow-row">
+        <svg viewBox="0 0 170 44" aria-hidden="true"><polygon points="6,22 26,12 46,22 26,32" fill="#fff" stroke="#111" stroke-width="2.5"/><line x1="46" y1="22" x2="164" y2="22" stroke="#111" stroke-width="2.5"/></svg>
+        <div><b>Aggregation ◇ (has, shared)</b><span><code>o--</code> hollow diamond on the whole. The part exists on its own (Ride ◇ Customer / Captain).</span></div>
+      </div>
+      <div class="arrow-row">
+        <svg viewBox="0 0 170 44" aria-hidden="true"><line x1="6" y1="22" x2="160" y2="22" stroke="#111" stroke-width="2.5"/><polyline points="144,12 164,22 144,32" fill="none" stroke="#111" stroke-width="2.5"/></svg>
+        <div><b>Association (uses, keeps a reference)</b><span><code>--&gt;</code> solid line, open arrow. A field of that type.</span></div>
+      </div>
+      <div class="arrow-row">
+        <svg viewBox="0 0 170 44" aria-hidden="true"><line x1="6" y1="22" x2="160" y2="22" stroke="#111" stroke-width="2.5" stroke-dasharray="8 6"/><polyline points="144,12 164,22 144,32" fill="none" stroke="#111" stroke-width="2.5"/></svg>
+        <div><b>Dependency (uses briefly)</b><span><code>..&gt;</code> dashed line, open arrow. A parameter, return type, or an object it creates.</span></div>
+      </div>
+    </div>
+    <table class="keys">
+      <thead><tr><th>Mark</th><th>Meaning</th><th>Mark</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>+</code></td><td>public</td><td><code>&lt;&lt;abstract&gt;&gt;</code></td><td>abstract class (cannot be instantiated)</td></tr>
+        <tr><td><code>-</code></td><td>private</td><td><code>&lt;&lt;interface&gt;&gt;</code></td><td>interface</td></tr>
+        <tr><td><code>#</code></td><td>protected</td><td><code>&lt;&lt;enumeration&gt;&gt;</code></td><td>enum (constants listed first)</td></tr>
+        <tr><td><code>«abstract»</code> after a method</td><td>abstract method: a subclass must override it (interface methods are always abstract, so they are not marked)</td><td><code>&lt;&lt;final&gt;&gt;</code></td><td>final class: cannot be extended</td></tr>
+        <tr><td><u>underlined</u></td><td>static member (shared by the class)</td><td><code>"1"</code> <code>"*"</code> <code>"0..1"</code></td><td>multiplicity at each end</td></tr>
+        <tr><td><code>List~Ride~</code></td><td>generic type <code>List&lt;Ride&gt;</code></td><td>box with a name only</td><td>class detailed in another diagram</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="diagram" id="a_users_and_vehicles">
+    <div class="diagram-head">
+      <h2>a) Users and vehicles</h2>
+      <span class="badge" data-status="pending">rendering…</span>
+      <div class="tools">
+        <button type="button" data-action="fit">Fit to width</button>
+        <button type="button" data-action="zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" data-action="zoom-in" aria-label="Zoom in">+</button>
+      </div>
+    </div>
+    <p class="blurb">Hierarchical inheritance (User → Customer / Captain), multilevel inheritance (Vehicle → Cab → CabEconomy / CabPremium), composition (Captain ◆ Vehicle), and enums with fields. Source: <code>docs/diagrams/a_users_and_vehicles.mmd</code></p>
+    <div class="canvas"></div>
+    <script type="text/plain" class="mermaid-source">
+---
+title: a) Users and vehicles  (packages model.user, model.vehicle)
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    class User {
+        <<abstract>>
+        -String INDIAN_MOBILE$
+        -String id
+        -String name
+        -String phone
+        -Location location
+        -int ratingCount
+        -int ratingTotal
+        #User(String, String, String, Location)
+        #User(String, String, String, Location, int, int)
+        +getRole()* String «abstract»
+        #moveTo(Location newLocation) void
+        +receiveRating(int stars) void
+        +getAverageRating() double
+        +getLocation() Location
+        +equals(Object o) boolean
+        +hashCode() int
+        +toString() String
+    }
+
+    class Customer {
+        -int nextIdNumber$
+        +Money MAX_TOP_UP$
+        -String upiId
+        -Money walletBalance
+        -List~Ride~ rideHistory
+        -List~OutstandingFee~ outstandingFees
+        -Set~String~ usedCoupons
+        +Customer(String, String, Location, String)
+        +Customer(String, String, Location, String, Money)
+        +getRole() String
+        +topUpWallet(Money amount) void
+        +debitWallet(Money amount) void
+        +recordRide(Ride ride) void
+        +getActiveRide() Ride
+        +getPaymentPendingRide() Ride
+        +arriveAt(Location dropPoint) void
+        +travelOnOwnTo(Location place) void
+        +addOutstandingFee(OutstandingFee fee) void
+        +takeOutstandingFees() List~OutstandingFee~
+        +markCouponUsed(String code) void
+    }
+
+    class Captain {
+        -int nextIdNumber$
+        +Money CASH_DUES_LIMIT$
+        +double FLAG_RATING_THRESHOLD$
+        -Vehicle vehicle
+        -double maxPreferredTripKm
+        -CaptainStatus status
+        -String currentRideId
+        -String pendingOfferRideId
+        -LocalDateTime availableFrom
+        -int offersReceived
+        -int offersAccepted
+        -int cancellationsAfterAccepting
+        -Money duesOwed
+        +Captain(String, String, Location, Vehicle)
+        +Captain(String, String, Location, Vehicle, double)
+        +Captain(String, String, Location, Vehicle, double, int, int, Money)
+        +getRole() String
+        +verifyKyc() void
+        +goOnline(Location at, LocalDateTime now) void
+        +goOffline() void
+        +considerOffer(double tripKm) boolean
+        +receiveOffer(String rideId) void
+        +respondToOffer(boolean accept) boolean
+        +acceptRide(String rideId, LocalDateTime now) void
+        +reachPickup(Location pickup) void
+        +finishRide(Location, LocalDateTime) void
+        +cancelAcceptedRide(LocalDateTime now) void
+        +isAvailableAt(LocalDateTime now) boolean
+        +addDues(Money amount) void
+        +isBlockedForCash() boolean
+        +settleDues() Money
+        +isFlagged() boolean
+        +getAcceptanceRate() double
+        -recordOfferDecision(boolean accepted) boolean
+    }
+
+    class CaptainStatus {
+        <<enumeration>>
+        KYC_PENDING
+        OFFLINE
+        AVAILABLE
+        ON_RIDE
+        -String label
+        +getLabel() String
+        +canReceiveOffers() boolean
+    }
+
+    class Vehicle {
+        <<abstract>>
+        -String TN_PLATE_FORMAT$
+        -String registrationNumber
+        -String model
+        -String colour
+        #Vehicle(String registrationNumber, String model)
+        #Vehicle(String, String, String)
+        +getType()* VehicleType «abstract»
+        +baseFare()* Money «abstract»
+        +perKmRate()* Money «abstract»
+        +perMinuteRate()* Money «abstract»
+        +minimumFare()* Money «abstract»
+        +seatCapacity()* int «abstract»
+        +averageSpeedKmph()* double «abstract»
+        +peakSpeedKmph()* double «abstract»
+        +calculateBaseFare(double, long) Money
+        +travelMinutes(double, boolean, boolean) int
+        +equals(Object o) boolean
+        +toString() String
+    }
+
+    class Cab {
+        <<abstract>>
+        #Cab(String, String, String)
+        +luggageCapacity()* int «abstract»
+        +hasAirConditioning() boolean
+        +averageSpeedKmph() double
+        +peakSpeedKmph() double
+        +toString() String
+    }
+
+    class Bike {
+        <<final>>
+        +Bike(String registrationNumber, String model)
+        +Bike(String, String, String)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +averageSpeedKmph() double
+        +peakSpeedKmph() double
+    }
+
+    class Auto {
+        <<final>>
+        +Auto(String registrationNumber, String model)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +averageSpeedKmph() double
+        +peakSpeedKmph() double
+    }
+
+    class CabEconomy {
+        <<final>>
+        +CabEconomy(String registrationNumber, String model)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +luggageCapacity() int
+    }
+
+    class CabPremium {
+        <<final>>
+        +CabPremium(String registrationNumber, String model)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +luggageCapacity() int
+        +averageSpeedKmph() double
+    }
+
+    class VehicleType {
+        <<enumeration>>
+        BIKE
+        AUTO
+        CAB_ECONOMY
+        CAB_PREMIUM
+        -String displayName
+        -int seatCapacity
+        -Money cancellationFee
+        -Money noShowFee
+        +getSeatCapacity() int
+        +getCancellationFee() Money
+        +getNoShowFee() Money
+        +canCarry(int passengers) boolean
+    }
+
+    class Ride
+    class OutstandingFee
+
+    User <|-- Customer : inheritance – hierarchical
+    User <|-- Captain : inheritance – hierarchical
+    Vehicle <|-- Bike : inheritance – hierarchical
+    Vehicle <|-- Auto : inheritance – hierarchical
+    Vehicle <|-- Cab : inheritance – multilevel (level 2)
+    Cab <|-- CabEconomy : inheritance – multilevel (level 3)
+    Cab <|-- CabPremium : inheritance – multilevel (level 3)
+    Captain "1" *-- "1" Vehicle : composition – HAS-A, final, never swapped
+    Captain --> "1" CaptainStatus : association – enum state
+    Vehicle ..> VehicleType : dependency – getType() returns
+    Customer o-- "*" Ride : aggregation – ride history
+    Customer o-- "*" OutstandingFee : aggregation – fees for the next ride
+</script>
+  </section>
+  <section class="diagram" id="b_ride_and_payments">
+    <div class="diagram-head">
+      <h2>b) Ride and payments</h2>
+      <span class="badge" data-status="pending">rendering…</span>
+      <div class="tools">
+        <button type="button" data-action="fit">Fit to width</button>
+        <button type="button" data-action="zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" data-action="zoom-in" aria-label="Zoom in">+</button>
+      </div>
+    </div>
+    <p class="blurb">Ride guards its own status (no setStatus). It aggregates Customer and Captain, and is composed of its request, receipt and timeline. Payable is realised by three payment classes (dynamic dispatch). Source: <code>docs/diagrams/b_ride_and_payments.mmd</code></p>
+    <div class="canvas"></div>
+    <script type="text/plain" class="mermaid-source">
+---
+title: b) Ride and payments  (packages model.ride, model.payment)
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    class Ride {
+        -int nextIdNumber$
+        +int MAX_OTP_ATTEMPTS$
+        +double ARRIVAL_TOLERANCE_METERS$
+        -String id
+        -RideRequest request
+        -String otp
+        -BigDecimal surgeMultiplier
+        -FareEstimate estimate
+        -RideStatus status
+        -Captain captain
+        -Captain pendingOfferTo
+        -Location drop
+        -int wrongOtpAttempts
+        -List~Location~ travelledRoute
+        -LocalDateTime assignedAt
+        -LocalDateTime startedAt
+        -LocalDateTime droppedAt
+        -Set~Captain~ excludedCaptains
+        -FareReceipt receipt
+        -PaymentMethod paidWith
+        -List~TimelineEntry~ timeline
+        +Ride(RideRequest, String, BigDecimal, FareEstimate)
+        +offerTo(Captain captain, LocalDateTime at) void
+        +recordOffer(Captain, boolean, double, LocalDateTime) void
+        +assignCaptain(Captain, LocalDateTime, LocalDateTime) void
+        +unassignCaptain(LocalDateTime at) Captain
+        +markArrived(LocalDateTime at) void
+        +revealOtpTo(Customer requester) String
+        +start(String, LocalDateTime, int) void
+        +changeDestination(Location, LocalDateTime, int) Location
+        +endEarly(LocalDateTime at) Location
+        +reachDestination(LocalDateTime at) void
+        +attachReceipt(FareReceipt receipt) void
+        +complete(PaymentMethod method, LocalDateTime at) void
+        +markPaymentPending(PaymentMethod, String, LocalDateTime) void
+        +cancel(CancellationReason, Party, Money, LocalDateTime) void
+        +actualDistanceKm() double
+        +getStatus() RideStatus
+        -requireStatus(RideStatus expected, String action) void
+    }
+    note for Ride "Encapsulation: there is NO setStatus().<br>Every method checks the status and throws<br>InvalidRideStatusException for an illegal move."
+
+    class RideStatus {
+        <<enumeration>>
+        REQUESTED
+        CAPTAIN_ASSIGNED
+        CAPTAIN_ARRIVED
+        IN_PROGRESS
+        PAYMENT_PENDING
+        COMPLETED
+        CANCELLED
+        -String label
+        -boolean active
+        +isActive() boolean
+        +canBeCancelled() boolean
+    }
+
+    class RideRequest {
+        <<final>>
+        -Customer customer
+        -Location pickup
+        -Location drop
+        -VehicleType vehicleType
+        -int passengers
+        -PaymentMethod paymentMethod
+        -String couponCode
+        -LocalDateTime requestedAt
+        +straightLineKm() double
+        +getCustomer() Customer
+        +hasCoupon() boolean
+    }
+
+    class FareReceipt {
+        <<final>>
+        -String rideId
+        -Money baseFare
+        -Money distanceCharge
+        -Money timeCharge
+        -Money minimumFareTopUp
+        -Money waitingCharge
+        -BigDecimal surgeMultiplier
+        -Money surgeCharge
+        -Money nightCharge
+        -List~OutstandingFee~ previousFees
+        -Money couponDiscount
+        -int gstPercent
+        -Money estimatedTotal
+        -Money subtotal
+        -Money gst
+        -Money total
+        +FareReceipt(String rideId, ... 18 parameters ...)
+        +getRideAmount() Money
+        +getPreviousFeesTotal() Money
+        +getGst() Money
+        +getTotal() Money
+        +toString() String
+    }
+
+    class OutstandingFee {
+        <<final>>
+        -Money amount
+        -Captain owedTo
+        -String fromRideId
+        -String reason
+        +getAmount() Money
+        +getOwedTo() Captain
+    }
+
+    class CancellationReason {
+        <<enumeration>>
+        CUSTOMER_CHANGED_PLANS
+        CUSTOMER_NO_SHOW
+        OTP_FAILED
+        NO_CAPTAIN_AVAILABLE
+        -Party allowedParty
+        -String description
+        +getAllowedParty() Party
+    }
+
+    class TimelineEntry {
+        <<final>>
+        -LocalDateTime at
+        -RideStatus status
+        -String note
+    }
+
+    class Payable {
+        <<interface>>
+        +pay(Money amount)* PaymentStatus
+        +method()* PaymentMethod
+        +status()* PaymentStatus
+        +resultMessage()* String
+    }
+
+    class UpiPayment {
+        <<final>>
+        -String upiId
+        -boolean bankReachable
+        -Random referenceGenerator
+        -PaymentStatus status
+        -String resultMessage
+        +UpiPayment(String, boolean, Random)
+        +pay(Money amount) PaymentStatus
+        +method() PaymentMethod
+        +status() PaymentStatus
+        +resultMessage() String
+    }
+
+    class CashPayment {
+        <<final>>
+        -Captain collectedBy
+        -PaymentStatus status
+        -String resultMessage
+        +CashPayment(Captain collectedBy)
+        +pay(Money amount) PaymentStatus
+        +method() PaymentMethod
+        +status() PaymentStatus
+        +resultMessage() String
+    }
+
+    class WalletPayment {
+        <<final>>
+        -Customer customer
+        -PaymentStatus status
+        -String resultMessage
+        +WalletPayment(Customer customer)
+        +pay(Money amount) PaymentStatus
+        +method() PaymentMethod
+        +status() PaymentStatus
+        +resultMessage() String
+    }
+
+    class PaymentMethod {
+        <<enumeration>>
+        UPI
+        CASH
+        WALLET
+        -String label
+    }
+
+    class PaymentStatus {
+        <<enumeration>>
+        NOT_ATTEMPTED
+        SUCCESS
+        FAILED
+    }
+
+    class Customer
+    class Captain
+
+    Ride "1" *-- "1" RideRequest : composition – the booking
+    Ride "1" *-- "0..1" FareReceipt : composition – the bill
+    Ride "1" *-- "*" TimelineEntry : composition – status history
+    Ride --> "1" RideStatus : association – guarded state
+    Ride --> "0..1" CancellationReason : association
+    Ride --> "0..1" PaymentMethod : association – paidWith
+    Ride o-- "0..1" Captain : aggregation – captain, pendingOfferTo
+    Ride o-- "1" Customer : aggregation – /customer (held via RideRequest)
+    RideRequest --> "1" Customer : association – booked by
+    RideRequest --> "1" PaymentMethod : association – chosen at booking
+    FareReceipt o-- "*" OutstandingFee : aggregation – previous fees
+    OutstandingFee --> "1" Captain : association – owedTo
+    Payable <|.. UpiPayment : interface realisation
+    Payable <|.. CashPayment : interface realisation
+    Payable <|.. WalletPayment : interface realisation
+    Payable ..> PaymentStatus : dependency – pay() returns
+    CashPayment --> "1" Captain : association – collectedBy
+    WalletPayment --> "1" Customer : association – debits the wallet
+</script>
+  </section>
+  <section class="diagram" id="c_services_and_notifications">
+    <div class="diagram-head">
+      <h2>c) Services and notifications</h2>
+      <span class="badge" data-status="pending">rendering…</span>
+      <div class="tools">
+        <button type="button" data-action="fit">Fit to width</button>
+        <button type="button" data-action="zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" data-action="zoom-in" aria-label="Zoom in">+</button>
+      </div>
+    </div>
+    <p class="blurb">What each service holds and which model classes it uses. RideService talks to notifiers only through the Notifier interface. Source: <code>docs/diagrams/c_services_and_notifications.mmd</code></p>
+    <div class="canvas"></div>
+    <script type="text/plain" class="mermaid-source">
+---
+title: c) Services and notifications  (packages service, notification, time)
+config:
+  layout: elk
+---
+classDiagram
+    direction LR
+
+    class RideService {
+        +int CANCELLATION_GRACE_MINUTES$
+        +int NO_SHOW_WAIT_MINUTES$
+        -long OTP_SEED$
+        -SimulatedClock clock
+        -MatchingService matchingService
+        -FareService fareService
+        -PaymentService paymentService
+        -List~Notifier~ notifiers
+        -Random otpGenerator
+        -List~Ride~ rides
+        -DispatchMode dispatchMode
+        +getFareEstimates(Location, Location) List~FareEstimate~
+        +bookRide(Customer, Location, Location, VehicleType, int) Ride
+        +bookRide(Customer, Location, Location, VehicleType, int, PaymentMethod) Ride
+        +bookRide(Customer, Location, Location, VehicleType, int, PaymentMethod, String) Ride
+        +respondToOffer(Ride, Captain, boolean) Captain
+        +captainArrived(Ride ride) void
+        +startRide(Ride ride, String otp) void
+        +changeDestination(Ride ride, Location newDrop) Location
+        +endTripEarly(Ride ride) FareReceipt
+        +completeTrip(Ride ride) FareReceipt
+        +completeTrip(Ride, PaymentMethod) FareReceipt
+        +retryPayment(Ride, PaymentMethod) PaymentStatus
+        +cancelByCustomer(Ride ride) Money
+        +cancellationFeeIfCancelledNow(Ride ride) Money
+        +cancelForNoShow(Ride ride) Money
+        +captainCancelsAfterAccepting(Ride ride) Captain
+        +setDispatchMode(DispatchMode mode) void
+        -validateBooking(...) void
+        -notify(User, RideEvent, String) void
+    }
+
+    class MatchingService {
+        +double MATCH_RADIUS_KM$
+        +int MAX_REJECTED_OFFERS$
+        -CaptainService captainService
+        -FareService fareService
+        +ineligibilityReason(Captain, Location, VehicleType, PaymentMethod, Ride, LocalDateTime) String
+        +findEligibleCaptains(Location, VehicleType, PaymentMethod, Ride, LocalDateTime) List~Captain~
+        +dispatch(Ride ride, LocalDateTime now) Captain
+        +nextCandidate(Ride ride, LocalDateTime now) Captain
+        +etaMinutes(Captain, Location, LocalDateTime) int
+    }
+
+    class FareService {
+        +int GST_PERCENT$
+        +int NIGHT_CHARGE_PERCENT$
+        +String FIRSTRIDE$
+        -ServiceArea serviceArea
+        -Map~VehicleType, Vehicle~ rateCard
+        +isNightTime(LocalDateTime time)$ boolean
+        +calculateSurge(Location, LocalDateTime, int, int) BigDecimal
+        +estimate(VehicleType, Location, Location, LocalDateTime, BigDecimal, int) FareEstimate
+        +generateReceipt(Ride, List~OutstandingFee~) FareReceipt
+        +travelMinutes(Vehicle, Location, Location, LocalDateTime) int
+    }
+
+    class PaymentService {
+        -long UPI_REFERENCE_SEED$
+        -EarningsService earningsService
+        -Random upiReferenceGenerator
+        -List~UpiOutage~ outages
+        +reportUpiOutage(String, LocalDateTime, LocalDateTime) void
+        +collect(Ride, PaymentMethod, LocalDateTime) Payable
+        -createPayment(PaymentMethod, Ride, LocalDateTime) Payable
+    }
+
+    class EarningsService {
+        +int COMMISSION_PERCENT$
+        -Map~String, DayEarnings~ earnings
+        -Money totalPaidByCustomers
+        -Money totalCaptainEarnings
+        -Money totalCommission
+        -Money totalGst
+        +recordPaidRide(Ride, PaymentMethod, LocalDate) void
+        +getDayEarnings(Captain, LocalDate) DayEarnings
+        +isBalanced() boolean
+    }
+
+    class DayEarnings {
+        <<static nested>>
+        -Captain captain
+        -LocalDate day
+        -int rides
+        -Money grossFare
+        -Money commission
+        -Money netEarnings
+        -Money cashCollected
+    }
+
+    class CaptainService {
+        -SimulatedClock clock
+        -List~Captain~ captains
+        +register(Captain captain) Captain
+        +verifyKyc(Captain captain) void
+        +goOnline(Captain captain, Location at) void
+        +goOffline(Captain captain) void
+        +settleDues(Captain captain) Money
+        +countOnline() int
+    }
+
+    class CustomerService {
+        -List~Customer~ customers
+        +register(Customer customer) Customer
+        +topUpWallet(Customer customer, Money amount) void
+    }
+
+    class RatingService {
+        -CaptainService captainService
+        +rateCaptain(Ride ride, int stars) void
+        +rateCustomer(Ride ride, int stars) void
+        +leaderboard() List~Captain~
+        +flaggedCaptains() List~Captain~
+    }
+
+    class RideAutopilot {
+        -SimulatedClock clock
+        -RideService rideService
+        -List~Ride~ rides
+        +add(Ride ride) void
+        +advanceTo(LocalDateTime target) List~Ride~
+        +driveToCompletion(Ride ride) void
+        +driveUntilStarted(Ride ride) void
+    }
+
+    class DispatchMode {
+        <<enumeration>>
+        AUTOMATIC
+        CAPTAIN_APP
+        -String label
+    }
+
+    class SimulatedClock {
+        <<final>>
+        -LocalDateTime now
+        +now() LocalDateTime
+        +advanceMinutes(long minutes) void
+        +advanceTo(LocalDateTime target) void
+        +stamp() String
+    }
+
+    class Notifier {
+        <<interface>>
+        +notify(User, RideEvent, String)* void
+        +handles(RideEvent event) boolean
+    }
+
+    class SmsNotifier {
+        -SimulatedClock clock
+        -NotificationLog log
+        +SmsNotifier(SimulatedClock clock)
+        +SmsNotifier(SimulatedClock clock, NotificationLog log)
+        +handles(RideEvent event) boolean
+        +notify(User, RideEvent, String) void
+    }
+
+    class PushNotifier {
+        -SimulatedClock clock
+        -NotificationLog log
+        +PushNotifier(SimulatedClock clock)
+        +PushNotifier(SimulatedClock clock, NotificationLog log)
+        +notify(User, RideEvent, String) void
+    }
+
+    class NotificationLog {
+        -List~Entry~ entries
+        +record(LocalDateTime, String, User, RideEvent, String) void
+        +latestFirst() List~Entry~
+    }
+
+    class RideEvent {
+        <<enumeration>>
+        RIDE_BOOKED
+        RIDE_OFFERED
+        CAPTAIN_ASSIGNED
+        RIDE_COMPLETED
+        PAYMENT_FAILED
+        RIDE_CANCELLED
+        ...
+        -boolean important
+    }
+
+    class Ride
+    class Captain
+    class Customer
+    class Vehicle
+    class Payable
+    class ServiceArea
+
+    RideService --> MatchingService : association – finds captains
+    RideService --> FareService : association – prices trips
+    RideService --> PaymentService : association – collects money
+    RideService --> SimulatedClock : association – all time
+    RideService --> DispatchMode : association – Auto / Manual
+    RideService o-- "*" Notifier : aggregation – dynamic dispatch
+    RideService o-- "*" Ride : aggregation – all rides
+    MatchingService --> CaptainService : association
+    MatchingService --> FareService : association – ETA
+    MatchingService ..> Captain : dependency – ranks nearest
+    FareService "1" *-- "4" Vehicle : composition – rate card (upcast)
+    FareService --> ServiceArea : association – peak and hotspots
+    PaymentService --> EarningsService : association
+    PaymentService ..> Payable : dependency – creates (upcasting)
+    EarningsService "1" *-- "*" DayEarnings : composition – nested class
+    CaptainService o-- "*" Captain : aggregation – the fleet
+    CustomerService o-- "*" Customer : aggregation
+    RatingService --> CaptainService : association
+    RatingService ..> Ride : dependency – COMPLETED only
+    RideAutopilot --> RideService : association – plain service calls
+    RideAutopilot o-- "*" Ride : aggregation
+    Notifier <|.. SmsNotifier : interface realisation
+    Notifier <|.. PushNotifier : interface realisation
+    Notifier ..> RideEvent : dependency
+    SmsNotifier o-- "0..1" NotificationLog : aggregation – optional log
+    PushNotifier o-- "0..1" NotificationLog : aggregation – optional log
+</script>
+  </section>
+  <section class="diagram" id="d_cli_layer">
+    <div class="diagram-head">
+      <h2>d) CLI layer</h2>
+      <span class="badge" data-status="pending">rendering…</span>
+      <div class="tools">
+        <button type="button" data-action="fit">Fit to width</button>
+        <button type="button" data-action="zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" data-action="zoom-in" aria-label="Zoom in">+</button>
+      </div>
+    </div>
+    <p class="blurb">The abstract Menu has a final run() loop; six screens extend it. ConsoleIO does all input and output; CliSession owns a fresh ChennaiWorld. Source: <code>docs/diagrams/d_cli_layer.mmd</code></p>
+    <div class="canvas"></div>
+    <script type="text/plain" class="mermaid-source">
+---
+title: d) CLI layer  (package cli + app.Launcher)
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    class Menu {
+        <<abstract>>
+        #String title
+        #ConsoleIO io
+        #CliSession session
+        #Menu(String title, ConsoleIO io, CliSession session)
+        #options()* String[] «abstract»
+        #handle(int choice)* void «abstract»
+        #onEnter() boolean
+        #subtitle() String
+        #exitLabel() String
+        +run() void
+    }
+    note for Menu "run() is final: the loop is written once.<br>Subclasses fill in options() and handle().<br>RideHailingException is caught here, shown as one ✘ line."
+
+    class StartupMenu {
+        +StartupMenu(ConsoleIO io)
+        #options() String[]
+        #exitLabel() String
+        #handle(int choice) void
+        +startInteractive(ConsoleIO io, String exitLabel)$ void
+        -runSelfCheck() void
+    }
+
+    class MainMenu {
+        -String exitLabel
+        +MainMenu(ConsoleIO, CliSession, String)
+        #options() String[]
+        #exitLabel() String
+        #handle(int choice) void
+        -changeCaptainMode() void
+    }
+
+    class CustomerMenu {
+        -Customer customer
+        +CustomerMenu(ConsoleIO io, CliSession session)
+        #onEnter() boolean
+        #subtitle() String
+        #options() String[]
+        #handle(int choice) void
+        -bookRide() void
+        -cancelRide() void
+        -payPendingRide() void
+        -trackRide() void
+    }
+
+    class CaptainMenu {
+        -Captain captain
+        +CaptainMenu(ConsoleIO io, CliSession session)
+        #onEnter() boolean
+        #subtitle() String
+        #options() String[]
+        #handle(int choice) void
+        -handleOffer() void
+        -markArrived() void
+        -startRide() void
+        -completeRide() void
+    }
+
+    class OperationsMenu {
+        +OperationsMenu(ConsoleIO io, CliSession session)
+        #options() String[]
+        #handle(int choice) void
+        -positionBoard() void
+        -nearbyCaptains() void
+        -surgeStatus() void
+        -earningsSummary() void
+    }
+
+    class ClockMenu {
+        +ClockMenu(ConsoleIO io, CliSession session)
+        #options() String[]
+        #handle(int choice) void
+        -showTime() void
+    }
+
+    class ConsoleIO {
+        -BufferedReader in
+        -PrintStream out
+        -boolean echoInput
+        -boolean placeListShown
+        +ConsoleIO(InputStream, PrintStream, boolean)
+        +readLine(String prompt) String
+        +readInt(String prompt, int min, int max) int
+        +readInt(String, int, int, int) int
+        +readChoice(String prompt, String[] options) int
+        +readYesNo(String prompt) boolean
+        +readText(String prompt, boolean allowEmpty) String
+        +readMoney(String prompt) Money
+        +readTime(String prompt) LocalTime
+        +readPlace(String, Location) Location
+        +printTable(String[] headers, List~String[]~ rows) void
+        +printHeader(String title) void
+        +printError(String message) void
+        +printSuccess(String message) void
+        -rawRead(String prompt) String
+    }
+
+    class CliSession {
+        <<final>>
+        -ConsoleIO io
+        -SimulatedClock clock
+        -NotificationLog notificationLog
+        -ChennaiWorld world
+        +CliSession(ConsoleIO io)
+        +statusLine() String
+        +advanceClockTo(LocalDateTime target) void
+        +advanceClockByMinutes(long minutes) void
+        +letCaptainPickUp(Ride ride) void
+        +printReceipt(Ride ride) void
+        +getMode() DispatchMode
+        +setMode(DispatchMode mode) void
+        +getWorld() ChennaiWorld
+    }
+
+    class GoBackException {
+        +GoBackException()
+    }
+
+    class QuitException {
+        +QuitException(String message)
+    }
+
+    class RuntimeException {
+        <<JDK>>
+    }
+
+    class Launcher {
+        <<final>>
+        +main(String[] args)$ void
+        -inputLooksRedirected()$ boolean
+    }
+
+    class ChennaiWorld {
+        <<final>>
+    }
+    class NotificationLog
+    class Customer
+    class Captain
+
+    Menu <|-- StartupMenu
+    Menu <|-- MainMenu
+    Menu <|-- CustomerMenu : inheritance – hierarchical, all six screens
+    Menu <|-- CaptainMenu
+    Menu <|-- OperationsMenu
+    Menu <|-- ClockMenu
+    Menu --> "1" ConsoleIO : association – shared io
+    Menu --> "0..1" CliSession : association – null in start-up menu
+    MainMenu ..> Menu : polymorphism – next.run()
+    StartupMenu ..> CliSession : dependency – creates a fresh session
+    CliSession "1" *-- "1" ChennaiWorld : composition – owns the seeded world
+    CliSession "1" *-- "1" NotificationLog : composition
+    CliSession --> ConsoleIO : association
+    CustomerMenu --> "1" Customer : association – selected customer
+    CaptainMenu --> "1" Captain : association – selected captain
+    RuntimeException <|-- GoBackException : inheritance – unchecked
+    RuntimeException <|-- QuitException : inheritance – unchecked
+    ConsoleIO ..> GoBackException : dependency – throws on b
+    ConsoleIO ..> QuitException : dependency – throws on q or EOF
+    Launcher ..> StartupMenu : dependency – starts
+    Launcher ..> ConsoleIO : dependency – creates
+</script>
+  </section>
+  <section class="diagram" id="e_overview">
+    <div class="diagram-head">
+      <h2>e) Overview</h2>
+      <span class="badge" data-status="pending">rendering…</span>
+      <div class="tools">
+        <button type="button" data-action="fit">Fit to width</button>
+        <button type="button" data-action="zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" data-action="zoom-in" aria-label="Zoom in">+</button>
+      </div>
+    </div>
+    <p class="blurb">Every class, grouped by package, with relationships only (no members). Source: <code>docs/diagrams/e_overview.mmd</code></p>
+    <div class="canvas"></div>
+    <script type="text/plain" class="mermaid-source">
+---
+title: e) Overview – every class, relationships only
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    namespace model_user {
+        class User { <<abstract>> }
+        class Customer
+        class Captain
+        class CaptainStatus { <<enumeration>> }
+    }
+    namespace model_vehicle {
+        class Vehicle { <<abstract>> }
+        class Cab { <<abstract>> }
+        class Bike
+        class Auto
+        class CabEconomy
+        class CabPremium
+        class VehicleType { <<enumeration>> }
+    }
+    namespace model_ride {
+        class Ride
+        class RideRequest
+        class RideStatus { <<enumeration>> }
+        class FareEstimate
+        class FareReceipt
+        class OutstandingFee
+        class CancellationReason { <<enumeration>> }
+        class TimelineEntry
+    }
+    namespace model_payment {
+        class Payable { <<interface>> }
+        class UpiPayment
+        class CashPayment
+        class WalletPayment
+        class PaymentMethod { <<enumeration>> }
+        class PaymentStatus { <<enumeration>> }
+    }
+    namespace model_common {
+        class Money
+        class Location
+        class ServiceArea
+        class ChennaiPlaces
+    }
+    namespace service {
+        class RideService
+        class MatchingService
+        class FareService
+        class PaymentService
+        class EarningsService
+        class CaptainService
+        class CustomerService
+        class RatingService
+        class RideAutopilot
+        class DispatchMode { <<enumeration>> }
+    }
+    namespace notification {
+        class Notifier { <<interface>> }
+        class SmsNotifier
+        class PushNotifier
+        class NotificationLog
+        class RideEvent { <<enumeration>> }
+    }
+    namespace app_cli {
+        class Launcher
+        class ChennaiWorld
+        class ChennaiRideApp
+        class Menu { <<abstract>> }
+        class StartupMenu
+        class MainMenu
+        class CustomerMenu
+        class CaptainMenu
+        class OperationsMenu
+        class ClockMenu
+        class ConsoleIO
+        class CliSession
+    }
+    namespace time {
+        class SimulatedClock
+    }
+
+    User <|-- Customer : hierarchical
+    User <|-- Captain : hierarchical
+    Vehicle <|-- Bike : hierarchical
+    Vehicle <|-- Auto : hierarchical
+    Vehicle <|-- Cab : multilevel
+    Cab <|-- CabEconomy : multilevel
+    Cab <|-- CabPremium : multilevel
+    Payable <|.. UpiPayment : realisation
+    Payable <|.. CashPayment : realisation
+    Payable <|.. WalletPayment : realisation
+    Notifier <|.. SmsNotifier : realisation
+    Notifier <|.. PushNotifier : realisation
+    Menu <|-- StartupMenu
+    Menu <|-- MainMenu
+    Menu <|-- CustomerMenu
+    Menu <|-- CaptainMenu
+    Menu <|-- OperationsMenu
+    Menu <|-- ClockMenu
+
+    Captain *-- Vehicle : composition
+    Captain --> CaptainStatus
+    Vehicle ..> VehicleType
+    Ride *-- RideRequest : composition
+    Ride *-- FareReceipt : composition
+    Ride *-- TimelineEntry : composition
+    Ride --> RideStatus
+    Ride --> CancellationReason
+    Ride o-- Captain : aggregation
+    Ride o-- Customer : aggregation
+    Ride --> FareEstimate
+    FareReceipt o-- OutstandingFee : aggregation
+    OutstandingFee --> Captain
+    Customer o-- Ride : history
+    RideRequest --> PaymentMethod
+    Payable ..> PaymentStatus
+    FareReceipt ..> Money
+    Ride ..> Location
+    ServiceArea o-- Location
+
+    RideService --> MatchingService
+    RideService --> FareService
+    RideService --> PaymentService
+    RideService o-- Notifier : aggregation
+    RideService o-- Ride : aggregation
+    RideService --> DispatchMode
+    RideService --> SimulatedClock
+    MatchingService --> CaptainService
+    FareService *-- Vehicle : rate card
+    FareService --> ServiceArea
+    PaymentService --> EarningsService
+    PaymentService ..> Payable : creates
+    CaptainService o-- Captain
+    CustomerService o-- Customer
+    RatingService --> CaptainService
+    RideAutopilot --> RideService
+    SmsNotifier o-- NotificationLog
+    PushNotifier o-- NotificationLog
+    Notifier ..> RideEvent
+
+    ChennaiWorld *-- RideService : composition
+    ChennaiWorld *-- CaptainService : composition
+    ChennaiWorld *-- CustomerService : composition
+    ChennaiWorld *-- RideAutopilot : composition
+    ChennaiRideApp *-- ChennaiWorld : composition
+    CliSession *-- ChennaiWorld : composition
+    Menu --> ConsoleIO
+    Menu --> CliSession
+    Launcher ..> StartupMenu
+    ChennaiPlaces ..> Location : constants
+</script>
+  </section>
+</main>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+  // The overview uses the ELK layout engine (tidier package groups). If it cannot load,
+  // Mermaid falls back to its default layout, so every diagram still renders.
+  try {
+    const elk = await import("https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0/dist/mermaid-layout-elk.esm.min.mjs");
+    mermaid.registerLayoutLoaders(elk.default);
+  } catch (e) {
+    console.warn("ELK layout not available, using the default layout", e);
+  }
+
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: "strict",
+    theme: "base",
+    themeVariables: {
+      background: "#ffffff",
+      primaryColor: "#eef4ff",
+      primaryBorderColor: "#1e3a8a",
+      primaryTextColor: "#111827",
+      lineColor: "#111827",
+      fontSize: "18px",
+      fontFamily: "Segoe UI, system-ui, -apple-system, Roboto, Arial, sans-serif"
+    },
+    htmlLabels: false,
+    class: { useMaxWidth: false, htmlLabels: false }
+  });
+
+  const sections = [...document.querySelectorAll("section.diagram")];
+  let ok = 0;
+  for (const [i, section] of sections.entries()) {
+    const source = section.querySelector("script.mermaid-source").textContent.trim();
+    const canvas = section.querySelector(".canvas");
+    const badge = section.querySelector(".badge");
+    try {
+      const { svg } = await mermaid.render("uml-" + i, source);
+      canvas.innerHTML = svg;
+      badge.dataset.status = "ok";
+      badge.textContent = "✔ rendered";
+      ok++;
+    } catch (err) {
+      const pre = document.createElement("pre");
+      pre.className = "error";
+      pre.textContent = "Mermaid error: " + (err && err.message ? err.message : err);
+      canvas.replaceChildren(pre);
+      badge.dataset.status = "error";
+      badge.textContent = "✘ syntax error";
+      document.getElementById("uml-" + i)?.remove();
+    }
+    wireTools(section);
+  }
+  const summary = document.getElementById("summary");
+  summary.textContent = ok + " of " + sections.length + " diagrams rendered" + (ok === sections.length ? " ✔" : " ✘");
+  document.body.dataset.rendered = ok + "/" + sections.length;
+
+  function wireTools(section) {
+    const svg = section.querySelector(".canvas svg");
+    if (!svg) return;
+    const natural = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+      ? svg.viewBox.baseVal.width : svg.getBoundingClientRect().width;
+    let scale = 1;
+    svg.style.maxWidth = "none";
+    svg.style.width = natural + "px";
+    const fitButton = section.querySelector('[data-action="fit"]');
+    fitButton.setAttribute("aria-pressed", "false");
+    const apply = () => { svg.style.width = Math.round(natural * scale) + "px"; };
+    section.querySelector('[data-action="zoom-in"]').addEventListener("click", () => {
+      scale = Math.min(scale * 1.2, 4); fitButton.setAttribute("aria-pressed", "false"); apply();
+    });
+    section.querySelector('[data-action="zoom-out"]').addEventListener("click", () => {
+      scale = Math.max(scale / 1.2, 0.2); fitButton.setAttribute("aria-pressed", "false"); apply();
+    });
+    fitButton.addEventListener("click", () => {
+      const available = section.querySelector(".canvas").clientWidth;
+      scale = available / natural;
+      fitButton.setAttribute("aria-pressed", "true");
+      apply();
+    });
+  }
+</script>
+</body>
+</html>

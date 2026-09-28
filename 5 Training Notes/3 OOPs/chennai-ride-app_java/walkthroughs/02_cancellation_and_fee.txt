@@ -1,0 +1,83 @@
+# ── Walkthrough 02: free cancel in the grace period, paid cancel after it, fee on the next ride ──
+# Clock to 8:15 AM.
+4
+3
+08:15
+0
+# Customer app -> Priya (#1) -> Book a bike Velachery -> Guindy, UPI.
+1
+1
+4
+
+guindy
+1
+
+1
+
+y
+# Captain app -> Karthik (#2) accepts the offer.
+0
+2
+2
+3
+1
+0
+# Priya cancels at once: still inside the 2-minute grace period -> FREE.
+1
+1
+6
+y
+# Book the same ride again; Karthik accepts again.
+4
+
+guindy
+1
+
+1
+
+y
+0
+2
+2
+3
+1
+0
+# Move the clock 3 minutes: the grace period is over.
+4
+2
+3
+0
+# Priya cancels again: the app WARNS about the ₹20 fee before she confirms.
+1
+1
+6
+y
+# Profile: the ₹20 is pending on her account.
+1
+# Book the next ride - the estimate line already mentions the ₹20.
+4
+
+guindy
+1
+
+1
+
+y
+# Karthik accepts, arrives, starts with the OTP and completes: see "7. Previous cancellation fee".
+0
+2
+2
+3
+1
+4
+5
+7186
+6
+0
+# Priya's profile: the fee was billed exactly once (pending fee back to ₹0).
+1
+1
+1
+11
+0
+0

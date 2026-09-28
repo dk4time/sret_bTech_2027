@@ -1,0 +1,38 @@
+# ── Walkthrough 04: night ride with the FIRSTRIDE coupon ──
+# Jump to 11:30 PM (night charge starts at 11 PM).
+4
+3
+23:30
+0
+# Auto captain mode for a quick run.
+5
+2
+# Priya (#1) takes the metro to the airport to receive her parents.
+1
+1
+13
+airport
+# Estimates: see the "+20%" night column.
+3
+
+anna
+# Book Cab Premium (row 4) for 5 people, pay by wallet, coupon FIRSTRIDE.
+4
+
+anna
+4
+5
+3
+FIRSTRIDE
+y
+# Move time to the drop: the receipt shows the night charge and the ₹50 coupon.
+0
+4
+4
+0
+# FIRSTRIDE is once per customer: profile says "already used".
+1
+1
+1
+0
+0

@@ -1,0 +1,169 @@
+---
+title: d) CLI layer  (package cli + app.Launcher)
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    class Menu {
+        <<abstract>>
+        #String title
+        #ConsoleIO io
+        #CliSession session
+        #Menu(String title, ConsoleIO io, CliSession session)
+        #options()* String[] «abstract»
+        #handle(int choice)* void «abstract»
+        #onEnter() boolean
+        #subtitle() String
+        #exitLabel() String
+        +run() void
+    }
+    note for Menu "run() is final: the loop is written once.<br>Subclasses fill in options() and handle().<br>RideHailingException is caught here, shown as one ✘ line."
+
+    class StartupMenu {
+        +StartupMenu(ConsoleIO io)
+        #options() String[]
+        #exitLabel() String
+        #handle(int choice) void
+        +startInteractive(ConsoleIO io, String exitLabel)$ void
+        -runSelfCheck() void
+    }
+
+    class MainMenu {
+        -String exitLabel
+        +MainMenu(ConsoleIO, CliSession, String)
+        #options() String[]
+        #exitLabel() String
+        #handle(int choice) void
+        -changeCaptainMode() void
+    }
+
+    class CustomerMenu {
+        -Customer customer
+        +CustomerMenu(ConsoleIO io, CliSession session)
+        #onEnter() boolean
+        #subtitle() String
+        #options() String[]
+        #handle(int choice) void
+        -bookRide() void
+        -cancelRide() void
+        -payPendingRide() void
+        -trackRide() void
+    }
+
+    class CaptainMenu {
+        -Captain captain
+        +CaptainMenu(ConsoleIO io, CliSession session)
+        #onEnter() boolean
+        #subtitle() String
+        #options() String[]
+        #handle(int choice) void
+        -handleOffer() void
+        -markArrived() void
+        -startRide() void
+        -completeRide() void
+    }
+
+    class OperationsMenu {
+        +OperationsMenu(ConsoleIO io, CliSession session)
+        #options() String[]
+        #handle(int choice) void
+        -positionBoard() void
+        -nearbyCaptains() void
+        -surgeStatus() void
+        -earningsSummary() void
+    }
+
+    class ClockMenu {
+        +ClockMenu(ConsoleIO io, CliSession session)
+        #options() String[]
+        #handle(int choice) void
+        -showTime() void
+    }
+
+    class ConsoleIO {
+        -BufferedReader in
+        -PrintStream out
+        -boolean echoInput
+        -boolean placeListShown
+        +ConsoleIO(InputStream, PrintStream, boolean)
+        +readLine(String prompt) String
+        +readInt(String prompt, int min, int max) int
+        +readInt(String, int, int, int) int
+        +readChoice(String prompt, String[] options) int
+        +readYesNo(String prompt) boolean
+        +readText(String prompt, boolean allowEmpty) String
+        +readMoney(String prompt) Money
+        +readTime(String prompt) LocalTime
+        +readPlace(String, Location) Location
+        +printTable(String[] headers, List~String[]~ rows) void
+        +printHeader(String title) void
+        +printError(String message) void
+        +printSuccess(String message) void
+        -rawRead(String prompt) String
+    }
+
+    class CliSession {
+        <<final>>
+        -ConsoleIO io
+        -SimulatedClock clock
+        -NotificationLog notificationLog
+        -ChennaiWorld world
+        +CliSession(ConsoleIO io)
+        +statusLine() String
+        +advanceClockTo(LocalDateTime target) void
+        +advanceClockByMinutes(long minutes) void
+        +letCaptainPickUp(Ride ride) void
+        +printReceipt(Ride ride) void
+        +getMode() DispatchMode
+        +setMode(DispatchMode mode) void
+        +getWorld() ChennaiWorld
+    }
+
+    class GoBackException {
+        +GoBackException()
+    }
+
+    class QuitException {
+        +QuitException(String message)
+    }
+
+    class RuntimeException {
+        <<JDK>>
+    }
+
+    class Launcher {
+        <<final>>
+        +main(String[] args)$ void
+        -inputLooksRedirected()$ boolean
+    }
+
+    class ChennaiWorld {
+        <<final>>
+    }
+    class NotificationLog
+    class Customer
+    class Captain
+
+    Menu <|-- StartupMenu
+    Menu <|-- MainMenu
+    Menu <|-- CustomerMenu : inheritance – hierarchical, all six screens
+    Menu <|-- CaptainMenu
+    Menu <|-- OperationsMenu
+    Menu <|-- ClockMenu
+    Menu --> "1" ConsoleIO : association – shared io
+    Menu --> "0..1" CliSession : association – null in start-up menu
+    MainMenu ..> Menu : polymorphism – next.run()
+    StartupMenu ..> CliSession : dependency – creates a fresh session
+    CliSession "1" *-- "1" ChennaiWorld : composition – owns the seeded world
+    CliSession "1" *-- "1" NotificationLog : composition
+    CliSession --> ConsoleIO : association
+    CustomerMenu --> "1" Customer : association – selected customer
+    CaptainMenu --> "1" Captain : association – selected captain
+    RuntimeException <|-- GoBackException : inheritance – unchecked
+    RuntimeException <|-- QuitException : inheritance – unchecked
+    ConsoleIO ..> GoBackException : dependency – throws on b
+    ConsoleIO ..> QuitException : dependency – throws on q or EOF
+    Launcher ..> StartupMenu : dependency – starts
+    Launcher ..> ConsoleIO : dependency – creates

@@ -1,0 +1,34 @@
+---
+title: "3 · Ride"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+
+    class RideStatus {
+        <<enumeration>>
+    }
+    class CancellationReason {
+        <<enumeration>>
+    }
+    class Ride
+    class Customer
+    class Captain
+    class FareReceipt
+
+    Ride o-- Customer : has-a, uses
+    Ride o-- Captain : has-a, uses
+    Ride *-- FareReceipt : has-a, owns
+    Ride o-- RideStatus : has-a, uses
+    Ride o-- CancellationReason : has-a, uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style RideStatus fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style CancellationReason fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style Ride fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Customer fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Captain fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style FareReceipt fill:#f8fafc,stroke:#475569,stroke-width:2px

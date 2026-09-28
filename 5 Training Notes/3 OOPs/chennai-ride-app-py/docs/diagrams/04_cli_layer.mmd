@@ -1,0 +1,198 @@
+%% (d) CLI layer — generated from ridehailing/cli/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class Menu {
+        <<abstract>>
+        #_title: str
+        #_io: ConsoleIO
+        +Menu(title: str, io: ConsoleIO)
+        +title() str
+        +options() list~tuple~*
+        +handle(choice: str) bool*
+        +on_enter() bool
+        +status_line() Optional~str~
+        +heading() str
+        +run() None
+    }
+
+    class StartupMenu {
+        +StartupMenu(io: ConsoleIO)
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_run_separately(flag: str) None
+    }
+
+    class MainMenu {
+        #_session: CliSession
+        #_submenus: dict~str, Menu~
+        +MainMenu(io: ConsoleIO, session: CliSession)
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_settings() None
+    }
+
+    class CustomerMenu {
+        #_session: CliSession
+        #_customer: Optional~Customer~
+        +on_enter() bool
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_pick_customer() Customer
+        #_book() None
+        #_track() None
+        #_cancel() None
+        #_change_destination() None
+        #_end_early() None
+        #_pay_pending() None
+        #_rate() None
+        #_history() None
+    }
+
+    class CaptainMenu {
+        #_session: CliSession
+        #_captain: Optional~Captain~
+        +on_enter() bool
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_pick_captain() Captain
+        #_offer() None
+        #_arrive() None
+        #_start() None
+        #_complete() None
+        #_cancel() None
+        #_earnings() None
+        #_settle() None
+    }
+
+    class OperationsMenu {
+        #_session: CliSession
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+        #_board() None
+        #_live_rides() None
+        #_nearby() None
+        #_surge() None
+        #_notifications() None
+        #_earnings() None
+        #_flagged() None
+    }
+
+    class ClockMenu {
+        #_session: CliSession
+        +status_line() str
+        +heading() str
+        +options() list~tuple~
+        +handle(choice: str) bool
+    }
+
+    class ConsoleIO {
+        +WIDTH: int$
+        #_echo_input: bool
+        +read_line(prompt: str, allow_empty: bool) str
+        +read_text(prompt: str, allow_empty: bool) str
+        +read_int(prompt: str, low: int, high: int, default: Optional~int~) int
+        +read_choice(prompt: str, choices: list~str~) str
+        +read_yes_no(prompt: str) bool
+        +read_money(prompt: str) Money
+        +read_time(prompt: str) tuple~int~
+        +read_place(prompt: str, places: list~tuple~, default: Optional~Location~, show_list: bool) Location
+        +print_header(title: str) None
+        +print_status(line: str) None
+        +print_options(options: list~tuple~) None
+        +print_table(headers: list~str~, rows: list, align: Optional~str~) None
+        +print_error(message: str) None
+        +print_success(message: str) None
+        +print_info(message: str) None
+        #_confirm_quit() bool
+        #_print_place_list(places: list~tuple~) None
+    }
+
+    class CliSession {
+        +io: ConsoleIO
+        +app: ChennaiRideApp
+        #_auto_captains: bool
+        #_service_area: ServiceArea
+        +CliSession(io: ConsoleIO)
+        +clock() SimulatedClock
+        +rides() RideService
+        +customers() tuple~Customer~
+        +captains() tuple~Captain~
+        +open_for_business() None
+        +auto_captains() bool
+        +set_auto_captains(enabled: bool) None
+        +status_line() str
+        +place_choices() list~tuple~
+        +read_place(prompt: str, default: Optional~Location~, show_list: bool) Location
+        +read_payment(customer: Customer, allow_default: bool) Optional~Payable~
+        +finish_trip(ride: Ride, stop: Optional~Location~) None
+        +offer_holder(ride: Ride) Optional~Captain~
+        +describe_waiting(ride: Ride, hint: bool) str
+    }
+
+    class GoBack {
+        <<exception>>
+    }
+    class QuitRequested {
+        <<exception>>
+    }
+    class EndOfInput {
+        <<exception>>
+    }
+
+    class ChennaiRideApp {
+        see diagram (c)
+    }
+    class Customer {
+        see diagram (a)
+    }
+    class Captain {
+        see diagram (a)
+    }
+
+    Menu <|-- StartupMenu : inheritance – hierarchical
+    Menu <|-- MainMenu : inheritance – hierarchical
+    Menu <|-- CustomerMenu : inheritance – hierarchical
+    Menu <|-- CaptainMenu : inheritance – hierarchical
+    Menu <|-- OperationsMenu : inheritance – hierarchical
+    Menu <|-- ClockMenu : inheritance – hierarchical
+    QuitRequested <|-- EndOfInput : inheritance – EndOfInput IS-A QuitRequested
+
+    Menu "0..*" o-- "1" ConsoleIO : aggregation – one ConsoleIO shared by all menus
+    MainMenu "1" *-- "4" Menu : composition – builds its sub-menus, holds them as Menu (polymorphism)
+    MainMenu o-- CliSession : aggregation – shared session
+    CustomerMenu o-- CliSession : aggregation – shared session
+    CaptainMenu o-- CliSession : aggregation – shared session
+    OperationsMenu o-- CliSession : aggregation – shared session
+    ClockMenu o-- CliSession : aggregation – shared session
+    CliSession "1" *-- "1" ChennaiRideApp : composition – same seeded world as the demo
+    CliSession o-- ConsoleIO : aggregation – shared
+    CustomerMenu --> "0..1" Customer : association – selected customer
+    CaptainMenu --> "0..1" Captain : association – selected captain
+    StartupMenu ..> CliSession : dependency – starts a fresh session
+    StartupMenu ..> MainMenu : dependency – runs it
+    ConsoleIO ..> GoBack : dependency – raises on b
+    ConsoleIO ..> QuitRequested : dependency – raises on q
+    ConsoleIO ..> EndOfInput : dependency – raises at end of input
+
+    note for Menu "run() is written once here (template method):<br>show options, read a choice, call handle(), repeat.<br>Every RideHailingError is caught and printed as a clean message."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style Menu fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style GoBack fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style QuitRequested fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style EndOfInput fill:#FDECEC,stroke:#B91C1C,stroke-width:2px
+    style ChennaiRideApp fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4

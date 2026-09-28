@@ -1,0 +1,55 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 1 · User and vehicles (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction TB
+    class User {
+        <<abstract>>
+    }
+    class Customer
+    class Captain
+    class Vehicle {
+        <<abstract>>
+    }
+    class Bike
+    class Auto
+    class Cab {
+        <<abstract>>
+    }
+    class CabEconomy
+    class CabPremium
+    class CaptainStatus {
+        <<enumeration>>
+    }
+    class VehicleType {
+        <<enumeration>>
+    }
+    User <|-- Customer : is-a
+    User <|-- Captain : is-a
+    Vehicle <|-- Bike : is-a
+    Vehicle <|-- Auto : is-a
+    Vehicle <|-- Cab : is-a
+    Cab <|-- CabEconomy : is-a
+    Cab <|-- CabPremium : is-a
+    Captain *-- Vehicle : has-a, owns
+    Captain o-- CaptainStatus : has-a, uses
+    Vehicle o-- VehicleType : has-a, uses
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:3px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px

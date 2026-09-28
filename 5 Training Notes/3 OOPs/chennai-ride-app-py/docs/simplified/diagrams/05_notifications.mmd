@@ -1,0 +1,27 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 5 · Notifications (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction TB
+    class Notifier {
+        <<abstract>>
+    }
+    class SmsNotifier
+    class PushNotifier
+    Notifier <|-- SmsNotifier : is-a
+    Notifier <|-- PushNotifier : is-a
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:3px

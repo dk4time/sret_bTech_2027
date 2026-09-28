@@ -1,0 +1,153 @@
+---
+title: e) Overview – every class, relationships only
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    namespace model_user {
+        class User { <<abstract>> }
+        class Customer
+        class Captain
+        class CaptainStatus { <<enumeration>> }
+    }
+    namespace model_vehicle {
+        class Vehicle { <<abstract>> }
+        class Cab { <<abstract>> }
+        class Bike
+        class Auto
+        class CabEconomy
+        class CabPremium
+        class VehicleType { <<enumeration>> }
+    }
+    namespace model_ride {
+        class Ride
+        class RideRequest
+        class RideStatus { <<enumeration>> }
+        class FareEstimate
+        class FareReceipt
+        class OutstandingFee
+        class CancellationReason { <<enumeration>> }
+        class TimelineEntry
+    }
+    namespace model_payment {
+        class Payable { <<interface>> }
+        class UpiPayment
+        class CashPayment
+        class WalletPayment
+        class PaymentMethod { <<enumeration>> }
+        class PaymentStatus { <<enumeration>> }
+    }
+    namespace model_common {
+        class Money
+        class Location
+        class ServiceArea
+        class ChennaiPlaces
+    }
+    namespace service {
+        class RideService
+        class MatchingService
+        class FareService
+        class PaymentService
+        class EarningsService
+        class CaptainService
+        class CustomerService
+        class RatingService
+        class RideAutopilot
+        class DispatchMode { <<enumeration>> }
+    }
+    namespace notification {
+        class Notifier { <<interface>> }
+        class SmsNotifier
+        class PushNotifier
+        class NotificationLog
+        class RideEvent { <<enumeration>> }
+    }
+    namespace app_cli {
+        class Launcher
+        class ChennaiWorld
+        class ChennaiRideApp
+        class Menu { <<abstract>> }
+        class StartupMenu
+        class MainMenu
+        class CustomerMenu
+        class CaptainMenu
+        class OperationsMenu
+        class ClockMenu
+        class ConsoleIO
+        class CliSession
+    }
+    namespace time {
+        class SimulatedClock
+    }
+
+    User <|-- Customer : hierarchical
+    User <|-- Captain : hierarchical
+    Vehicle <|-- Bike : hierarchical
+    Vehicle <|-- Auto : hierarchical
+    Vehicle <|-- Cab : multilevel
+    Cab <|-- CabEconomy : multilevel
+    Cab <|-- CabPremium : multilevel
+    Payable <|.. UpiPayment : realisation
+    Payable <|.. CashPayment : realisation
+    Payable <|.. WalletPayment : realisation
+    Notifier <|.. SmsNotifier : realisation
+    Notifier <|.. PushNotifier : realisation
+    Menu <|-- StartupMenu
+    Menu <|-- MainMenu
+    Menu <|-- CustomerMenu
+    Menu <|-- CaptainMenu
+    Menu <|-- OperationsMenu
+    Menu <|-- ClockMenu
+
+    Captain *-- Vehicle : composition
+    Captain --> CaptainStatus
+    Vehicle ..> VehicleType
+    Ride *-- RideRequest : composition
+    Ride *-- FareReceipt : composition
+    Ride *-- TimelineEntry : composition
+    Ride --> RideStatus
+    Ride --> CancellationReason
+    Ride o-- Captain : aggregation
+    Ride o-- Customer : aggregation
+    Ride --> FareEstimate
+    FareReceipt o-- OutstandingFee : aggregation
+    OutstandingFee --> Captain
+    Customer o-- Ride : history
+    RideRequest --> PaymentMethod
+    Payable ..> PaymentStatus
+    FareReceipt ..> Money
+    Ride ..> Location
+    ServiceArea o-- Location
+
+    RideService --> MatchingService
+    RideService --> FareService
+    RideService --> PaymentService
+    RideService o-- Notifier : aggregation
+    RideService o-- Ride : aggregation
+    RideService --> DispatchMode
+    RideService --> SimulatedClock
+    MatchingService --> CaptainService
+    FareService *-- Vehicle : rate card
+    FareService --> ServiceArea
+    PaymentService --> EarningsService
+    PaymentService ..> Payable : creates
+    CaptainService o-- Captain
+    CustomerService o-- Customer
+    RatingService --> CaptainService
+    RideAutopilot --> RideService
+    SmsNotifier o-- NotificationLog
+    PushNotifier o-- NotificationLog
+    Notifier ..> RideEvent
+
+    ChennaiWorld *-- RideService : composition
+    ChennaiWorld *-- CaptainService : composition
+    ChennaiWorld *-- CustomerService : composition
+    ChennaiWorld *-- RideAutopilot : composition
+    ChennaiRideApp *-- ChennaiWorld : composition
+    CliSession *-- ChennaiWorld : composition
+    Menu --> ConsoleIO
+    Menu --> CliSession
+    Launcher ..> StartupMenu
+    ChennaiPlaces ..> Location : constants

@@ -1,0 +1,62 @@
+# ── Walkthrough 03: wallet too low, UPI down, PAYMENT_PENDING blocks booking, cash fixes it ──
+# 7:00 PM - HDFC Bank's UPI servers are down from 6:45 to 7:45 PM today.
+4
+3
+19:00
+0
+# Settings -> Auto captain: the captain accepts, drives over and starts by himself.
+5
+2
+# Customer app -> Harish (#5) has only ₹60 in his wallet.
+1
+5
+1
+# Book a Cab Premium Chromepet -> Tambaram, paying by wallet.
+4
+
+tambaram
+4
+
+3
+
+y
+# Move time to the next ride event: the trip ends, the wallet cannot pay -> PAYMENT_PENDING.
+0
+4
+4
+0
+# Harish retries with UPI (harish.m@okhdfcbank) -> the bank is down -> still PAYMENT_PENDING.
+1
+5
+9
+1
+# He tries to book another ride -> blocked by PaymentPendingException.
+4
+
+pallavaram
+4
+
+2
+
+y
+# He pays the captain in cash -> COMPLETED.
+9
+2
+# Now the booking works (Balaji is at Tambaram, right here).
+4
+
+chromepet
+4
+
+2
+
+y
+0
+4
+4
+0
+1
+5
+11
+0
+0

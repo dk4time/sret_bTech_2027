@@ -1,0 +1,30 @@
+---
+title: "4 · Payments"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+    class Payable {
+        <<interface>>
+    }
+    class PaymentStatus {
+        <<enumeration>>
+    }
+    class UpiPayment
+    class CashPayment
+    class WalletPayment
+
+    Payable <|.. UpiPayment : can-do
+    Payable <|.. CashPayment : can-do
+    Payable <|.. WalletPayment : can-do
+    Payable ..> PaymentStatus : uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Payable fill:#dcfce7,stroke:#15803d,stroke-width:3px
+    style PaymentStatus fill:#fef3c7,stroke:#b45309,stroke-width:3px
+    style UpiPayment fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CashPayment fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style WalletPayment fill:#f8fafc,stroke:#475569,stroke-width:2px

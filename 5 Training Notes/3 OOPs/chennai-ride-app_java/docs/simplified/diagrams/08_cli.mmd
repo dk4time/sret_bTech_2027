@@ -1,0 +1,41 @@
+---
+title: "8 · CLI (interactive mode)"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+    class Menu {
+        <<abstract>>
+    }
+
+
+    class StartupMenu
+    class MainMenu
+    class CustomerMenu
+    class CaptainMenu
+    class OperationsMenu
+    class ClockMenu
+    class ConsoleIO
+    class CliSession
+
+    Menu <|-- StartupMenu : is-a
+    Menu <|-- MainMenu : is-a
+    Menu <|-- CustomerMenu : is-a
+    Menu <|-- CaptainMenu : is-a
+    Menu <|-- OperationsMenu : is-a
+    Menu <|-- ClockMenu : is-a
+    Menu o-- ConsoleIO : has-a, uses
+    Menu o-- CliSession : has-a, uses
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Menu fill:#ede9fe,stroke:#6d28d9,stroke-width:3px
+    style StartupMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style MainMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CustomerMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style OperationsMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ClockMenu fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ConsoleIO fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CliSession fill:#f8fafc,stroke:#475569,stroke-width:2px

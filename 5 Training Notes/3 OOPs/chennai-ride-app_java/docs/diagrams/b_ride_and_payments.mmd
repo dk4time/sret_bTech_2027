@@ -1,0 +1,217 @@
+---
+title: b) Ride and payments  (packages model.ride, model.payment)
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    class Ride {
+        -int nextIdNumber$
+        +int MAX_OTP_ATTEMPTS$
+        +double ARRIVAL_TOLERANCE_METERS$
+        -String id
+        -RideRequest request
+        -String otp
+        -BigDecimal surgeMultiplier
+        -FareEstimate estimate
+        -RideStatus status
+        -Captain captain
+        -Captain pendingOfferTo
+        -Location drop
+        -int wrongOtpAttempts
+        -List~Location~ travelledRoute
+        -LocalDateTime assignedAt
+        -LocalDateTime startedAt
+        -LocalDateTime droppedAt
+        -Set~Captain~ excludedCaptains
+        -FareReceipt receipt
+        -PaymentMethod paidWith
+        -List~TimelineEntry~ timeline
+        +Ride(RideRequest, String, BigDecimal, FareEstimate)
+        +offerTo(Captain captain, LocalDateTime at) void
+        +recordOffer(Captain, boolean, double, LocalDateTime) void
+        +assignCaptain(Captain, LocalDateTime, LocalDateTime) void
+        +unassignCaptain(LocalDateTime at) Captain
+        +markArrived(LocalDateTime at) void
+        +revealOtpTo(Customer requester) String
+        +start(String, LocalDateTime, int) void
+        +changeDestination(Location, LocalDateTime, int) Location
+        +endEarly(LocalDateTime at) Location
+        +reachDestination(LocalDateTime at) void
+        +attachReceipt(FareReceipt receipt) void
+        +complete(PaymentMethod method, LocalDateTime at) void
+        +markPaymentPending(PaymentMethod, String, LocalDateTime) void
+        +cancel(CancellationReason, Party, Money, LocalDateTime) void
+        +actualDistanceKm() double
+        +getStatus() RideStatus
+        -requireStatus(RideStatus expected, String action) void
+    }
+    note for Ride "Encapsulation: there is NO setStatus().<br>Every method checks the status and throws<br>InvalidRideStatusException for an illegal move."
+
+    class RideStatus {
+        <<enumeration>>
+        REQUESTED
+        CAPTAIN_ASSIGNED
+        CAPTAIN_ARRIVED
+        IN_PROGRESS
+        PAYMENT_PENDING
+        COMPLETED
+        CANCELLED
+        -String label
+        -boolean active
+        +isActive() boolean
+        +canBeCancelled() boolean
+    }
+
+    class RideRequest {
+        <<final>>
+        -Customer customer
+        -Location pickup
+        -Location drop
+        -VehicleType vehicleType
+        -int passengers
+        -PaymentMethod paymentMethod
+        -String couponCode
+        -LocalDateTime requestedAt
+        +straightLineKm() double
+        +getCustomer() Customer
+        +hasCoupon() boolean
+    }
+
+    class FareReceipt {
+        <<final>>
+        -String rideId
+        -Money baseFare
+        -Money distanceCharge
+        -Money timeCharge
+        -Money minimumFareTopUp
+        -Money waitingCharge
+        -BigDecimal surgeMultiplier
+        -Money surgeCharge
+        -Money nightCharge
+        -List~OutstandingFee~ previousFees
+        -Money couponDiscount
+        -int gstPercent
+        -Money estimatedTotal
+        -Money subtotal
+        -Money gst
+        -Money total
+        +FareReceipt(String rideId, ... 18 parameters ...)
+        +getRideAmount() Money
+        +getPreviousFeesTotal() Money
+        +getGst() Money
+        +getTotal() Money
+        +toString() String
+    }
+
+    class OutstandingFee {
+        <<final>>
+        -Money amount
+        -Captain owedTo
+        -String fromRideId
+        -String reason
+        +getAmount() Money
+        +getOwedTo() Captain
+    }
+
+    class CancellationReason {
+        <<enumeration>>
+        CUSTOMER_CHANGED_PLANS
+        CUSTOMER_NO_SHOW
+        OTP_FAILED
+        NO_CAPTAIN_AVAILABLE
+        -Party allowedParty
+        -String description
+        +getAllowedParty() Party
+    }
+
+    class TimelineEntry {
+        <<final>>
+        -LocalDateTime at
+        -RideStatus status
+        -String note
+    }
+
+    class Payable {
+        <<interface>>
+        +pay(Money amount)* PaymentStatus
+        +method()* PaymentMethod
+        +status()* PaymentStatus
+        +resultMessage()* String
+    }
+
+    class UpiPayment {
+        <<final>>
+        -String upiId
+        -boolean bankReachable
+        -Random referenceGenerator
+        -PaymentStatus status
+        -String resultMessage
+        +UpiPayment(String, boolean, Random)
+        +pay(Money amount) PaymentStatus
+        +method() PaymentMethod
+        +status() PaymentStatus
+        +resultMessage() String
+    }
+
+    class CashPayment {
+        <<final>>
+        -Captain collectedBy
+        -PaymentStatus status
+        -String resultMessage
+        +CashPayment(Captain collectedBy)
+        +pay(Money amount) PaymentStatus
+        +method() PaymentMethod
+        +status() PaymentStatus
+        +resultMessage() String
+    }
+
+    class WalletPayment {
+        <<final>>
+        -Customer customer
+        -PaymentStatus status
+        -String resultMessage
+        +WalletPayment(Customer customer)
+        +pay(Money amount) PaymentStatus
+        +method() PaymentMethod
+        +status() PaymentStatus
+        +resultMessage() String
+    }
+
+    class PaymentMethod {
+        <<enumeration>>
+        UPI
+        CASH
+        WALLET
+        -String label
+    }
+
+    class PaymentStatus {
+        <<enumeration>>
+        NOT_ATTEMPTED
+        SUCCESS
+        FAILED
+    }
+
+    class Customer
+    class Captain
+
+    Ride "1" *-- "1" RideRequest : composition – the booking
+    Ride "1" *-- "0..1" FareReceipt : composition – the bill
+    Ride "1" *-- "*" TimelineEntry : composition – status history
+    Ride --> "1" RideStatus : association – guarded state
+    Ride --> "0..1" CancellationReason : association
+    Ride --> "0..1" PaymentMethod : association – paidWith
+    Ride o-- "0..1" Captain : aggregation – captain, pendingOfferTo
+    Ride o-- "1" Customer : aggregation – /customer (held via RideRequest)
+    RideRequest --> "1" Customer : association – booked by
+    RideRequest --> "1" PaymentMethod : association – chosen at booking
+    FareReceipt o-- "*" OutstandingFee : aggregation – previous fees
+    OutstandingFee --> "1" Captain : association – owedTo
+    Payable <|.. UpiPayment : interface realisation
+    Payable <|.. CashPayment : interface realisation
+    Payable <|.. WalletPayment : interface realisation
+    Payable ..> PaymentStatus : dependency – pay() returns
+    CashPayment --> "1" Captain : association – collectedBy
+    WalletPayment --> "1" Customer : association – debits the wallet

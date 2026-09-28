@@ -1,0 +1,26 @@
+---
+title: "2 · Location and money"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR
+
+
+
+    class Location
+    class Money
+    class ChennaiPlaces
+    class ServiceArea
+
+    ChennaiPlaces *-- Location : has-a, owns
+    ServiceArea o-- Location : has-a, uses
+    note for Money "immutable"
+    note for Location "immutable"
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style Location fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Money fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ChennaiPlaces fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ServiceArea fill:#f8fafc,stroke:#475569,stroke-width:2px

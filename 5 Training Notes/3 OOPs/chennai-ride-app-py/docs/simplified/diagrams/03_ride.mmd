@@ -1,0 +1,40 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 3 · Ride (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class Ride
+    class Customer
+    class Captain
+    class RideRequest
+    class FareEstimate
+    class FareReceipt
+    class RideStatus {
+        <<enumeration>>
+    }
+    class CancellationReason {
+        <<enumeration>>
+    }
+    Ride o-- Customer : has-a, uses
+    Ride o-- Captain : has-a, uses
+    Ride *-- RideRequest : has-a, owns
+    Ride *-- FareEstimate : has-a, owns
+    Ride *-- FareReceipt : has-a, owns
+    Ride o-- RideStatus : has-a, uses
+    Ride o-- CancellationReason : has-a, uses
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px

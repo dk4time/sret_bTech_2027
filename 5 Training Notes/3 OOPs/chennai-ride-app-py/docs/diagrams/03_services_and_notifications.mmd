@@ -1,0 +1,302 @@
+%% (c) Services and notifications — generated from ridehailing/service/*, notification/*, time/*, app/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class ChennaiRideApp {
+        +clock: SimulatedClock
+        +sms: SmsNotifier
+        +push: PushNotifier
+        +captain_service: CaptainService
+        +customer_service: CustomerService
+        +fare_service: FareService
+        +matching_service: MatchingService
+        +earnings_service: EarningsService
+        +payment_service: PaymentService
+        +rating_service: RatingService
+        +ride_service: RideService
+        +upi_accounts: dict~Customer, UpiPayment~
+        +run() None
+        +bring_captains_online() list~tuple~
+        +print_reconciliation() None
+        +wallets_balance() bool
+    }
+
+    class RideService {
+        +MIN_TRIP_KM: float$
+        +MAX_TRIP_KM: Decimal$
+        +CANCELLATION_GRACE: timedelta$
+        +NO_SHOW_WAIT_MINUTES: int$
+        #_clock: SimulatedClock
+        #_service_area: ServiceArea
+        #_fares: FareService
+        #_matching: MatchingService
+        #_payments: PaymentService
+        #_notifiers: list~Notifier~
+        #_otp_rng: Random
+        #_rides: list~Ride~
+        #_manual_offers: bool
+        +fare_estimates(customer: Customer, drop: Location, pickup: Optional~Location~) list~FareEstimate~
+        +book_ride(customer: Customer, drop: Location, vehicle_type: VehicleType, passengers: int = 1, payment_method: Optional~Payable~ = None, coupon_code: Optional~str~ = None) Ride
+        +captain_arrives(ride: Ride) None
+        +start_ride(ride: Ride, entered_otp: str) None
+        +change_destination(ride: Ride, change_point: Location, new_drop: Location) None
+        +end_trip_early(ride: Ride, stop_point: Location, payment_method: Optional~Payable~) FareReceipt
+        +complete_trip(ride: Ride, payment_method: Optional~Payable~) FareReceipt
+        +pay_for_ride(ride: Ride, payable: Payable) str
+        +cancel_by_customer(ride: Ride) Money
+        +cancel_by_captain(ride: Ride) Captain
+        +cancel_no_show(ride: Ride) Money
+        +set_manual_offers(enabled: bool) None
+        +accept_offer(captain: Captain) Ride
+        +reject_offer(captain: Captain) Optional~Captain~
+        +active_rides() list~Ride~
+        +position_now(ride: Ride) Location
+        +surge_at(place: Location, vehicle_type: VehicleType) Decimal
+        +cancellation_fee_if_cancelled_now(ride: Ride) Money
+        #_match(ride: Ride) Captain
+        #_assign(ride: Ride, captain: Captain) Captain
+        #_settle_trip(ride: Ride, payment_method: Optional~Payable~) FareReceipt
+        #_notify(user: User, message: str) None
+    }
+
+    class FareService {
+        +NIGHT_CHARGE_RATE: Decimal$
+        +WAITING_CHARGE_PER_MINUTE: Money$
+        +MAX_SURGE: Decimal$
+        +HOTSPOT_RADIUS_KM: float$
+        +COUPONS: dict$
+        #_rate_card: dict~VehicleType, Vehicle~
+        +rate_card_vehicle(vehicle_type: VehicleType) Vehicle
+        +road_km(start: Location, end: Location) Decimal$
+        +is_hotspot(location: Location) bool$
+        +travel_minutes(vehicle: Vehicle, start: Location, end: Location, at: datetime) int
+        +surge_multiplier(pickup: Location, open_requests: int, free_captains: int, at: datetime) Decimal
+        +validate_coupon(customer: Customer, code: Optional~str~) None
+        +estimate(pickup: Location, drop: Location, vehicle_type: VehicleType, surge: Decimal, at: datetime, nearest_captain_eta: Optional~int~) FareEstimate
+        +build_receipt(ride: Ride, previous_fee: Money, at: datetime) FareReceipt
+        #_price(vehicle: Vehicle, distance_km: Decimal, trip_minutes: int, ...) FareReceipt
+    }
+
+    class MatchingService {
+        +SEARCH_RADIUS_KM: float$
+        +MAX_REJECTIONS: int$
+        #_captain_service: CaptainService
+        #_fare_service: FareService
+        +ineligibility_reason(captain: Captain, ride: Ride, at: datetime) Optional~str~
+        +captains_near(place: Location, vehicle_type: Optional~VehicleType~, at: datetime) list~tuple~
+        +eligible_captains(ride: Ride, at: datetime) list~Captain~
+        +free_captains_near(pickup: Location, vehicle_type: VehicleType) list~Captain~
+        +offered_captains() list~Captain~
+        +eta_minutes(captain: Captain, pickup: Location, at: datetime) int
+        +nearest_eta(pickup: Location, vehicle_type: VehicleType, at: datetime) Optional~int~
+        +next_candidate(ride: Ride, at: datetime) Captain
+        +find_captain(ride: Ride, at: datetime) Captain
+        #_reason(captain: Captain, pickup: Location, ...) Optional~str~
+    }
+
+    class PaymentService {
+        #_earnings: EarningsService
+        #_ledger: list~PaymentRecord~
+        +pay_ride(ride: Ride, payable: Payable, at: datetime) str
+        +charge_fee(customer: Customer, fee: Money, captain: Captain, payable: Payable, ride_id: str, at: datetime) str
+        +ledger() tuple~PaymentRecord~
+        +total_collected() Money
+    }
+
+    class PaymentRecord {
+        #_at: datetime
+        #_reference: str
+        #_customer: Customer
+        #_method: str
+        #_amount: Money
+        #_succeeded: bool
+        #_note: str
+        +amount() Money
+        +succeeded() bool
+        +method() str
+    }
+
+    class EarningsService {
+        +COMMISSION_RATE: Decimal$
+        #_daily: dict~tuple, DailyEarnings~
+        #_total_paid: Money
+        #_total_commission: Money
+        #_total_gst: Money
+        #_total_captain_earnings: Money
+        +record_ride_payment(ride: Ride, is_cash: bool, at: datetime) None
+        +record_fee_payment(fee: Money, captain: Optional~Captain~, at: datetime) None
+        +earnings_for(captain: Captain, day: date) DailyEarnings
+        +total_paid_by_customers() Money
+        +books_balance() bool
+        #_split(amount: Money, captain: Optional~Captain~, day: date, counts_as_ride: bool) Money
+    }
+
+    class DailyEarnings {
+        #_captain: Captain
+        #_day: date
+        #_rides: int
+        #_gross_fare: Money
+        #_commission: Money
+        #_net_earnings: Money
+        #_cash_collected: Money
+        #_dues_added: Money
+        +add_earning(gross: Money, commission: Money, net: Money, counts_as_ride: bool) None
+        +add_cash(collected: Money, owed_to_platform: Money) None
+    }
+
+    class CaptainService {
+        #_clock: SimulatedClock
+        #_captains: list~Captain~
+        #_total_dues_settled: Money
+        +register_captain(name: str, phone: str, home_place: str, vehicle: Vehicle, opening_dues: Optional~Money~, past_ratings: list~int~) Captain
+        +verify_kyc(captain: Captain) None
+        +go_online(captain: Captain) None
+        +go_offline(captain: Captain) None
+        +settle_dues(captain: Captain) Money
+        +captains() tuple~Captain~
+        +find(name: str) Captain
+    }
+
+    class CustomerService {
+        #_clock: SimulatedClock
+        #_customers: list~Customer~
+        +register_customer(name: str, phone: str, home_place: str, wallet_balance: Money) Customer
+        +top_up(customer: Customer, amount: Money) Money
+        +relocate(customer: Customer, place_name: str) None
+        +customers() tuple~Customer~
+        +find(name: str) Customer
+    }
+
+    class RatingService {
+        +rate_captain(ride: Ride, score: int) None
+        +rate_customer(ride: Ride, score: int) None
+        +leaderboard(captains: tuple~Captain~) list~Captain~
+        +flagged_captains(captains: tuple~Captain~) list~Captain~
+        #_validate_score(score: int) None$
+    }
+
+    class SimulatedClock {
+        +PEAK_WINDOWS: tuple$
+        +NIGHT_START_HOUR: int$
+        +NIGHT_END_HOUR: int$
+        #_now: datetime
+        +now() datetime
+        +advance(minutes: int, seconds: int) datetime
+        +advance_to(moment: datetime) datetime
+        +is_peak_hour(moment: datetime) bool$
+        +is_night(moment: datetime) bool$
+    }
+
+    class ServiceArea {
+        #_name: str
+        #_south: float
+        #_north: float
+        #_west: float
+        #_east: float
+        +chennai_metro() ServiceArea$
+        +contains(location: Location) bool
+        +ensure_contains(location: Location) None
+    }
+
+    class Notifier {
+        <<abstract>>
+        #_sequence: int$
+        #_sent: list~str~
+        #_log: list~tuple~
+        +channel() str*
+        +notify(user: User, message: str, at: datetime) None*
+        #_record(at: datetime, line: str) None
+        +log() tuple~tuple~
+        +sent_count() int
+        +sent_messages() tuple~str~
+    }
+
+    class SmsNotifier {
+        #_echo: bool
+        +SmsNotifier(echo: bool = False)
+        +channel() str
+        +notify(user: User, message: str, at: datetime) None
+    }
+
+    class PushNotifier {
+        #_echo: bool
+        +PushNotifier(echo: bool = True)
+        +channel() str
+        +notify(user: User, message: str, at: datetime) None
+    }
+
+    class Ride {
+        see diagram (b)
+    }
+    class Captain {
+        see diagram (a)
+    }
+    class Customer {
+        see diagram (a)
+    }
+    class Vehicle {
+        <<abstract>>
+        see diagram (a)
+    }
+    class Payable {
+        <<interface>>
+        see diagram (b)
+    }
+    class FareEstimate {
+        see diagram (b)
+    }
+    class FareReceipt {
+        see diagram (b)
+    }
+
+    ChennaiRideApp "1" *-- "1" SimulatedClock : composition – creates the clock
+    ChennaiRideApp "1" *-- "1" RideService : composition – builds every service
+    ChennaiRideApp "1" *-- "1" CaptainService : composition
+    ChennaiRideApp "1" *-- "1" CustomerService : composition
+    ChennaiRideApp "1" *-- "1" FareService : composition
+    ChennaiRideApp "1" *-- "1" MatchingService : composition
+    ChennaiRideApp "1" *-- "1" PaymentService : composition
+    ChennaiRideApp "1" *-- "1" EarningsService : composition
+    ChennaiRideApp "1" *-- "1" RatingService : composition
+    ChennaiRideApp "1" *-- "2" Notifier : composition – one SMS and one push notifier
+
+    RideService o-- FareService : aggregation – injected, shared
+    RideService o-- MatchingService : aggregation – injected, shared
+    RideService o-- PaymentService : aggregation – injected, shared
+    RideService "1" o-- "0..*" Notifier : aggregation – list of Notifier (polymorphism)
+    RideService --> SimulatedClock : association – all time comes from here
+    RideService --> ServiceArea : association – validates pickup and drop
+    RideService "1" --> "0..*" Ride : association – creates and tracks rides
+    MatchingService o-- CaptainService : aggregation – injected
+    MatchingService o-- FareService : aggregation – ETA maths
+    PaymentService o-- EarningsService : aggregation – injected
+    PaymentService "1" *-- "0..*" PaymentRecord : composition – the ledger
+    EarningsService "1" *-- "0..*" DailyEarnings : composition – one per captain per day
+    DailyEarnings "0..*" --> "1" Captain : association
+    FareService "1" *-- "4" Vehicle : composition – rate-card vehicles
+    FareService ..> FareEstimate : dependency – creates
+    FareService ..> FareReceipt : dependency – creates
+    CaptainService "1" o-- "0..*" Captain : aggregation – registry
+    CustomerService "1" o-- "0..*" Customer : aggregation – registry
+    CaptainService --> SimulatedClock : association
+    CustomerService --> SimulatedClock : association
+    RatingService ..> Ride : dependency – rates completed rides
+    PaymentService ..> Payable : dependency – calls pay(), dynamic dispatch
+
+    Notifier <|-- SmsNotifier : inheritance – overrides notify()
+    Notifier <|-- PushNotifier : inheritance – overrides notify()
+
+    note for RideService "book_ride(... passengers=1, payment_method=None, coupon_code=None):<br>Python has no method overloading, so default/keyword args are used."
+    note for ChennaiRideApp "Composition root: builds the whole world.<br>The scripted demo AND the CLI (CliSession) use it."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style Notifier fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Ride fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Vehicle fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Payable fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style FareEstimate fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style FareReceipt fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4

@@ -1,0 +1,39 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 9 · Overview: how the 8 groups connect.
+flowchart TB
+    G8["8 · CLI"]
+    G6["6 · Services"]
+    G7["7 · Clock and exceptions"]
+    G5["5 · Notifications"]
+    G3["3 · Ride"]
+    G1["1 · User and vehicles"]
+    G4["4 · Payments"]
+    G2["2 · Location and money"]
+    G8 -- "calls the services" --> G6
+    G6 -- "reads the clock, raises errors" --> G7
+    G6 -- "sends messages" --> G5
+    G6 -- "coordinates rides" --> G3
+    G6 -- "registers users" --> G1
+    G6 -- "takes payments" --> G4
+    G3 -- "has a Customer and a Captain" --> G1
+    G3 -- "paid with a Payable" --> G4
+    G3 -- "route and fare" --> G2
+    G1 -- "is at a Location, wallet in Money" --> G2
+    classDef grp fill:#FFFFFF,stroke:#111827,stroke-width:2px,color:#111827,font-size:20px
+    classDef hub fill:#EEF2FF,stroke:#1D4ED8,stroke-width:3px,color:#111827,font-size:20px
+    class G1,G2,G3,G4,G5,G7,G8 grp
+    class G6 hub

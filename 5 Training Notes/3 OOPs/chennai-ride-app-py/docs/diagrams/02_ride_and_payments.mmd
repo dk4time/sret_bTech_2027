@@ -1,0 +1,223 @@
+%% (b) Ride and payments — generated from ridehailing/model/ride/*, model/payment/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level (underlined).
+classDiagram
+    direction TB
+
+    class Ride {
+        #_next_number: int$
+        +MAX_OTP_ATTEMPTS: int$
+        +ARRIVAL_RADIUS_KM: float$
+        +FREE_WAITING_MINUTES: int$
+        #_ride_id: str
+        -__otp: str
+        #_otp_attempts: int
+        #_status: RideStatus
+        #_request: RideRequest
+        #_estimate: FareEstimate
+        #_captain: Optional~Captain~
+        #_payment_method: Payable
+        #_payment_status: PaymentStatus
+        #_receipt: Optional~FareReceipt~
+        #_carried_fees: list~PendingFee~
+        #_route: list~Location~
+        #_timeline: list~tuple~
+        #_cancellation_reason: Optional~CancellationReason~
+        #_cancelled_by: Optional~User~
+        +Ride(request: RideRequest, otp: str, estimate: FareEstimate, payment_method: Payable, booked_at: datetime)
+        +ride_id() str
+        +status() RideStatus
+        +customer() Customer
+        +captain() Optional~Captain~
+        +pickup() Location
+        +drop() Location
+        +receipt() Optional~FareReceipt~
+        +is_paid() bool
+        +actual_distance_km() Decimal
+        +trip_minutes() int
+        +otp_for(user: User) str
+        +is_excluded(captain: Captain) bool
+        +record_offer(captain: Captain, distance_km: float, accepted: bool, at: datetime) None
+        +assign_captain(captain: Captain, eta_minutes: int, at: datetime) None
+        +release_captain(at: datetime) Captain
+        +mark_arrived(at: datetime) None
+        +start(entered_otp: str, at: datetime) None
+        +change_destination(change_point: Location, new_drop: Location, at: datetime) None
+        +end_early(stop_point: Location, at: datetime) None
+        +end_trip(at: datetime) None
+        +attach_receipt(receipt: FareReceipt, carried_fees: list~PendingFee~) None
+        +mark_payment_failed(reason: str, at: datetime) None
+        +complete(paid_with: Payable, payment_reference: str, at: datetime) None
+        +cancel(reason: CancellationReason, by: Optional~User~, at: datetime, fee: Optional~Money~) None
+        +rate_captain(score: int) None
+        +rate_customer(score: int) None
+        +timeline_text() str
+        #_transition(new_status: RideStatus, at: datetime, note: str) None
+        #_require_status(action: str, allowed: RideStatus...) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class RideRequest {
+        #_customer: Customer
+        #_pickup: Location
+        #_drop: Location
+        #_vehicle_type: VehicleType
+        #_passengers: int
+        #_requested_at: datetime
+        #_coupon_code: Optional~str~
+        +customer() Customer
+        +pickup() Location
+        +drop() Location
+        +vehicle_type() VehicleType
+        +passengers() int
+        +coupon_code() Optional~str~
+    }
+
+    class FareEstimate {
+        #_vehicle_type: VehicleType
+        #_distance_km: Decimal
+        #_trip_minutes: int
+        #_surge_multiplier: Decimal
+        #_fare: Money
+        #_nearest_captain_eta: Optional~int~
+        +fare() Money
+        +surge_multiplier() Decimal
+        +nearest_captain_eta() Optional~int~
+        +is_available() bool
+    }
+
+    class FareReceipt {
+        +GST_RATE: Decimal$
+        #_ride_id: str
+        #_base_fare: Money
+        #_distance_charge: Money
+        #_time_charge: Money
+        #_minimum_fare_top_up: Money
+        #_waiting_charge: Money
+        #_surge_charge: Money
+        #_night_charge: Money
+        #_previous_cancellation_fee: Money
+        #_coupon_discount: Money
+        #_estimated_total: Optional~Money~
+        #_fare_before_gst: Money
+        #_gst: Money
+        #_total: Money
+        +FareReceipt(ride_id: str, vehicle_type: VehicleType, base_fare: Money, ... keyword-only)
+        +fare_before_gst() Money
+        +ride_fare_before_gst() Money
+        +gst() Money
+        +total() Money
+        +#95;#95;str#95;#95;() str
+    }
+
+    class RideStatus {
+        <<enumeration>>
+        REQUESTED
+        CAPTAIN_ASSIGNED
+        CAPTAIN_ARRIVED
+        IN_PROGRESS
+        PAYMENT_PENDING
+        COMPLETED
+        CANCELLED
+        +label: str
+        +is_active() bool
+        +is_cancellable() bool
+        +is_final() bool
+    }
+
+    class CancellationReason {
+        <<enumeration>>
+        CUSTOMER_CANCELLED
+        NO_SHOW
+        OTP_FAILED
+        NO_CAPTAIN_AVAILABLE
+        +description: str
+        +fee_may_apply: bool
+    }
+
+    class PaymentStatus {
+        <<enumeration>>
+        NOT_DUE
+        FAILED
+        PAID
+        +label: str
+    }
+
+    class Payable {
+        <<interface>>
+        +method_name() str*
+        +pay(amount: Money) str*
+        +is_cash() bool
+        +#95;#95;str#95;#95;() str
+    }
+
+    class UpiPayment {
+        #_reference_counter: int$
+        #_upi_id: str
+        #_rng: Random
+        #_failure_rate: float
+        +UpiPayment(upi_id: str, rng: Random, failure_rate: float)
+        +upi_id() str
+        +method_name() str
+        +pay(amount: Money) str
+    }
+
+    class CashPayment {
+        #_reference_counter: int$
+        +method_name() str
+        +is_cash() bool
+        +pay(amount: Money) str
+    }
+
+    class WalletPayment {
+        #_reference_counter: int$
+        #_customer: Customer
+        +WalletPayment(customer: Customer)
+        +method_name() str
+        +pay(amount: Money) str
+    }
+
+    class Customer {
+        see diagram (a)
+    }
+    class Captain {
+        see diagram (a)
+    }
+    class User {
+        <<abstract>>
+        see diagram (a)
+    }
+    class PendingFee {
+        see diagram (a)
+    }
+
+    Ride "1" *-- "1" RideRequest : composition – frozen booking details
+    Ride "1" *-- "1" FareEstimate : composition – price shown before confirming
+    Ride "1" *-- "0..1" FareReceipt : composition – the itemised bill
+    Ride "0..*" o-- "1" Customer : aggregation – existing customer (via request.customer)
+    Ride "0..*" o-- "0..1" Captain : aggregation – existing captain, assigned later
+    Ride "0..*" --> "1" Payable : association – chosen payment method
+    Ride "1" --> "0..*" PendingFee : association – old fees billed on this ride
+    Ride --> RideStatus : association – guarded state (no setter)
+    Ride --> PaymentStatus : association
+    Ride --> CancellationReason : association
+    Ride ..> User : dependency – otp_for(user), cancelled_by
+
+    Payable <|.. UpiPayment : realisation – implements pay()
+    Payable <|.. CashPayment : realisation – implements pay(), overrides is_cash
+    Payable <|.. WalletPayment : realisation – implements pay()
+    WalletPayment "0..*" --> "1" Customer : association – pays from this wallet
+
+    note for Ride "#95;#95;otp is name-mangled to _Ride#95;#95;otp:<br>ride.#95;#95;otp from outside raises AttributeError.<br>status changes only via assign_captain(), start(otp), cancel()..."
+    note for Payable "Python has no 'interface' keyword:<br>Payable is an ABC used as an interface.<br>PaymentService just calls payable.pay(amount)."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style RideStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style CancellationReason fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:2px
+    style Customer fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style Captain fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style User fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4
+    style PendingFee fill:#F3F4F6,stroke:#6B7280,stroke-width:1px,stroke-dasharray:5 4

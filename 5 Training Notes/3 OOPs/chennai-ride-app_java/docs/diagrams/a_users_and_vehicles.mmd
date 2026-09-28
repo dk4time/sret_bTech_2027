@@ -1,0 +1,215 @@
+---
+title: a) Users and vehicles  (packages model.user, model.vehicle)
+config:
+  layout: elk
+---
+classDiagram
+    direction TB
+
+    class User {
+        <<abstract>>
+        -String INDIAN_MOBILE$
+        -String id
+        -String name
+        -String phone
+        -Location location
+        -int ratingCount
+        -int ratingTotal
+        #User(String, String, String, Location)
+        #User(String, String, String, Location, int, int)
+        +getRole()* String «abstract»
+        #moveTo(Location newLocation) void
+        +receiveRating(int stars) void
+        +getAverageRating() double
+        +getLocation() Location
+        +equals(Object o) boolean
+        +hashCode() int
+        +toString() String
+    }
+
+    class Customer {
+        -int nextIdNumber$
+        +Money MAX_TOP_UP$
+        -String upiId
+        -Money walletBalance
+        -List~Ride~ rideHistory
+        -List~OutstandingFee~ outstandingFees
+        -Set~String~ usedCoupons
+        +Customer(String, String, Location, String)
+        +Customer(String, String, Location, String, Money)
+        +getRole() String
+        +topUpWallet(Money amount) void
+        +debitWallet(Money amount) void
+        +recordRide(Ride ride) void
+        +getActiveRide() Ride
+        +getPaymentPendingRide() Ride
+        +arriveAt(Location dropPoint) void
+        +travelOnOwnTo(Location place) void
+        +addOutstandingFee(OutstandingFee fee) void
+        +takeOutstandingFees() List~OutstandingFee~
+        +markCouponUsed(String code) void
+    }
+
+    class Captain {
+        -int nextIdNumber$
+        +Money CASH_DUES_LIMIT$
+        +double FLAG_RATING_THRESHOLD$
+        -Vehicle vehicle
+        -double maxPreferredTripKm
+        -CaptainStatus status
+        -String currentRideId
+        -String pendingOfferRideId
+        -LocalDateTime availableFrom
+        -int offersReceived
+        -int offersAccepted
+        -int cancellationsAfterAccepting
+        -Money duesOwed
+        +Captain(String, String, Location, Vehicle)
+        +Captain(String, String, Location, Vehicle, double)
+        +Captain(String, String, Location, Vehicle, double, int, int, Money)
+        +getRole() String
+        +verifyKyc() void
+        +goOnline(Location at, LocalDateTime now) void
+        +goOffline() void
+        +considerOffer(double tripKm) boolean
+        +receiveOffer(String rideId) void
+        +respondToOffer(boolean accept) boolean
+        +acceptRide(String rideId, LocalDateTime now) void
+        +reachPickup(Location pickup) void
+        +finishRide(Location, LocalDateTime) void
+        +cancelAcceptedRide(LocalDateTime now) void
+        +isAvailableAt(LocalDateTime now) boolean
+        +addDues(Money amount) void
+        +isBlockedForCash() boolean
+        +settleDues() Money
+        +isFlagged() boolean
+        +getAcceptanceRate() double
+        -recordOfferDecision(boolean accepted) boolean
+    }
+
+    class CaptainStatus {
+        <<enumeration>>
+        KYC_PENDING
+        OFFLINE
+        AVAILABLE
+        ON_RIDE
+        -String label
+        +getLabel() String
+        +canReceiveOffers() boolean
+    }
+
+    class Vehicle {
+        <<abstract>>
+        -String TN_PLATE_FORMAT$
+        -String registrationNumber
+        -String model
+        -String colour
+        #Vehicle(String registrationNumber, String model)
+        #Vehicle(String, String, String)
+        +getType()* VehicleType «abstract»
+        +baseFare()* Money «abstract»
+        +perKmRate()* Money «abstract»
+        +perMinuteRate()* Money «abstract»
+        +minimumFare()* Money «abstract»
+        +seatCapacity()* int «abstract»
+        +averageSpeedKmph()* double «abstract»
+        +peakSpeedKmph()* double «abstract»
+        +calculateBaseFare(double, long) Money
+        +travelMinutes(double, boolean, boolean) int
+        +equals(Object o) boolean
+        +toString() String
+    }
+
+    class Cab {
+        <<abstract>>
+        #Cab(String, String, String)
+        +luggageCapacity()* int «abstract»
+        +hasAirConditioning() boolean
+        +averageSpeedKmph() double
+        +peakSpeedKmph() double
+        +toString() String
+    }
+
+    class Bike {
+        <<final>>
+        +Bike(String registrationNumber, String model)
+        +Bike(String, String, String)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +averageSpeedKmph() double
+        +peakSpeedKmph() double
+    }
+
+    class Auto {
+        <<final>>
+        +Auto(String registrationNumber, String model)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +averageSpeedKmph() double
+        +peakSpeedKmph() double
+    }
+
+    class CabEconomy {
+        <<final>>
+        +CabEconomy(String registrationNumber, String model)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +luggageCapacity() int
+    }
+
+    class CabPremium {
+        <<final>>
+        +CabPremium(String registrationNumber, String model)
+        +getType() VehicleType
+        +baseFare() Money
+        +perKmRate() Money
+        +perMinuteRate() Money
+        +minimumFare() Money
+        +seatCapacity() int
+        +luggageCapacity() int
+        +averageSpeedKmph() double
+    }
+
+    class VehicleType {
+        <<enumeration>>
+        BIKE
+        AUTO
+        CAB_ECONOMY
+        CAB_PREMIUM
+        -String displayName
+        -int seatCapacity
+        -Money cancellationFee
+        -Money noShowFee
+        +getSeatCapacity() int
+        +getCancellationFee() Money
+        +getNoShowFee() Money
+        +canCarry(int passengers) boolean
+    }
+
+    class Ride
+    class OutstandingFee
+
+    User <|-- Customer : inheritance – hierarchical
+    User <|-- Captain : inheritance – hierarchical
+    Vehicle <|-- Bike : inheritance – hierarchical
+    Vehicle <|-- Auto : inheritance – hierarchical
+    Vehicle <|-- Cab : inheritance – multilevel (level 2)
+    Cab <|-- CabEconomy : inheritance – multilevel (level 3)
+    Cab <|-- CabPremium : inheritance – multilevel (level 3)
+    Captain "1" *-- "1" Vehicle : composition – HAS-A, final, never swapped
+    Captain --> "1" CaptainStatus : association – enum state
+    Vehicle ..> VehicleType : dependency – getType() returns
+    Customer o-- "*" Ride : aggregation – ride history
+    Customer o-- "*" OutstandingFee : aggregation – fees for the next ride

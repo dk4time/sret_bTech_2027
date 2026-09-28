@@ -1,0 +1,33 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 4 · Payments (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction TB
+    class Payable {
+        <<interface>>
+    }
+    class UpiPayment
+    class CashPayment
+    class WalletPayment
+    class PaymentStatus {
+        <<enumeration>>
+    }
+    Payable <|.. UpiPayment : can-do
+    Payable <|.. CashPayment : can-do
+    Payable <|.. WalletPayment : can-do
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module
+    style Payable fill:#F3E8FF,stroke:#7E22CE,stroke-width:3px
+    style PaymentStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:3px

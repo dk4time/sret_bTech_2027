@@ -1,0 +1,57 @@
+---
+config:
+  theme: base
+  fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+  themeVariables:
+    fontSize: 20px
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+    primaryColor: '#FFFFFF'
+    primaryBorderColor: '#4B5563'
+    primaryTextColor: '#111827'
+    lineColor: '#111827'
+    textColor: '#111827'
+  class:
+    hideEmptyMembersBox: true
+---
+%% 7 · Clock and exceptions (simplified: type names only). Generated from the ridehailing/ code.
+classDiagram
+    direction LR
+    class SimulatedClock
+    class Exception
+    class RideHailingError
+    class InvalidRideStatusError
+    class InvalidOtpError
+    class NoCaptainAvailableError
+    class ActiveRideExistsError
+    class PaymentPendingError
+    class InsufficientWalletBalanceError
+    class OutOfServiceAreaError
+    class InvalidBookingError
+    class CaptainNotEligibleError
+    class CaptainBusyError
+    class CaptainNotAtPickupError
+    class PaymentFailedError
+    class DuplicatePaymentError
+    class InvalidAmountError
+    class InvalidRatingError
+    class TimeTravelError
+    class UnauthorizedAccessError
+    Exception <|-- RideHailingError : is-a
+    RideHailingError <|-- InvalidRideStatusError : is-a
+    RideHailingError <|-- InvalidOtpError : is-a
+    RideHailingError <|-- NoCaptainAvailableError : is-a
+    RideHailingError <|-- ActiveRideExistsError : is-a
+    RideHailingError <|-- PaymentPendingError : is-a
+    RideHailingError <|-- InsufficientWalletBalanceError : is-a
+    RideHailingError <|-- OutOfServiceAreaError : is-a
+    RideHailingError <|-- InvalidBookingError : is-a
+    RideHailingError <|-- CaptainNotEligibleError : is-a
+    RideHailingError <|-- CaptainBusyError : is-a
+    RideHailingError <|-- CaptainNotAtPickupError : is-a
+    RideHailingError <|-- PaymentFailedError : is-a
+    RideHailingError <|-- DuplicatePaymentError : is-a
+    RideHailingError <|-- InvalidAmountError : is-a
+    RideHailingError <|-- InvalidRatingError : is-a
+    RideHailingError <|-- TimeTravelError : is-a
+    RideHailingError <|-- UnauthorizedAccessError : is-a
+    %% colours: amber = abstract, purple = interface, green = enum, white = concrete, dashed = module

@@ -1,0 +1,224 @@
+---
+title: c) Services and notifications  (packages service, notification, time)
+config:
+  layout: elk
+---
+classDiagram
+    direction LR
+
+    class RideService {
+        +int CANCELLATION_GRACE_MINUTES$
+        +int NO_SHOW_WAIT_MINUTES$
+        -long OTP_SEED$
+        -SimulatedClock clock
+        -MatchingService matchingService
+        -FareService fareService
+        -PaymentService paymentService
+        -List~Notifier~ notifiers
+        -Random otpGenerator
+        -List~Ride~ rides
+        -DispatchMode dispatchMode
+        +getFareEstimates(Location, Location) List~FareEstimate~
+        +bookRide(Customer, Location, Location, VehicleType, int) Ride
+        +bookRide(Customer, Location, Location, VehicleType, int, PaymentMethod) Ride
+        +bookRide(Customer, Location, Location, VehicleType, int, PaymentMethod, String) Ride
+        +respondToOffer(Ride, Captain, boolean) Captain
+        +captainArrived(Ride ride) void
+        +startRide(Ride ride, String otp) void
+        +changeDestination(Ride ride, Location newDrop) Location
+        +endTripEarly(Ride ride) FareReceipt
+        +completeTrip(Ride ride) FareReceipt
+        +completeTrip(Ride, PaymentMethod) FareReceipt
+        +retryPayment(Ride, PaymentMethod) PaymentStatus
+        +cancelByCustomer(Ride ride) Money
+        +cancellationFeeIfCancelledNow(Ride ride) Money
+        +cancelForNoShow(Ride ride) Money
+        +captainCancelsAfterAccepting(Ride ride) Captain
+        +setDispatchMode(DispatchMode mode) void
+        -validateBooking(...) void
+        -notify(User, RideEvent, String) void
+    }
+
+    class MatchingService {
+        +double MATCH_RADIUS_KM$
+        +int MAX_REJECTED_OFFERS$
+        -CaptainService captainService
+        -FareService fareService
+        +ineligibilityReason(Captain, Location, VehicleType, PaymentMethod, Ride, LocalDateTime) String
+        +findEligibleCaptains(Location, VehicleType, PaymentMethod, Ride, LocalDateTime) List~Captain~
+        +dispatch(Ride ride, LocalDateTime now) Captain
+        +nextCandidate(Ride ride, LocalDateTime now) Captain
+        +etaMinutes(Captain, Location, LocalDateTime) int
+    }
+
+    class FareService {
+        +int GST_PERCENT$
+        +int NIGHT_CHARGE_PERCENT$
+        +String FIRSTRIDE$
+        -ServiceArea serviceArea
+        -Map~VehicleType, Vehicle~ rateCard
+        +isNightTime(LocalDateTime time)$ boolean
+        +calculateSurge(Location, LocalDateTime, int, int) BigDecimal
+        +estimate(VehicleType, Location, Location, LocalDateTime, BigDecimal, int) FareEstimate
+        +generateReceipt(Ride, List~OutstandingFee~) FareReceipt
+        +travelMinutes(Vehicle, Location, Location, LocalDateTime) int
+    }
+
+    class PaymentService {
+        -long UPI_REFERENCE_SEED$
+        -EarningsService earningsService
+        -Random upiReferenceGenerator
+        -List~UpiOutage~ outages
+        +reportUpiOutage(String, LocalDateTime, LocalDateTime) void
+        +collect(Ride, PaymentMethod, LocalDateTime) Payable
+        -createPayment(PaymentMethod, Ride, LocalDateTime) Payable
+    }
+
+    class EarningsService {
+        +int COMMISSION_PERCENT$
+        -Map~String, DayEarnings~ earnings
+        -Money totalPaidByCustomers
+        -Money totalCaptainEarnings
+        -Money totalCommission
+        -Money totalGst
+        +recordPaidRide(Ride, PaymentMethod, LocalDate) void
+        +getDayEarnings(Captain, LocalDate) DayEarnings
+        +isBalanced() boolean
+    }
+
+    class DayEarnings {
+        <<static nested>>
+        -Captain captain
+        -LocalDate day
+        -int rides
+        -Money grossFare
+        -Money commission
+        -Money netEarnings
+        -Money cashCollected
+    }
+
+    class CaptainService {
+        -SimulatedClock clock
+        -List~Captain~ captains
+        +register(Captain captain) Captain
+        +verifyKyc(Captain captain) void
+        +goOnline(Captain captain, Location at) void
+        +goOffline(Captain captain) void
+        +settleDues(Captain captain) Money
+        +countOnline() int
+    }
+
+    class CustomerService {
+        -List~Customer~ customers
+        +register(Customer customer) Customer
+        +topUpWallet(Customer customer, Money amount) void
+    }
+
+    class RatingService {
+        -CaptainService captainService
+        +rateCaptain(Ride ride, int stars) void
+        +rateCustomer(Ride ride, int stars) void
+        +leaderboard() List~Captain~
+        +flaggedCaptains() List~Captain~
+    }
+
+    class RideAutopilot {
+        -SimulatedClock clock
+        -RideService rideService
+        -List~Ride~ rides
+        +add(Ride ride) void
+        +advanceTo(LocalDateTime target) List~Ride~
+        +driveToCompletion(Ride ride) void
+        +driveUntilStarted(Ride ride) void
+    }
+
+    class DispatchMode {
+        <<enumeration>>
+        AUTOMATIC
+        CAPTAIN_APP
+        -String label
+    }
+
+    class SimulatedClock {
+        <<final>>
+        -LocalDateTime now
+        +now() LocalDateTime
+        +advanceMinutes(long minutes) void
+        +advanceTo(LocalDateTime target) void
+        +stamp() String
+    }
+
+    class Notifier {
+        <<interface>>
+        +notify(User, RideEvent, String)* void
+        +handles(RideEvent event) boolean
+    }
+
+    class SmsNotifier {
+        -SimulatedClock clock
+        -NotificationLog log
+        +SmsNotifier(SimulatedClock clock)
+        +SmsNotifier(SimulatedClock clock, NotificationLog log)
+        +handles(RideEvent event) boolean
+        +notify(User, RideEvent, String) void
+    }
+
+    class PushNotifier {
+        -SimulatedClock clock
+        -NotificationLog log
+        +PushNotifier(SimulatedClock clock)
+        +PushNotifier(SimulatedClock clock, NotificationLog log)
+        +notify(User, RideEvent, String) void
+    }
+
+    class NotificationLog {
+        -List~Entry~ entries
+        +record(LocalDateTime, String, User, RideEvent, String) void
+        +latestFirst() List~Entry~
+    }
+
+    class RideEvent {
+        <<enumeration>>
+        RIDE_BOOKED
+        RIDE_OFFERED
+        CAPTAIN_ASSIGNED
+        RIDE_COMPLETED
+        PAYMENT_FAILED
+        RIDE_CANCELLED
+        ...
+        -boolean important
+    }
+
+    class Ride
+    class Captain
+    class Customer
+    class Vehicle
+    class Payable
+    class ServiceArea
+
+    RideService --> MatchingService : association – finds captains
+    RideService --> FareService : association – prices trips
+    RideService --> PaymentService : association – collects money
+    RideService --> SimulatedClock : association – all time
+    RideService --> DispatchMode : association – Auto / Manual
+    RideService o-- "*" Notifier : aggregation – dynamic dispatch
+    RideService o-- "*" Ride : aggregation – all rides
+    MatchingService --> CaptainService : association
+    MatchingService --> FareService : association – ETA
+    MatchingService ..> Captain : dependency – ranks nearest
+    FareService "1" *-- "4" Vehicle : composition – rate card (upcast)
+    FareService --> ServiceArea : association – peak and hotspots
+    PaymentService --> EarningsService : association
+    PaymentService ..> Payable : dependency – creates (upcasting)
+    EarningsService "1" *-- "*" DayEarnings : composition – nested class
+    CaptainService o-- "*" Captain : aggregation – the fleet
+    CustomerService o-- "*" Customer : aggregation
+    RatingService --> CaptainService : association
+    RatingService ..> Ride : dependency – COMPLETED only
+    RideAutopilot --> RideService : association – plain service calls
+    RideAutopilot o-- "*" Ride : aggregation
+    Notifier <|.. SmsNotifier : interface realisation
+    Notifier <|.. PushNotifier : interface realisation
+    Notifier ..> RideEvent : dependency
+    SmsNotifier o-- "0..1" NotificationLog : aggregation – optional log
+    PushNotifier o-- "0..1" NotificationLog : aggregation – optional log

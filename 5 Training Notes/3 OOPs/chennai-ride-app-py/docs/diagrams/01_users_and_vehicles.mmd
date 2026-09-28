@@ -1,0 +1,288 @@
+%% (a) Users and vehicles — generated from ridehailing/model/user/*, model/vehicle/*, model/common/*
+%% Notation: + public, # protected (_name), - private (__name). getters (@property) are shown as name().
+%% Trailing * = abstract (italic), trailing $ = class-level: class attribute, @staticmethod or @classmethod (underlined).
+classDiagram
+    direction TB
+
+    class User {
+        <<abstract>>
+        #_id_counter: int$
+        #_PHONE_PATTERN: Pattern$
+        #_user_id: str
+        #_name: str
+        #_phone: str
+        #_location: Location
+        #_ratings: list~int~
+        +User(name: str, phone: str, location: Location)
+        +role() str*
+        +id_prefix() str*
+        +user_id() str
+        +name() str
+        +phone() str
+        +location() Location
+        +rating_count() int
+        +average_rating() Decimal
+        +receive_rating(score: int) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Customer {
+        +MAX_TOP_UP: Money$
+        +SELF_TRAVEL_SPEED_KMPH: int$
+        #_wallet_balance: Money
+        #_preferred_payment: Optional~Payable~
+        #_active_ride: Optional~Ride~
+        #_unpaid_ride: Optional~Ride~
+        #_ride_history: list~Ride~
+        #_pending_fees: list~PendingFee~
+        #_used_coupons: set~str~
+        #_location_since: datetime
+        +Customer(name: str, phone: str, location: Location, wallet_balance: Money, joined_at: datetime)
+        +role() str
+        +id_prefix() str
+        +wallet_balance() Money
+        +ride_history() tuple~Ride~
+        +last_completed_ride() Optional~Ride~
+        +pending_fee_total() Money
+        +top_up(amount: Money) None
+        +pay_from_wallet(amount: Money) None
+        +ensure_can_book() None
+        +begin_ride(ride: Ride) None
+        +finish_ride(ride: Ride, drop: Location, at: datetime) None
+        +ride_cancelled(ride: Ride) None
+        +relocate_to(place: Location, at: datetime) None
+        +add_pending_fee(fee: PendingFee) None
+        +take_pending_fees() list~PendingFee~
+        +mark_coupon_used(code: str) None
+    }
+
+    class PendingFee {
+        #_amount: Money
+        #_captain: Optional~Captain~
+        #_ride_id: str
+        +amount() Money
+        +captain() Optional~Captain~
+        +ride_id() str
+    }
+
+    class Captain {
+        +CASH_DUES_LIMIT: Money$
+        +RATING_FLAG_THRESHOLD: Decimal$
+        +MIN_RATINGS_BEFORE_FLAG: int$
+        #_vehicle: Vehicle
+        #_status: CaptainStatus
+        #_current_ride: Optional~Ride~
+        #_pending_offer: Optional~Ride~
+        #_dues_owed: Money
+        #_free_since: Optional~datetime~
+        #_offers_received: int
+        #_offers_accepted: int
+        #_cancellation_count: int
+        +Captain(name: str, phone: str, home_location: Location, vehicle: Vehicle, opening_dues: Optional~Money~, past_ratings: list~int~)
+        +role() str
+        +id_prefix() str
+        +vehicle() Vehicle
+        +status() CaptainStatus
+        +is_available() bool
+        +accepts_cash_rides() bool
+        +acceptance_rate() Decimal
+        +is_flagged() bool
+        +verify_kyc() None
+        +go_online() None
+        +go_offline() None
+        +respond_to_offer(ride: Ride) bool
+        +receive_offer(ride: Ride) None
+        +withdraw_offer() Ride
+        +start_assignment(ride: Ride, at: datetime) None
+        +arrive_at(pickup: Location) None
+        +finish_ride(drop: Location, at: datetime) None
+        +release_after_cancellation(at: datetime, cancelled_by_captain: bool) None
+        +add_dues(amount: Money) None
+        +settle_dues() Money
+        #_release(at: datetime) None
+    }
+
+    class CaptainStatus {
+        <<enumeration>>
+        KYC_PENDING
+        OFFLINE
+        ONLINE
+        ON_RIDE
+        +label: str
+        +is_working() bool
+    }
+
+    class Vehicle {
+        <<abstract>>
+        #_PLATE_PATTERN: Pattern$
+        #_registration_number: str
+        #_model_name: str
+        #_colour: str
+        +Vehicle(registration_number: str, model_name: str, colour: str)
+        +registration_number() str
+        +model_name() str
+        +vehicle_type() VehicleType*
+        +base_fare() Money*
+        +per_km_rate() Money*
+        +per_minute_rate() Money*
+        +minimum_fare() Money*
+        +seat_capacity() int*
+        +average_speed_kmph(is_peak: bool) int*
+        +distance_charge(distance_km: Decimal) Money
+        +time_charge(minutes: int) Money
+        +calculate_base_fare(distance_km: Decimal, minutes: int) Money
+        +can_carry(passengers: int) bool
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Bike {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +average_speed_kmph(is_peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class Auto {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +average_speed_kmph(is_peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class Cab {
+        <<abstract>>
+        #_air_conditioned: bool
+        +is_air_conditioned() bool
+        +luggage_bags() int*
+        +average_speed_kmph(is_peak: bool) int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class CabEconomy {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +luggage_bags() int
+    }
+
+    class CabPremium {
+        #_BASE_FARE: Money$
+        #_PER_KM: Money$
+        #_PER_MINUTE: Money$
+        #_MINIMUM_FARE: Money$
+        +vehicle_type() VehicleType
+        +base_fare() Money
+        +per_km_rate() Money
+        +per_minute_rate() Money
+        +minimum_fare() Money
+        +seat_capacity() int
+        +luggage_bags() int
+        +#95;#95;str#95;#95;() str
+    }
+
+    class VehicleType {
+        <<enumeration>>
+        BIKE
+        AUTO
+        CAB_ECONOMY
+        CAB_PREMIUM
+        +display_name: str
+        +seats: int
+        #_cancellation_fee_rupees: str
+        +cancellation_fee() Money
+        +can_carry(passengers: int) bool
+        +is_cab() bool
+    }
+
+    class Location {
+        <<value object>>
+        +EARTH_RADIUS_KM: float$
+        +ROAD_FACTOR: float$
+        #_name: str
+        #_latitude: float
+        #_longitude: float
+        +from_place_name(place_name: str) Location$
+        +haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) float$
+        +name() str
+        +distance_to(other: Location) float
+        +road_distance_to(other: Location) float
+        +is_within_km(other: Location, radius_km: float) bool
+        +point_towards(destination: Location, fraction: float, name: str) Location
+        +#95;#95;setattr#95;#95;(name: str, value: object) None
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+    }
+
+    class Money {
+        <<value object>>
+        +CURRENCY_SYMBOL: str$
+        #_PAISA: Decimal$
+        #_amount: Decimal
+        +Money(amount: Decimal)
+        +zero() Money$
+        +total(amounts: list~Money~) Money$
+        +amount() Decimal
+        +#95;#95;add#95;#95;(other: Money) Money
+        +#95;#95;sub#95;#95;(other: Money) Money
+        +#95;#95;mul#95;#95;(factor: Decimal) Money
+        +#95;#95;lt#95;#95;(other: Money) bool
+        +#95;#95;le#95;#95;(other: Money) bool
+        +#95;#95;eq#95;#95;(other: object) bool
+        +#95;#95;hash#95;#95;() int
+        +#95;#95;setattr#95;#95;(name: str, value: object) None
+        +percent(rate: Decimal) Money
+    }
+
+    User <|-- Customer : inheritance – hierarchical
+    User <|-- Captain : inheritance – hierarchical
+    Vehicle <|-- Bike : inheritance – hierarchical
+    Vehicle <|-- Auto : inheritance – hierarchical
+    Vehicle <|-- Cab : inheritance – multilevel (level 2)
+    Cab <|-- CabEconomy : inheritance – multilevel (level 3)
+    Cab <|-- CabPremium : inheritance – multilevel (level 3)
+
+    Captain "1" *-- "1" Vehicle : composition – HAS-A, created with the captain
+    Customer "1" *-- "0..*" PendingFee : composition – owns its unpaid fees
+    PendingFee "0..*" --> "0..1" Captain : association – fee is paid to
+    Captain "1" --> "1" CaptainStatus : association – enum state
+    User "0..*" --> "1" Location : association – is currently at
+    Customer "1" --> "1" Money : association – wallet (value object)
+    Vehicle ..> VehicleType : dependency – polymorphic vehicle_type()
+    Vehicle ..> Money : dependency – rates are Money
+
+    note for Vehicle "calculate_base_fare() is written ONCE here.<br>It calls the abstract rates, so a Bike and a CabPremium<br>give different fares: polymorphism."
+    note for Money "Immutable: #95;#95;setattr#95;#95; always raises.<br>Operator overloading: fare + gst, rate * km."
+
+    %% --- colour key: amber = abstract, purple = interface, green = enumeration, blue = value object, red = exception, grey dashed = defined in another diagram
+    style User fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style CaptainStatus fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Vehicle fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style Cab fill:#FFF4D6,stroke:#B45309,stroke-width:2px
+    style VehicleType fill:#E7F6EA,stroke:#2E7D32,stroke-width:2px
+    style Location fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px
+    style Money fill:#E6F0FB,stroke:#1D4ED8,stroke-width:2px

@@ -1,0 +1,51 @@
+---
+title: "7 · Clock and exceptions"
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR
+
+
+
+    class SimulatedClock
+    class Exception
+    class RideHailingException
+    class InvalidRideStatusException
+    class InvalidOtpException
+    class NoCaptainAvailableException
+    class CaptainNotEligibleException
+    class CaptainBusyException
+    class InsufficientWalletBalanceException
+    class InvalidBookingException
+    class ActiveRideExistsException
+    class PaymentPendingException
+    class OutOfServiceAreaException
+
+    Exception <|-- RideHailingException : is-a
+    RideHailingException <|-- InvalidRideStatusException : is-a
+    RideHailingException <|-- InvalidOtpException : is-a
+    RideHailingException <|-- NoCaptainAvailableException : is-a
+    RideHailingException <|-- CaptainNotEligibleException : is-a
+    RideHailingException <|-- CaptainBusyException : is-a
+    RideHailingException <|-- InsufficientWalletBalanceException : is-a
+    RideHailingException <|-- InvalidBookingException : is-a
+    InvalidBookingException <|-- ActiveRideExistsException : is-a
+    InvalidBookingException <|-- PaymentPendingException : is-a
+    InvalidBookingException <|-- OutOfServiceAreaException : is-a
+    %% colours: abstract = purple, interface = green, enum = amber, concrete = grey, group = blue
+    style SimulatedClock fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style Exception fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style RideHailingException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InvalidRideStatusException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InvalidOtpException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style NoCaptainAvailableException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainNotEligibleException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style CaptainBusyException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InsufficientWalletBalanceException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style InvalidBookingException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style ActiveRideExistsException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style PaymentPendingException fill:#f8fafc,stroke:#475569,stroke-width:2px
+    style OutOfServiceAreaException fill:#f8fafc,stroke:#475569,stroke-width:2px
