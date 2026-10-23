@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dk/Downloads/C_Programs/01_basics/sizeof_datatypes'
+relocations:     []
+...
